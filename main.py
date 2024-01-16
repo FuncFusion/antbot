@@ -12,6 +12,12 @@ def run():
     async def on_ready():
         logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 
+    @bot.command(
+        aliases=['p', 'зштп', 'пинг']
+    )
+    async def ping(ctx):
+        await ctx.send("pong!")
+
     
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 
