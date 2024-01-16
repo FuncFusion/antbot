@@ -4,24 +4,28 @@ from discord.ext import commands
 
 logger = settings.logging.getLogger("bot")
 
-def run():
-    intents = discord.Intents.all()
-    bot = commands.Bot(command_prefix="!", intents=intents)
 
-    @bot.event
-    async def on_ready():
-        logger.info(f"User: {bot.user} (ID: {bot.user.id})")
+class AntBot(commands.Bot):
+	def __init__(self, *, intents: discord.Intents, command_prefix: str):
+		super().__init__(intents=intents, command_prefix=command_prefix)
 
-    @bot.command(
-        aliases=['p', 'зштп', 'пинг']
-    )
-    async def ping(ctx):
-        await ctx.send("pong!")
+	async def setup_hook(self):
+		await self.tree.sync()
 
-    
-    bot.run(settings.DISCORD_API_SECRET, root_logger=True)
+intents = discord.Intents.all()
+bot = AntBot(command_prefix="!", intents=intents)
 
-if __name__ == "__main__":
-    run()
+@bot.event
+async def on_ready():
+	logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 
-#saygex
+@bot.command(aliases=['p', 'зштп', 'пинг'])
+async def ping(ctx):
+	await ctx.send("pong!")
+	
+@bot.tree.command()
+async def saygex(Intercation: discord.Interaction):
+	await Intercation.response.send_message("gex")
+
+	
+bot.run(settings.DISCORD_API_SECRET, root_logger=True)
