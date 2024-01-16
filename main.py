@@ -2,6 +2,8 @@ import settings
 import discord
 from discord.ext import commands
 
+from cogs.general import GeneralCommands
+
 logger = settings.logging.getLogger("bot")
 
 
@@ -10,6 +12,7 @@ class AntBot(commands.Bot):
 		super().__init__(intents=intents, command_prefix=command_prefix)
 
 	async def setup_hook(self):
+		await self.add_cog(GeneralCommands(self))
 		await self.tree.sync()
 
 intents = discord.Intents.all()
@@ -21,7 +24,7 @@ async def on_ready():
 
 @bot.command(aliases=['p', 'зштп', 'пинг'])
 async def ping(ctx):
-	await ctx.send("pong!")
+	await ctx.send("brbr")
 	
 @bot.tree.command()
 async def saygex(Intercation: discord.Interaction):
