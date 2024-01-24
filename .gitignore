@@ -1,3 +1,7 @@
+# Custom folder icon
+desktop.ini
+antbot.ico
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
