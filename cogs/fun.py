@@ -57,7 +57,8 @@ sga2normal_table = {
 	"∴": "w",
 	"̇̇/": "x",
 	"||": "y",
-	"⨅": "z"
+	"⨅": "z",
+	"\u200b": ""
 }
 
 class FunCommands(commands.Cog):
