@@ -66,6 +66,7 @@ class FunCommands(commands.Cog):
 		
 		@bot.hybrid_command(aliases=["ench", "зачаровать", "зачарить", "зачарь", "зачаруй"],
 					  description="Переводит сообщение на язык стола зачарования")
+		@app_commands.describe(text="Текст, который нужно перевести на язык стола зачарований")
 		async def enchant(ctx, *, text: str):
 			enchanted = text
 			for char in normal2sga_table:
@@ -74,6 +75,7 @@ class FunCommands(commands.Cog):
 		
 		@bot.hybrid_command(aliases=["unench", "раззачаровать", "разчарить", "разчарь", "разчаруй"],
 					  description="Переводит сообщение с языка стола зачарования")
+		@app_commands.describe(text="Текст, который нужно перевести с языка стола зачарований")
 		async def unenchant(ctx, *, text: str):
 			unenchanted = text
 			for char in sga2normal_table:
