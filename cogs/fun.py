@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import random
+from random import randint, choice
+import re
 
 normal2sga_table = {
 	"a": "ᔑ",
@@ -87,17 +88,35 @@ class FunCommands(commands.Cog):
 		@app_commands.describe(first="Минимальное число в промежутке", second="Максимальное число в промежутке")
 		async def randomrange(ctx, first: str='-2147483648', second: str='2147483647'):
 			minInt, maxInt = -2147483648, 2147483647
+			clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
 			try:
-				embed = discord.Embed(color=discord.Colour.dark_embed())
-				clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
 				first, second = clamp(int(float(first)), minInt, maxInt), clamp(int(float(second)), minInt, maxInt)
 				minimum = min(first, second)
 				maximum = max(first, second)
-				result = random.randint(minimum, maximum)
-				embed.title = f"Рандомное число между {minimum} и {maximum}:"
+				result = randint(minimum, maximum)
+				embed = discord.Embed(color=discord.Colour.dark_embed(), title=f"Рандомное число между {minimum} и {maximum}:")
 				embed.add_field(name=result, value='', inline=True)
 				await ctx.send(embed=embed)
 			except Exception as error:
 				eArg = str(error).split("'")[1].replace("\\\\", "\\")
 				await ctx.send(f"Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения")
+
+		@bot.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
+					  description="Выдаёт случайный ответ из заданных на заданный вопрос")
+		@app_commands.describe(text="Текст вопроса и ответов. Разделяются символом \"|\" или переносом строки")
+		async def random(ctx, *, text: str="Не хватает аргументов?|Да."):
+			pattern = r'[|\n]'
+			args = re.split(pattern, text)[1:]
+			if (len(args) >= 2):
+				title = re.split(pattern, text)[0]
+				result = choice(args)
+			else:
+				title = "Не хватает аргументов?"
+				result = "Да."
+			embed = discord.Embed(title=title, color=discord.Colour.dark_embed())
+			embed.add_field(name="Ответ:", value=result, inline=False)
+			await ctx.send(embed=embed)
+
+
+
 

@@ -6,9 +6,9 @@ from discord import app_commands
 class GeneralCommands(commands.Cog):
 	def __init__(self, bot):
 
-		@bot.hybrid_command(name="server-info", aliases=["info", "штащ","сервер-инфо", "инфо"],
+		@bot.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
 					  description="Показать инфу о сервере")
-		async def server_info(ctx):
+		async def serverinfo(ctx):
 			# setup vars
 			server = ctx.guild
 			member_count = 0
@@ -31,7 +31,7 @@ class GeneralCommands(commands.Cog):
 			embed.set_footer(text=f"🆔 {server.id}")
 			await ctx.send(embed=embed)
 		
-		@bot.hybrid_command(aliases=["usr", "юзер", "пользователь", "усер"],
+		@bot.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
 					  description="Показать информацию о пользователе")
 		async def user(ctx, user:discord.Member):
 			# Setting up vars
@@ -51,7 +51,7 @@ class GeneralCommands(commands.Cog):
 			embed.set_footer(text=f"🆔 {user.id}")
 			await ctx.send(embed=embed)
 		
-		@bot.hybrid_command(aliases=["сказать", "молвить"],
+		@bot.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
 					  description="Сказать от имени бота")
 		@app_commands.describe(text="Текст сообщения, которое отправит бот")
 		async def say(ctx, *, text: str):
