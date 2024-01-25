@@ -39,7 +39,8 @@ class GeneralCommands(commands.Cog):
 				"online": "🟢 В сети",
 				"offline": "⚫ Не в сети",
 				"idle": "🟡 Отошёл",
-				"dnd": "🔴 Не беспокоить"
+				"dnd": "🔴 Не беспокоить",
+				"invisible": "⚫ Невидимка"
 			}
 			# Build embed
 			embed = discord.Embed(title=user.display_name, color=user.color)
