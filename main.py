@@ -4,6 +4,7 @@ from discord.ext import commands
 
 from cogs.general import GeneralCommands
 from cogs.fun import FunCommands
+from cogs.minecraft import MinecraftCommands
 
 logger = settings.logging.getLogger("bot")
 
@@ -15,6 +16,7 @@ class AntBot(commands.Bot):
 	async def setup_hook(self):
 		await self.add_cog(GeneralCommands(self))
 		await self.add_cog(FunCommands(self))
+		await self.add_cog(MinecraftCommands(self))
 		await self.tree.sync()
 
 intents = discord.Intents.all()
