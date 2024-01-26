@@ -7,7 +7,7 @@ class GeneralCommands(commands.Cog):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
-					  description="Показать инфу о сервере")
+							description="Показывает информацию о сервере")
 		async def serverinfo(ctx):
 			# setup vars
 			server = ctx.guild
@@ -32,7 +32,7 @@ class GeneralCommands(commands.Cog):
 			await ctx.send(embed=embed)
 		
 		@bot.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
-					  description="Показать информацию о пользователе")
+					  description="Показывает информацию о пользователе")
 		async def user(ctx, user:discord.Member):
 			# Setting up vars
 			statuses = {
@@ -53,7 +53,7 @@ class GeneralCommands(commands.Cog):
 			await ctx.send(embed=embed)
 		
 		@bot.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
-					  description="Сказать от имени бота")
+							description="Отправляет сообщение от имени бота")
 		@app_commands.describe(text="Текст сообщения, которое отправит бот")
 		@app_commands.default_permissions(manage_messages=True)
 		async def say(ctx, *, text: str):
