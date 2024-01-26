@@ -12,7 +12,7 @@ class MinecraftCommands(commands.Cog):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],
-							description="Подсветить синтакс для mcfunction")
+							description="Подсвечивает синтакс для mcfunction")
 		async def highlight(ctx, *, command:str="default_variant"):
 			# Setting up vars
 			message = ""
