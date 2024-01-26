@@ -9,30 +9,35 @@ class AdminCommands(commands.Cog):
 
         @bot.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
                             description="Отключает бота.")
+        @app_commands.default_permissions(manage_guild=True)
         async def shutdown(ctx):
             await ctx.send("Отключаюсь...")
             await bot.close()
 
         @bot.hybrid_command(aliases=["on", "онлайн", "всети", "в-сети", "щтдшту", "щт"],
                             description="Меняет статус бота на \"В сети\".")
+        @app_commands.default_permissions(manage_guild=True)
         async def online(ctx):
             await ctx.send("Теперь мой статус - `В сети`.")
             await bot.change_presence(status=discord.Status.online)
 
         @bot.hybrid_command(aliases=["afk", "отошёл", "отойди", "айдл", "афк", "швду", "фал"],
                             description="Меняет статус бота на \"Отошёл\".")
+        @app_commands.default_permissions(manage_guild=True)
         async def idle(ctx):
             await ctx.send("Теперь мой статус - `Отошёл`.")
             await bot.change_presence(status=discord.Status.idle)
 
         @bot.hybrid_command(aliases=["dnd", "do-not-disturb", "небеспокоить", "не-беспокоить", "днд", "вщтщевшыегки", "втв", "вщ-тще-вшыегки"],
                             description="Меняет статус бота на \"Не беспокоить\".")
+        @app_commands.default_permissions(manage_guild=True)
         async def donotdisturb(ctx):
             await ctx.send("Теперь мой статус - `Не беспокоить`.")
             await bot.change_presence(status=discord.Status.do_not_disturb)
 
         @bot.hybrid_command(aliases=["invis", "inv", "невидимка", "невидимый", "инвизибл", "инвиз", "инв", "штмшышиду", "штмшы", "штм"],
                             description="Меняет статус бота на \"Невидимка\".")
+        @app_commands.default_permissions(manage_guild=True)
         async def invisible(ctx):
             await ctx.send("Теперь мой статус - `Невидимка`.")
             await bot.change_presence(status=discord.Status.invisible)
@@ -47,6 +52,7 @@ class AdminCommands(commands.Cog):
         @bot.hybrid_command(aliases=["изменить", "эдит", "увше"],
                             description="Изменяет заданное сообщение.")
         @app_commands.describe(message="Сообщение, которое будет изменяться.", text="Текст, на который изменится сообщение.")
+        @app_commands.default_permissions(manage_messages=True)
         async def edit(ctx, message:str=None, *, text:str=""):
             if message == None:
                 await ctx.send("Не хватает аргументов.")
