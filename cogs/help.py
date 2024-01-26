@@ -13,8 +13,8 @@ class HelpCommands(commands.Cog):
 		@bot.hybrid_command(aliases=["thx", "ерфтлы", "ерч", "спасибо", "спс", "благодраю", "благодарен"]) 
 		@app_commands.describe(helper="Человек, который помго вам решить проблему")
 		async def thanks(ctx, helper: discord.Message=None):
-			
-			await ctx.sendd(embed=embed)
+			pass
+			# await ctx.sendd(embed=embed)
 
 		@bot.hybrid_command(aliases=["solve", "ыщдму", "куыщдму", "решено"]) 
 		@app_commands.describe(solution="Сообщение которое помогло решить проблему")
