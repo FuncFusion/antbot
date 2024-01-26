@@ -31,8 +31,8 @@ async def on_ready():
 	logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 	
 @bot.tree.command()
-async def saygex(Intercation: discord.Interaction):
-	await Intercation.response.send_message("gex")
+async def saygex(Interaction: discord.Interaction):
+	await Interaction.response.send_message("gex")
 
 	
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)

@@ -55,6 +55,7 @@ class GeneralCommands(commands.Cog):
 		@bot.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
 					  description="Сказать от имени бота")
 		@app_commands.describe(text="Текст сообщения, которое отправит бот")
+		@app_commands.default_permissions(manage_messages=True)
 		async def say(ctx, *, text: str):
 			temp = await ctx.send("_ _", ephemeral=True)
 			await ctx.channel.send(text)
