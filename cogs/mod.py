@@ -121,3 +121,23 @@ class ModerationCommands(commands.Cog):
 			await ctx.send(embed=embed)
 			# Da kick
 			await user.kick(reason=reason)
+		
+		@bot.hybrid_command(aliases=["сдуфк", "клир", "очистить"], 
+							description="Очищает сообщения")
+		@app_commands.default_permissions(manage_messages=True)
+		@app_commands.describe(count="Количество сообщений которое будет удалено", channel="Канал в котором будут удалены сообщения")
+		async def clear(ctx, count: int=None, channel: discord.TextChannel=None):
+			# Setting up variables
+			channel = channel if channel != None else ctx.channel
+			# Handling errors
+			if count == None:
+				ctx.send("Пожалуйста, укажите количество сообщений которое будет удалено")
+				return None
+			# Building embed
+			embed = discord.Embed(title="🗑Очистка", color=discord.Color.dark_embed())
+			embed.add_field(name="Канал", value=channel.jump_url, inline=False)
+			embed.add_field(name="Удалённые сообщения", value=f"💬 {count}", inline=False)
+			# Clearing
+			await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
+			#
+			await ctx.send(embed=embed)
