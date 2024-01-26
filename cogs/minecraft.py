@@ -6,13 +6,13 @@ import re
 from utils.highlighter.main import Highlighter as hl
 from utils.fake_user import fake_send
 
-code_block_content_re = r"```[a-zA-Z+]+\n|\n?```\n?"
+code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
 class MinecraftCommands(commands.Cog):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],
-					  description="Подсветить синтакс для mcfunction")
+							description="Подсветить синтакс для mcfunction")
 		async def highlight(ctx, *, command:str="default_variant"):
 			# Setting up vars
 			message = ""
@@ -38,7 +38,7 @@ class MinecraftCommands(commands.Cog):
 			embed = discord.Embed(title="Подсвеченная функция" if message.count("```") == 2 else "Подсвеченные функции", color=discord.Colour.dark_embed(), description=message)
 			await ctx.send(embed=embed)
 	
-		@bot.tree.context_menu(name="✨Подсветить функцию")
+		@bot.tree.context_menu(name="🌈Подсветить функцию")
 		async def highlight_ctxmenu(interaction: discord.Interaction, message:discord.Message):
 			# Setting up variables
 			code_block_re = r"```[^`]+```"
