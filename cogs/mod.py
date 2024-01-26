@@ -73,7 +73,7 @@ class ModerationCommands(commands.Cog):
 				await user.unban()
 		
 		@bot.command(aliases=["ьгеу", "мут"])
-		@app_commands.default_permissions(ban_members=True)
+		@app_commands.default_permissions(mute_members=True)
 		async def mute(ctx, user: discord.Member=None, term: str="", *, reason: str=None):
 			# Setting up variables
 			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
@@ -104,7 +104,7 @@ class ModerationCommands(commands.Cog):
 			await user.timeout(timedelta(seconds=term), reason=reason)
 		
 		@bot.command(aliases=["лшсл", "кик", "изгнать"])
-		@app_commands.default_permissions(ban_members=True)
+		@app_commands.default_permissions(kick_members=True)
 		async def kick(ctx, user: discord.Member=None, *, reason: str=None):
 			# Setting up variables
 			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
