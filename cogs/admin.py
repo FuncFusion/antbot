@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-
+from utils.msg_utils import get_msg_by_id_arg
 
 
 class AdminCommands(commands.Cog):
@@ -59,13 +59,7 @@ class AdminCommands(commands.Cog):
             else:
                 try:
                     if ctx.message.reference == None:
-                        id = (message.split("/")[-2:])
-                        msg = None
-                        if len(id) == 2 or (len(id:=id[0].split("-")) == 2): 
-                            chnl = bot.get_channel(int(id[0]))
-                            msg = await chnl.fetch_message(int(id[1]))
-                        else:
-                            msg = await ctx.channel.fetch_message(int(id[-1]))
+                        msg = await get_msg_by_id_arg(ctx, bot, message)
                         await discord.Message.edit(self=msg,content=text)
                     else:
                         msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
@@ -73,9 +67,5 @@ class AdminCommands(commands.Cog):
                 except Exception as e:
                     if str(e).startswith('403'):
                         await ctx.send(f"Не могу изменять чужие сообщения.")
-                    elif str(e).startswith('404'):
-                        await ctx.send(f"Не нашёл сообщения с таким айди.")
-                    elif str(e).startswith('invalid literal for int()'):
-                        await ctx.send(f"Введён неверный айди.")
-                    else:
+                    elif msg != 'id_error':
                         await ctx.send(f"Не хватает аргументов.")
