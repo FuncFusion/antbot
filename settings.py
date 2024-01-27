@@ -8,6 +8,8 @@ load_dotenv()
 
 DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
 
+HELP_FORUM_ID = 1169322456125800498
+
 LOGGING_CONFIG = {
     "version": 1,
     "disabled_existing_loggers": False,

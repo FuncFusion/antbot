@@ -47,30 +47,27 @@ class ModerationCommands(commands.Cog):
 			# Handling errors
 			if user == None:
 				await ctx.send("Пожалуйста, укажите пользователя")
-				return None
 			elif term == "":
 				await ctx.send("Пожалуйста, укажите срок бана в формате <время><мера измерения времени сокращённо>")
-				return None
 			elif raw_term == []:
 				await ctx.send("Пожалуйста, укажите целочисленное время бана")
-				return None
 			elif measure == []:
 				await ctx.send("Пожалуйтса, укажите меру измерения времени бана")
-				return None
-			term = int(raw_term[0]) * time_multipliers[measure[0]]
-			# Building embed
-			embed = discord.Embed(title="🔨Бан", color=discord.Color.dark_embed())
-			embed.set_thumbnail(url=user.avatar.url)
-			embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-			embed.add_field(name="Причина", value=reason)
-			embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
-			await ctx.send(embed=embed)
-			# Ban
-			await user.ban(reason=reason)
-			# Unban
-			if term < 1262278080:
-				await sleep(term)
-				await user.unban()
+			else:
+				term = int(raw_term[0]) * time_multipliers[measure[0]]
+				# Building embed
+				embed = discord.Embed(title="🔨Бан", color=discord.Color.dark_embed())
+				embed.set_thumbnail(url=user.avatar.url)
+				embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+				embed.add_field(name="Причина", value=reason)
+				embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
+				await ctx.send(embed=embed)
+				# Ban
+				await user.ban(reason=reason)
+				# Unban
+				if term < 1262278080:
+					await sleep(term)
+					await user.unban()
 		
 		@bot.command(aliases=["ьгеу", "мут"])
 		@app_commands.default_permissions(mute_members=True)
@@ -82,26 +79,23 @@ class ModerationCommands(commands.Cog):
 			# Handling errors
 			if user == None:
 				await ctx.send("Пожалуйста, укажите пользователя")
-				return None
 			elif term == "":
 				await ctx.send("Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>")
-				return None
 			elif raw_term == []:
 				await ctx.send("Пожалуйста, укажите целочисленное время мута")
-				return None
 			elif measure == []:
 				await ctx.send("Пожалуйтса, укажите меру измерения времени мута")
-				return None
-			term = int(raw_term[0]) * time_multipliers[measure[0]]
-			# Building embed
-			embed = discord.Embed(title="🔇Мут", color=discord.Color.dark_embed())
-			embed.set_thumbnail(url=user.avatar.url)
-			embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-			embed.add_field(name="Причина", value=reason)
-			embed.add_field(name="Замуненый участник", value=user.mention, inline=False)
-			await ctx.send(embed=embed)
-			# Da mute
-			await user.timeout(timedelta(seconds=term), reason=reason)
+			else:
+				term = int(raw_term[0]) * time_multipliers[measure[0]]
+				# Building embed
+				embed = discord.Embed(title="🔇Мут", color=discord.Color.dark_embed())
+				embed.set_thumbnail(url=user.avatar.url)
+				embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+				embed.add_field(name="Причина", value=reason)
+				embed.add_field(name="Замуненый участник", value=user.mention, inline=False)
+				await ctx.send(embed=embed)
+				# Da mute
+				await user.timeout(timedelta(seconds=term), reason=reason)
 		
 		@bot.command(aliases=["лшсл", "кик", "изгнать"])
 		@app_commands.default_permissions(kick_members=True)
@@ -111,16 +105,16 @@ class ModerationCommands(commands.Cog):
 			# Handling errors
 			if user == None:
 				await ctx.send("Пожалуйста, укажите пользователя")
-				return None
-			# Building embed
-			embed = discord.Embed(title="🦵Кик", color=discord.Color.dark_embed())
-			embed.set_thumbnail(url=user.avatar.url)
-			embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-			embed.add_field(name="Причина", value=reason)
-			embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)
-			await ctx.send(embed=embed)
-			# Da kick
-			await user.kick(reason=reason)
+			else:
+				# Building embed
+				embed = discord.Embed(title="🦵Кик", color=discord.Color.dark_embed())
+				embed.set_thumbnail(url=user.avatar.url)
+				embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+				embed.add_field(name="Причина", value=reason)
+				embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)
+				await ctx.send(embed=embed)
+				# Da kick
+				await user.kick(reason=reason)
 		
 		@bot.hybrid_command(aliases=["сдуфк", "клир", "очистить"], 
 							description="Очищает сообщения")
@@ -132,12 +126,12 @@ class ModerationCommands(commands.Cog):
 			# Handling errors
 			if count == None:
 				ctx.send("Пожалуйста, укажите количество сообщений которое будет удалено")
-				return None
-			# Building embed
-			embed = discord.Embed(title="🗑Очистка", color=discord.Color.dark_embed())
-			embed.add_field(name="Канал", value=channel.jump_url, inline=False)
-			embed.add_field(name="Удалённые сообщения", value=f"💬 {count}", inline=False)
-			# Clearing
-			await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
-			#
-			await ctx.send(embed=embed)
+			else:
+				# Building embed
+				embed = discord.Embed(title="🗑 Очистка", color=discord.Color.dark_embed())
+				embed.add_field(name="Канал", value=channel.jump_url, inline=False)
+				embed.add_field(name="Удалённые сообщения", value=f"💬 {count}", inline=False)
+				# Clearing
+				await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
+				#
+				await ctx.send(embed=embed)
