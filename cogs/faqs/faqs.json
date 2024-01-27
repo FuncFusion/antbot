@@ -1,0 +1,18 @@
+{
+    "example faq": {
+        "aliases": [],
+        "files": []
+    },
+    "output log": {
+        "aliases": ["ol", "журнал ошибок", "жо", "щгезге дщп", "щд"],
+        "files": ["output log.png"]
+    },
+    "pack mcmeta": {
+        "aliases": ["pm", "пак мсмета", "пм", "зфсл.ьсьуеф", "зь"],
+        "files": []
+    },
+    "cem folders": {
+        "aliases": ["cf"],
+        "files": []
+    }
+}
