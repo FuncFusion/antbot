@@ -3,7 +3,9 @@ from discord.ext import commands
 from discord import app_commands
 from utils.msg_utils import get_msg_by_id_arg
 
-
+async def pfp_ratelimit_msg(ctx):
+	await ctx.send("Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+	
 class AdminCommands(commands.Cog):
 	def __init__(self, bot):
 
@@ -11,36 +13,61 @@ class AdminCommands(commands.Cog):
 							description="Отключает бота.")
 		@app_commands.default_permissions(manage_guild=True)
 		async def shutdown(ctx):
-			await ctx.send("Отключаюсь...")
-			await bot.close()
+			try:
+				with open("assets/pfps/offline.png", "rb") as file:
+					await bot.user.edit(avatar=file.read())
+				await ctx.send("Отключаюсь...", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await bot.close()
+			except Exception:
+				await pfp_ratelimit_msg(ctx)
 
 		@bot.hybrid_command(aliases=["on", "онлайн", "всети", "в-сети", "щтдшту", "щт"],
 							description="Меняет статус бота на \"В сети\".")
 		@app_commands.default_permissions(manage_guild=True)
 		async def online(ctx):
-			await ctx.send("Теперь мой статус - `В сети`.")
-			await bot.change_presence(status=discord.Status.online)
+			try:
+				with open("assets/pfps/online.png", "rb") as file:
+					await bot.user.edit(avatar=file.read())
+				await ctx.send("Теперь мой статус - `В сети`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.online)
+			except Exception:
+				await pfp_ratelimit_msg(ctx)
 
 		@bot.hybrid_command(aliases=["afk", "отошёл", "отойди", "айдл", "афк", "швду", "фал"],
 							description="Меняет статус бота на \"Отошёл\".")
 		@app_commands.default_permissions(manage_guild=True)
 		async def idle(ctx):
-			await ctx.send("Теперь мой статус - `Отошёл`.")
-			await bot.change_presence(status=discord.Status.idle)
+			try:
+				with open("assets/pfps/idle.png", "rb") as file:
+					await bot.user.edit(avatar=file.read())
+				await ctx.send("Теперь мой статус - `Отошёл`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.idle)
+			except Exception:
+				await pfp_ratelimit_msg(ctx)
 
 		@bot.hybrid_command(aliases=["dnd", "do-not-disturb", "небеспокоить", "не-беспокоить", "днд", "вщтщевшыегки", "втв", "вщ-тще-вшыегки"],
 							description="Меняет статус бота на \"Не беспокоить\".")
 		@app_commands.default_permissions(manage_guild=True)
 		async def donotdisturb(ctx):
-			await ctx.send("Теперь мой статус - `Не беспокоить`.")
-			await bot.change_presence(status=discord.Status.do_not_disturb)
+			try:
+				with open("assets/pfps/dnd.png", "rb") as file:
+					await bot.user.edit(avatar=file.read())
+				await ctx.send("Теперь мой статус - `Не беспокоить`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.do_not_disturb)
+			except Exception:
+				await pfp_ratelimit_msg(ctx)
 
 		@bot.hybrid_command(aliases=["invis", "inv", "невидимка", "невидимый", "инвизибл", "инвиз", "инв", "штмшышиду", "штмшы", "штм"],
 							description="Меняет статус бота на \"Невидимка\".")
 		@app_commands.default_permissions(manage_guild=True)
 		async def invisible(ctx):
-			await ctx.send("Теперь мой статус - `Невидимка`.")
-			await bot.change_presence(status=discord.Status.invisible)
+			try:
+				with open("assets/pfps/offline.png", "rb") as file:
+					await bot.user.edit(avatar=file.read())
+				await ctx.send("Теперь мой статус - `Невидимка`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.invisible)
+			except Exception:
+				await pfp_ratelimit_msg(ctx)
 
 		@bot.hybrid_command(aliases=["p", "latency", "пинг", "п", "з", "зштп", "дфеутсн"],
 							description="Показывает пинг бота.")

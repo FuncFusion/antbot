@@ -33,6 +33,8 @@ bot = AntBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
+	with open("assets/pfps/online.png", "rb") as file:
+		await bot.user.edit(avatar=file.read())
 	logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 	
 @bot.tree.command()
