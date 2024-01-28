@@ -1,1 +1,1 @@
-`give <target> <item> [<count>]`
+`give <[36mселектор> <item> [<count>]`

@@ -1,1 +1,1 @@
-`pardon-ip <target>`
+`pardon-ip <[36mселектор>`

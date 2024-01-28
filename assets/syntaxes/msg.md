@@ -1,1 +1,1 @@
-`msg <targets> <message>`
+`msg <[36mселекторs> <message>`

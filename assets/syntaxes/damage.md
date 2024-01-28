@@ -1,2 +1,2 @@
-`damage <target> <amount> [<damageType>] [at <location>]`
-`damage <target> <amount> [<damageType>] [by <entity>] [from <cause>]`
+`damage <[36mселектор> <amount> [<damageType>] [at <location>]`
+`damage <[36mселектор> <amount> [<damageType>] [by <entity>] [from <cause>]`

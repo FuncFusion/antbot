@@ -77,7 +77,7 @@ docs/_build/
 
 # PyBuilder
 .pybuilder/
-target/
+[36mселектор/
 
 # Jupyter Notebook
 .ipynb_checkpoints

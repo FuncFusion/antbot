@@ -1,1 +1,1 @@
-`tellraw <targets> <message>`
+`tellraw <[36mселекторs> <message>`

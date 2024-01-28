@@ -1,1 +1,1 @@
-`pardon <target>`
+`pardon <[36mселектор>`

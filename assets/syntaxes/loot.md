@@ -1,22 +1,22 @@
-`loot <_TARGET_> <_SOURCE_>`
+`loot <_[36mселектор_> <_SOURCE_>`
 
 In which:
 
-`<_TARGET_>` is:
+`<_[36mселектор_>` is:
 
 `give <players>`
 
 Gives items to players, ignoring empty item stacks.
 
-`insert <targetPos>`
+`insert <[36mселекторPos>`
 
 Distributes items to a container block.
 
-`spawn <targetPos>`
+`spawn <[36mселекторPos>`
 
 Spawns item entities.
 
-`replace block <targetPos> <slot> [<count>]`
+`replace block <[36mселекторPos> <slot> [<count>]`
 
 Distributes items to a container block.
 
@@ -30,6 +30,6 @@ Distributes items to entities.
 
 `loot <loot_table>`
 
-`kill <target>`
+`kill <[36mселектор>`
 
 `mine <pos> [<tool>|mainhand|offhand]`

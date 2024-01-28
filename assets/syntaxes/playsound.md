@@ -1,1 +1,1 @@
-`playsound <sound> <source> <targets> [<pos>] [<volume>] [<pitch>] [<minVolume>]`
+`playsound <sound> <source> <[36mселекторs> [<pos>] [<volume>] [<pitch>] [<minVolume>]`

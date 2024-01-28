@@ -1,1 +1,1 @@
-`spectate <target> [<player>]`
+`spectate <[36mселектор> [<player>]`

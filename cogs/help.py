@@ -45,7 +45,7 @@ class HelpAdditionals:
 			syntaxes_path = "assets\\syntaxes"
 			for filename in os.listdir(syntaxes_path):
 				if filename.endswith(".md"):
-					with open(os.path.join(syntaxes_path, filename), "r") as file:
+					with open(os.path.join(syntaxes_path, filename), "r", encoding="utf-8") as file:
 						HelpAdditionals.Syntax.syntaxes[filename.replace(".md", "")] = file.read()
 		
 
@@ -100,6 +100,7 @@ class HelpCommands(commands.Cog):
 			if command == None:
 				await ctx.send("Пожалуйста, укажите команду", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			else:
+				HelpAdditionals.Syntax.read_syntaxes()
 				#Bulding embed
 				embed = discord.Embed(title=f"🖥 /{command}", color=discord.Color.dark_embed(), 
 					description=HelpAdditionals.Syntax.syntaxes[command])

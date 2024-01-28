@@ -36,4 +36,4 @@ Prepend the source data or direct value data onto the _beginning_ of the pointed
 
 `... set value <value>`
 
-Set the tag specified by `<targetPath>` to the source data or direct value data.
+Set the tag specified by `<[36mселекторPath>` to the source data or direct value data.
