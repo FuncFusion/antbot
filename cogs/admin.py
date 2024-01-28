@@ -74,7 +74,7 @@ class AdminCommands(commands.Cog):
 		async def ping(ctx):
 			embed = discord.Embed(title="Понг!", color=discord.Colour.dark_embed())
 			embed.add_field(name=f'Мой пинг: {round(bot.latency*1000)}ms', value="", inline=True)
-			await ctx.send(embed=embed)
+			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
 		@bot.hybrid_command(aliases=["изменить", "эдит", "увше"],
 							description="Изменяет заданное сообщение.")
@@ -99,4 +99,4 @@ class AdminCommands(commands.Cog):
 					elif str(msg).startswith('invalid literal for int()'):
 						await ctx.send("Введён неверный айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 					else:
-						await ctx.send(f"Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.send("Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())

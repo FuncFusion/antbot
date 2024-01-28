@@ -25,13 +25,13 @@ class FAQs(commands.Cog):
                 embed.add_field(name="", value=faqs_str, inline=False)
                 embed.add_field(name="", value="", inline=False)
                 embed.add_field(name="Как использовать факьюшки?", value="Чтобы вызвать ответ на какую либо факьюшку, напишите вопросительный знак и после него название факьюшки. Вы также можете вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. Примеры:\n`?журнал ошибок`\n`Тебе стоит открыть **?**журнал ошибок, потому что в нём полезная инфа`")
-                await ctx.send(embed=embed)
+                await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
             else:
                 faq = get_faq(name)
                 aliases = ", ".join([f"`{alias}`" for alias in db[faq]['aliases']])             
                 embed.title = f"Список алиасов для \"{faq}\""
                 embed.add_field(name="", value=aliases, inline=False)
-                await ctx.send(embed=embed)
+                await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
         @bot.listen("on_message")
         async def main(msg):

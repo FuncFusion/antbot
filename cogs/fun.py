@@ -72,7 +72,7 @@ class FunCommands(commands.Cog):
 			enchanted = text
 			for char in normal2sga_table:
 				enchanted = enchanted.replace(char, normal2sga_table[char]+"\u200b")
-			await ctx.send(enchanted)
+			await ctx.send(enchanted, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 		
 		@bot.hybrid_command(aliases=["unench", "раззачаровать", "разчарить", "разчарь", "разчаруй", "гтутср", "гтутсрфте"],
 					  description="Переводит сообщение с языка стола зачарования")
@@ -81,7 +81,7 @@ class FunCommands(commands.Cog):
 			unenchanted = text
 			for char in sga2normal_table:
 				unenchanted = unenchanted.replace(char, sga2normal_table[char])
-			await ctx.send(unenchanted)
+			await ctx.send(unenchanted, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
 		@bot.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
 					  description="Генерирует рандомное число в заданном промежутке")
@@ -96,10 +96,10 @@ class FunCommands(commands.Cog):
 				result = randint(minimum, maximum)
 				embed = discord.Embed(color=discord.Colour.dark_embed(), title=f"Рандомное число между {minimum} и {maximum}:")
 				embed.add_field(name=result, value='', inline=True)
-				await ctx.send(embed=embed)
+				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			except Exception as error:
 				eArg = str(error).split("'")[1].replace("\\\\", "\\")
-				await ctx.send(f"Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения")
+				await ctx.send(f"Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
 		@bot.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 					  description="Выдаёт случайный ответ из заданных на заданный вопрос")
@@ -115,7 +115,7 @@ class FunCommands(commands.Cog):
 				result = "Да."
 			embed = discord.Embed(title=title, color=discord.Colour.dark_embed())
 			embed.add_field(name="Ответ:", value=result, inline=False)
-			await ctx.send(embed=embed)
+			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
 
 

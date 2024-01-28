@@ -29,7 +29,7 @@ class GeneralCommands(commands.Cog):
 			embed.add_field(name="Роли", value=f"🎭 {len(server.roles)}", inline=False)
 			embed.add_field(name="Приглашение (иссякает через сутки)", value=f"🔗 {invitation_link}")
 			embed.set_footer(text=f"🆔 {server.id}")
-			await ctx.send(embed=embed)
+			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 		
 		@bot.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
 					  description="Показывает информацию о пользователе")
@@ -50,7 +50,7 @@ class GeneralCommands(commands.Cog):
 			embed.add_field(name="Роли", value=" ".join([role.mention for role in user.roles[1:][::-1]]), inline=False)
 			embed.add_field(name="Статус", value=statuses[str(user.status)], inline=False)
 			embed.set_footer(text=f"🆔 {user.id}")
-			await ctx.send(embed=embed)
+			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 		
 		@bot.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
 							description="Отправляет сообщение от имени бота")
