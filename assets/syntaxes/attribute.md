@@ -1,23 +1,24 @@
-`attribute <target> <attribute> get [<scale>]`
-
-Returns the total value of the specified attribute.
-
-`attribute <target> <attribute> base get [<scale>]`
-
-Returns the base value of the specified attribute.
-
-`attribute <target> <attribute> base set <value>`
-
-Overwrites the base value of the specified attribute with the given value.
-
-`attribute <target> <attribute> modifier add <uuid> <name> <value> (add|multiply|multiply_base)`
-
-Adds an attribute modifier with the specified properties if no modifier with the same UUID already existed.
-
-`attribute <target> <attribute> modifier remove <uuid>`
-
-Removes the attribute modifier with the specified UUID.
-
-`attribute <target> <attribute> modifier value get <uuid> [<scale>]`
-
-Returns the value of the modifier with the specified UUID.
+```ansi
+[35mattribute [33m<[36mселектор[33m> <[0mатрибут[33m> [34mget [33m[[34m<множитель[34m>[33m]
+```
+Возвращает общее значение указанного атрибута.
+```ansi
+[35mattribute [33m<[36mселектор[33m> <[0mатрибут[33m> [34mbase get [33m[[34m<[0mмножитель[34m>[33m]
+```
+Возвращает базовое значение указанного атрибута.
+```ansi
+[35mattribute [33m<[36mселектор[33m> <[0mатрибут[33m> [34mbase set [33m<[0mзначение[33m>
+```
+Переписывает базовое значение указанного атрибута.
+```ansi
+[35mattribute [33m<[36mселектор[33m> <[0mатрибут[33m> [34mmodifier add [33m<[0muuid[33m> <[0mимя[33m> <[0mзначение[33m> ([34madd[33m|[34mmultiply[33m|[34mmultiply_base[33m)
+```
+Добавляет модификатор атрибута с заданными свойствами если не существует модификатора с таким же ююид.
+```ansi
+[35mattribute [33m<[36mселектор[33m> <[0mатрибут[33m> [34mmodifier remove [33m<[0muuid[33m>
+```
+Убирает модификатор атрибута с указанным ююид.
+```ansi
+[35mattribute [33m<[36mселектор[33m> <[0mатрибут[33m> [34mmodifier value get [33m<[0muuid[33m> [[34m<[0mscale[34m>[33m]
+```
+Возвращает значение атрибута с указанным ююид.

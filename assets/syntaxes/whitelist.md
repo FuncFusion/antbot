@@ -1,6 +1,6 @@
-`whitelist add <targets>`
+`whitelist add <[36mселекторs>`
 `whitelist list`
 `whitelist off`
 `whitelist on`
 `whitelist reload``
-`whitelist remove <targets>`
+`whitelist remove <[36mселекторs>`

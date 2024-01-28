@@ -1,1 +1,1 @@
-`kick <target> [<reason>]`
+`kick <[36mселектор> [<reason>]`

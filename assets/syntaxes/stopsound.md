@@ -1,1 +1,1 @@
-`stopsound <targets> [<source>] [<sound>]`
+`stopsound <[36mселекторs> [<source>] [<sound>]`

@@ -1,45 +1,47 @@
-`bossbar add <id> <name>`
-
-Create a new bossbar.
-
-`bossbar get <id> (max|players|value|visible)`
-
-Return the requested setting as a `result` of the command.
-
-`bossbar list`
-
-Display a list of existing bossbars.
-
-`bossbar remove <id>`
-
-Remove an existing bossbar.
-
-`bossbar set <id> (color|max|name|players|style|value|visible)`
-
-`... color (blue|green|pink|purple|red|white|yellow)`
-
-Set the text color (if no color was specified as part of a text component) and bar color. Defaults to `white` upon creation.
-
-`... max <max>`
-
-Set the bossbar's maximum value. Defaults to `100` upon creation.
-
-`... name <name>`
-
-Set the bossbar's name.
-
-`... players [<targets>]`
-
-Change the set of players to whom the bar is visible. Defaults to none upon creation.
-
-`... style (notched_6|notched_10|notched_12|notched_20|progress)`
-
-Set the bossbar's visual amount of segments: continuous, 6 segments, 10 segments, 12 segments, or 20 segments. Defaults to `progress` upon creation.
-
-`... value <value>`
-
-Set the bossbar's current value. Defaults to `0` upon creation.
-
-`... visible <visible>`
-
-Set the bossbar's visibility. Defaults to `true` upon creation.
+```ansi
+[35mbossbar [34madd [33m<[0mайди[33m> <[0mимя[33m>
+```
+Создать новый боссбар.
+```ansi
+[35mbossbar [34mget [33m<[0mайди[33m> ([34mmax[33m|[34mplayers[33m|[34mvalue[33m|[34mvisible[33m)
+```
+Возвращает запрошенный параметер как `результат` команды.
+```ansi
+[35mbossbar [34mlist
+```
+Показать список существующих боссбаров.
+```ansi
+[35mbossbar [34mremove [33m<[0mайди[33m>
+```
+Удалить существующий боссбар.
+```ansi
+[35mbossbar [34mset [33m<[0mайди[33m> ([34mcolor[33m|[34mmax[33m|[34mname[33m|[34mplayers[33m|[34mstyle[33m|[34mvalue[33m|[34mvisible[33m)
+```
+```ansi
+... [34mcolor [33m([34mblue[33m|[34mgreen[33m|[34mpink[33m|[34mpurple[33m|[34mred[33m|[34mwhite[33m|[34myellow[33m)
+```
+Задать цвет текста и цвет полоски. По умолчанию `белый` при создании.
+```ansi
+... [34mmax [33m<[0m[32mмаксимум[33m>
+```
+Задать максимальное значение боссбара. По умолчанию `100` при создании.
+```ansi
+... [34mname [33m<[0mимя[33m>
+```
+Задать имя боссбара.
+```ansi
+... [34mplayers [33m[[34m<[36mселекторs[34m>[33m]
+```
+Изменить круг игроков которым виден боссбар. По умолчанию никому при создании.
+```ansi
+... [34mstyle [33m([34mnotched_6[33m|[34mnotched_10[33m|[34mnotched_12[33m|[34mnotched_20[33m|[34mprogress[33m)
+```
+Задать количество сегментов боссбара: непрерывный, 6 сегментов, 10 сегментов, 12 сегментов, или 20 сегментов. По умолчанию `progress` при создании.
+```ansi
+... [34mvalue [33m<[0mзначение[33m>
+```
+Задать поточное значение боссбара. По умолчанию `0` при создания.
+```ansi
+... [34mvisible [33m<[0mtrue[33m|[0mfalse[33m|[32m1[33m|[32m0[33m>
+```
+Задать видимость боссбара. По умолчанию `true` при создании.

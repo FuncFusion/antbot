@@ -1,1 +1,1 @@
-`gamemode <gamemode> [<target>]`
+`gamemode <gamemode> [<[36mселектор>]`

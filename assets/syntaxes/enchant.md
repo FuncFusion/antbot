@@ -1,1 +1,1 @@
-`enchant <targets> <enchantment> [<level>]`
+`enchant <[36mселекторs> <enchantment> [<level>]`

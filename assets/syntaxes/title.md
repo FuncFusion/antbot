@@ -1,5 +1,5 @@
-`title <targets> (clear|reset)`
+`title <[36mселекторs> (clear|reset)`
 
-`title <targets> (title|subtitle|actionbar) <title>`
+`title <[36mселекторs> (title|subtitle|actionbar) <title>`
 
-`title <targets> times <fadeIn> <stay> <fadeOut>`
+`title <[36mселекторs> times <fadeIn> <stay> <fadeOut>`

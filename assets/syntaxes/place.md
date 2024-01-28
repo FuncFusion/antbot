@@ -2,7 +2,7 @@
 
 Place the configured feature.
 
-`/place jigsaw <pool> <target> <max_depth> [<position>]`
+`/place jigsaw <pool> <[36mселектор> <max_depth> [<position>]`
 
 Place the jigsaw.
 

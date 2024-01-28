@@ -1,31 +1,26 @@
-`advancement (grant|revoke) <targets> everything`
+```ansi
+[35madvancement [33m([34mgrant[33m|[34mrevoke[33m) [33m<[36mселектор[33m> [34meverything
+```
+Добавляет или убирает _все_ имеющиеся достижения.
+```ansi
+[35madvancement [33m([34mgrant[33m|[34mrevoke[33m) [33m<[36mселектор[33m> [34monly [33m<[0mдостижение[33m> [33m[[35m<[0mусловие[35m>[33m]
+```
+Добавляет или убирает одно достижение или условие.
+```ansi
+[35madvancement [33m([34mgrant[33m|[34mrevoke[33m) <[36mселектор[33m> [34mfrom [33m<[0mдостижение[33m>
+```
+Добавляет или убирает достиение и _все_ его дочерние достижения.
 
-Adds or removes _all_ loaded advancements.
+Точный порядок выполнения операции `указанное достижение > дочернее достижение > дочернее достижение дочернего достижения > ...` Когда оно оперирует дочерним достежением которое разветвляется, оно перебирает все его дочерние достижения перед тем как продолжить.
+```ansi
+[35madvancement [33m([34mgrant[33m|[34mrevoke[33m) <[36mселектор[33m> [34mthrough [33m<[0mдостижение[33m>
+```
+Указывает достижение, и добавляет или убирает _все_ его родительские достижения, и _все_ его дочерние достижения.
 
-`advancement (grant|revoke) <targets> only <advancement> [<criterion>]`
+Точный порядок операции это как если бы команда была выполнена с указанием _до_ и _после_: `родительское достижение > родительское достижение родительского достижения > ... > корневое достижение > указанное достижение > дочернее достижение > дочернее достижение дочернего достижения > ...`
+```ansi
+[35madvancement [33m([34mgrant[33m|[34mrevoke[33m) <[36mселектор[33m> [34muntil [33m<[0mдостижение[33m>
+```
+Добавляет или убирает достижение и _все_ его родительские достижения вплоть до корневого достижения для добавления/удаления.
 
-Adds or removes a single advancement or criterion.
-
-`advancement (grant|revoke) <targets> from <advancement>`
-
-Adds or removes an advancement and _all_ its child advancements.
-
-Think of specifying everything _from_ that advancement to the end.
-
-The exact order the operation is carried out in is `specified advancement > child > child's child > ...` When it operates on a child that branches, it iterates through all its children before continuing.
-
-`advancement (grant|revoke) <targets> through <advancement>`
-
-Specifies an advancement, and adds or removes _all_ its parent advancements, and _all_ its child advancements.
-
-Think of specifying everything _through_ the specified advancement, going both backwards and forwards.
-
-The exact order the operation is as if the command were executed with "until" specified, then with "from" specified: `parent > parent's parent > ... > root > specified advancement > child > child's child > ...`
-
-`advancement (grant|revoke) <targets> until <advancement>`
-
-Adds or removes an advancement and _all_ its parent advancements until the root for addition/removal.
-
-Think of specifying everything from the start _until_ that advancement.
-
-The exact order the operation is carried out in is: `parent > parent's parent > ... > root > specified advancement`.
+Точный порядок выполнения операции: `родительское достижение > родительское достижение родительского достижения > ... > корневое достижение > указанное достижение`.

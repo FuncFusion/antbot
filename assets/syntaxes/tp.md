@@ -1,6 +1,6 @@
 `tp <destination>`
 
-`tp <targets> <destination>`
+`tp <[36mселекторs> <destination>`
 
 Teleports the executor or the specified entity(s) to the position of an entity, and makes its rotation the same as the specified entity's.
 
@@ -8,14 +8,14 @@ Teleports the executor or the specified entity(s) to the position of an entity, 
 
 Teleports the executor to a certain position (and changes its rotation to the command's execution rotation).
 
-`tp <targets> <location>`
+`tp <[36mселекторs> <location>`
 
 Teleports the entity(s) to a certain position (without changing their rotation).
 
-`tp <targets> <location> <rotation>`
+`tp <[36mселекторs> <location> <rotation>`
 
-`tp <targets> <location> facing <facingLocation>`
+`tp <[36mселекторs> <location> facing <facingLocation>`
 
-`tp <targets> <location> facing entity <facingEntity> [<facingAnchor>]`
+`tp <[36mселекторs> <location> facing entity <facingEntity> [<facingAnchor>]`
 
 Teleports the entity(s) to a certain position and changes their rotation to the specified rotation.

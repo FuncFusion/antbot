@@ -1,1 +1,1 @@
-`spawnpoint [<targets>] [<pos>] [<angle>]`
+`spawnpoint [<[36mселекторs>] [<pos>] [<angle>]`

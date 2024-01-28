@@ -1,14 +1,23 @@
-`clone . . .`
-
-`clone from <sourceDimension> . . .`
-
-*   `... <begin> <end> . . .`
-    *   `... <destination> . . .`
-    *   `... to <targetDimension> <destination> . . .`
-        *   `... [replace|masked] [force|move|normal]`
-            
-            Clones all blocks or only non-[air](/w/Air "Air") blocks.
-            
-        *   `... filtered <filter> [force|move|normal]`
-            
-            Clones only blocks with the block id specified by `<filter>`.
+```ansi
+[35mclone [0m. . .
+```
+```ansi
+[35mclone [34mfrom [33m<[0mисходное измерение[33m> [0m. . .
+```
+```ansi
+... [33m<[32mначало[33m> <[32mконец[33m> [0m. . .
+```
+```ansi
+... [33m<[32mпункт назначения[33m> [0m. . .
+```
+```ansi
+... [34mto [33m<[0mизмерение назначения[33m> <[32mпункт назначения[33m> [0m. . .
+```
+```ansi
+... [33m[[34mreplace[33m|[34mmasked[33m] [[34mforce[33m|[34mmove[33m|[34mnormal[33m]
+```
+Клонирует все блоки или только не воздух.
+```ansi
+... [34mfiltered [33m<[0mфильтр[33m> [[34mforce[33m|[34mmove[33m|[34mnormal[33m]
+```
+Клонирует только блоки с айди указанным в `<фильтр>`.
