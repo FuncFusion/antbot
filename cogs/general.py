@@ -1,7 +1,35 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+from asyncio import sleep
+from datetime import timedelta
+from re import findall
 
+time_multipliers = {
+	"y": 31556952,
+	"mo": 2678400,
+	"w": 604800,
+	"d": 86400,
+	"h": 3600,
+	"m": 60,
+	"s": 1,
+	"г": 31556952,
+	"ме": 2678400,
+	"н": 604800,
+	"д": 86400,
+	"ч": 3600,
+	"м": 60,
+	"с": 1
+}
+time_names = {
+	"секунд": ["s", "с"],
+	"минут": ["m", "м"],
+	"часов": ["h", "ч"],
+	"дней": ["d", "д"],
+	"недель": ["w", "н"],
+	"месяцев": ["mo", "ме"],
+	"лет": ["y", "г"]
+}
 
 class GeneralCommands(commands.Cog):
 	def __init__(self, bot):
@@ -61,3 +89,33 @@ class GeneralCommands(commands.Cog):
 			await ctx.channel.send(text)
 			await temp.delete()
 			await ctx.message.delete()
+
+		@bot.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
+					  description="Напоминает о чём-то через определённое время с помощью пинга.")
+		@app_commands.describe(time="Время, через которое бот пинганёт", reason="Причина, по которой бот будет напоиминать")
+		async def remind(ctx, time:str="", *, reason:str=""):
+			raw_time = findall(r"[0-9]+", time)
+			measure = findall(r"[A-zА-я]+", time)
+			if time == "":
+				await ctx.send("Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			elif raw_time == []:
+				await ctx.send("Пожалуйста, укажите целочисленное значение времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			elif measure == []:
+				await ctx.send("Пожалуйста, укажите меру измерения времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			else:
+				time = int(raw_time[0]) * time_multipliers[measure[0]]
+				time_name = ""
+				for key, values in time_names.items():
+					if measure[0] in values: time_name = key
+				user = ctx.author
+				embed = discord.Embed(title="🔔 Напоминание", color=discord.Color.dark_embed())
+				embed_reason = ""
+				if reason != "":
+					embed_reason = f"по причине \"{reason}\""
+				if time < 1262278080:
+					if reason != "": embed.add_field(name=reason, value="", inline=False)
+					await ctx.send(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+					await sleep(time)
+					await ctx.send(user.mention,embed=embed)
+				else:
+					await ctx.send("Вы указали слишком большой промежуток времени.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())

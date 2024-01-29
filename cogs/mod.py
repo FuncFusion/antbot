@@ -43,7 +43,7 @@ class ModerationCommands(commands.Cog):
 			# Setting up variables
 			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
 			raw_term = findall(r"[0-9]+", term)
-			measure = findall(r"[a-zA-Zа-яА-Я]+", term)
+			measure = findall(r"[A-zА-я]+", term)
 			# Handling errors
 			if user == None:
 				await ctx.send("Пожалуйста, укажите пользователя", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
@@ -52,7 +52,7 @@ class ModerationCommands(commands.Cog):
 			elif raw_term == []:
 				await ctx.send("Пожалуйста, укажите целочисленное время бана", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			elif measure == []:
-				await ctx.send("Пожалуйтса, укажите меру измерения времени бана", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send("Пожалуйста, укажите меру измерения времени бана", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			else:
 				term = int(raw_term[0]) * time_multipliers[measure[0]]
 				# Building embed
