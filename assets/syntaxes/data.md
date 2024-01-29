@@ -1,39 +1,50 @@
-`... append from (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>]`
-
-`... append string (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>] [<start>] [<end>]`
-
-`... append value <value>`
-
-Append the source data or direct value data onto the _end_ of the pointed-to list.
-
-`... insert <index> from (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>]`
-
-`... insert <index> string (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>] [<start>] [<end>]`
-
-`... insert <index> value <value>`
-
-Insert the source data or direct value data into the pointed-to list as element `<index>`, then shift higher elements one position upward.
-
-`... merge from (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>]`
-
-`... merge string (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>] [<start>] [<end>]`
-
-`... merge value <value>`
-
-Merge the source data or direct value data into the pointed-to object.
-
-`... prepend from (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>]`
-
-`... prepend string (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>] [<start>] [<end>]`
-
-`... prepend value <value>`
-
-Prepend the source data or direct value data onto the _beginning_ of the pointed-to list.
-
-`... set from (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>]`
-
-`... set string (block <sourcePos>|entity <source>|storage <source>) [<sourcePath>] [<start>] [<end>]`
-
-`... set value <value>`
-
-Set the tag specified by `<[36mселекторPath>` to the source data or direct value data.
+```ansi
+... [34mmappend [34mfrom [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m]
+```
+```ansi
+... [34mmappend [34mstring [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m] [[34m<[0mначало[34m>[33m] [[34m<[0mконец[34m>[33m]
+```
+```ansi
+... [34mappend [34mvalue [33m<[0mзначение[33m>
+```
+Добавить исходные данные или новое значение в _конец_ списка.
+```ansi
+... [34minsert [33m<[32mиндекс[33m> [34mfrom [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m]
+```
+```ansi
+... [34minsert [33m<[32mиндекс[33m> [34mstring [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mхранилище[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m] [[34m<[0mначало[34m>[33m] [[34m<[0mконец[34m>[33m]
+```
+```ansi
+... [34minsert [33m<[32mиндекс[33m> [34mvalue [33m<[0mзначение[33m>
+```
+Вставить исходные данные или новое значение в список на позицию `<индекс>`, переставив все элементы после на одну позицию вперёд.
+```ansi
+... [34mmerge from [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m]
+```
+```ansi
+... [34mmerge string [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m] [[34m<[0mначало[34m>[33m] [[34m<[0mконец[34m>[33m]
+```
+```ansi
+... [34mmerge value [33m<[0mзначение[33m>
+```
+Заменяет значение объекта на исходные данные или новое значение.
+```ansi
+... [34mprepend from [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m]
+```
+```ansi
+... [34mprepend string [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m] [[34m<[0mначало[34m>[33m] [[34m<[0mконец[34m>[33m]
+```
+```ansi
+... [34mprepend value [33m<[0mзначение[33m>
+```
+Вставляет исходные данные или новое значение в _начало_ списка.
+```ansi
+... [34mset from [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m]
+```
+```ansi
+... [34mset string [33m([34mblock <[32mкоординаты блока[34m>[33m|[34mentity <[0mсущность[34m>[33m|[34mstorage <[0mсторадж[34m>[33m) [[34m<[0mнбт[33m/[0mпуть[34m>[33m] [[34m<[0mначало[34m>[33m] [[34m<[0mконец[34m>[33m]
+```
+```ansi
+... [34mset value [33m<[0mзначение[33m>
+```
+Задать значение указанного тэга исходными данными или новым значением.

@@ -1,17 +1,19 @@
-`datapack disable <name>`
-
-`datapack enable <name>`
-
-Enable the specified pack.
-
-`datapack enable <name> (first|last)`
-
-Load this pack before (lowest priority) or after (highest priority) all others (lowest or highest priority).
-
-`datapack enable <name> (before|after) <existing>`
-
-Load this pack just before (lower priority) or after (higher priority) an _existing_ pack.
-
-`datapack list [available|enabled]`
-
-List all data packs, or list only the available/enabled ones. Hovering over the data packs in the chat output shows their description defined in their `pack.mcmeta`.
+```ansi
+[35mdatapack [34mdisable [33m<[0mназвание датапака[33m>
+```
+```ansi
+[35mdatapack [34menable [33m<[0mназвание датапака[33m>
+```
+Деактивировать/активировать указанный дп.
+```ansi
+[35mdatapack [34menable [33m<[0mназвание датапака[33m> ([34mfirst[33m|[34mlast[33m)
+```
+Загрузить указанный дп до или после других.
+```ansi
+[35mdatapack [34menable [33m<[0mназвание[33m> [33m([34mbefore[33m|[34mafter[33m) [33m<[0mсуществующий дп[33m>
+```
+Загружать указанный дп до или после _существующего_ дп.
+```ansi
+[35mdatapack [34mlist [33m[[34mavailable[33m|[34menabled[33m]
+```
+Получить список всех датапаков, или спосиок активированных/деактивированных дп.
