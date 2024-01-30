@@ -97,11 +97,11 @@ class GeneralCommands(commands.Cog):
 			raw_time = findall(r"[0-9]+", time)
 			measure = findall(r"[A-zА-я]+", time)
 			if time == "":
-				await ctx.send("Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send("❗ Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			elif raw_time == []:
-				await ctx.send("Пожалуйста, укажите целочисленное значение времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send("❗ Пожалуйста, укажите целочисленное значение времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			elif measure == []:
-				await ctx.send("Пожалуйста, укажите меру измерения времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send("❗ Пожалуйста, укажите меру измерения времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			else:
 				time = int(raw_time[0]) * time_multipliers[measure[0]]
 				time_name = ""
@@ -118,4 +118,4 @@ class GeneralCommands(commands.Cog):
 					await sleep(time)
 					await ctx.send(user.mention,embed=embed)
 				else:
-					await ctx.send("Вы указали слишком большой промежуток времени.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+					await ctx.send("❗ Вы указали слишком большой промежуток времени.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())

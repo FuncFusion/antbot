@@ -99,7 +99,7 @@ class FunCommands(commands.Cog):
 				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			except Exception as error:
 				eArg = str(error).split("'")[1].replace("\\\\", "\\")
-				await ctx.send(f"Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send(f"❗ Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
 		@bot.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 					  description="Выдаёт случайный ответ из заданных на заданный вопрос")

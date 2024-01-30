@@ -22,7 +22,7 @@ class FAQs(commands.Cog):
             embed = discord.Embed(color=discord.Colour.dark_embed())
             if name == None:
                 faqs_str = ", ".join([f"`{faq}`" for faq in faq_names])
-                embed.title = "Список всех факьюшек"
+                embed.title = f"{Emojis.no_dp_icons} Список всех факьюшек"
                 embed.add_field(name="", value=faqs_str, inline=False)
                 embed.add_field(name="", value="", inline=False)
                 embed.add_field(name="Как использовать факьюшки?", value="Чтобы вызвать ответ на какую либо факьюшку, напишите вопросительный знак и после него название факьюшки. Вы также можете вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. Примеры:\n`?логи`\n`Тебе стоит открыть **?**логи, потому что в нём полезная инфа`")
@@ -30,7 +30,7 @@ class FAQs(commands.Cog):
             else:
                 faq = get_faq(name)
                 aliases = ", ".join([f"`{alias}`" for alias in db[faq]['aliases']])             
-                embed.title = f"Список алиасов для \"{faq}\""
+                embed.title = f"{Emojis.txt} Список алиасов для \"{faq}\""
                 embed.add_field(name="", value=aliases, inline=False)
                 await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
@@ -52,7 +52,7 @@ class FAQs(commands.Cog):
                 if faq_name != None and faq_name not in faq_names:
                     faq_names.append(faq_name)
             if len(faq_names) > 3:
-                await msg.channel.send("Чтобы предотвратить флуд, я не буду отправлять больше трёх ответов за раз.", reference = msg, allowed_mentions = discord.AllowedMentions.none())
+                await msg.channel.send(f"{Emojis.chat_type_open} Чтобы предотвратить флуд, я не буду отправлять больше трёх ответов за раз.", reference = msg, allowed_mentions = discord.AllowedMentions.none())
             for faq in faq_names:
                 if faq_names.index(faq) < 3:
                     file_names = db[faq]["files"]

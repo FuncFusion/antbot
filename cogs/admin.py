@@ -2,9 +2,10 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from utils.msg_utils import get_msg_by_id_arg
+from utils.emojis import Emojis
 
 async def pfp_ratelimit_msg(ctx):
-	await ctx.send("Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+	await ctx.send(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 	
 class AdminCommands(commands.Cog):
 	def __init__(self, bot):
@@ -16,7 +17,7 @@ class AdminCommands(commands.Cog):
 			try:
 				with open("assets/pfps/offline.png", "rb") as file:
 					await bot.user.edit(avatar=file.read())
-				await ctx.send("Отключаюсь...", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send("Отключаюсь... 😴", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 				await bot.close()
 			except Exception:
 				await pfp_ratelimit_msg(ctx)
@@ -72,7 +73,7 @@ class AdminCommands(commands.Cog):
 		@bot.hybrid_command(aliases=["p", "latency", "пинг", "п", "з", "зштп", "дфеутсн"],
 							description="Показывает пинг бота.")
 		async def ping(ctx):
-			embed = discord.Embed(title="Понг!", color=discord.Colour.dark_embed())
+			embed = discord.Embed(title="🏓 Понг!", color=discord.Colour.dark_embed())
 			embed.add_field(name=f'Мой пинг: {round(bot.latency*1000)}ms', value="", inline=True)
 			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 
@@ -82,7 +83,7 @@ class AdminCommands(commands.Cog):
 		@app_commands.default_permissions(manage_messages=True)
 		async def edit(ctx, message:str=None, *, text:str=""):
 			if message == None:
-				await ctx.send("Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.send("❗ Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 			else:
 				try:
 					if ctx.message.reference == None:
@@ -93,10 +94,10 @@ class AdminCommands(commands.Cog):
 						await discord.Message.edit(self=msg, content=message+" "+text)
 				except Exception as e:
 					if str(e).startswith('403'):
-						await ctx.send(f"Не могу изменять чужие сообщения.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.send(f"❗ Не могу изменять чужие сообщения.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 					elif str(msg).startswith('404'):
-						await ctx.send("Не нашёл сообщения с таким айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.send("❗ Не нашёл сообщения с таким айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 					elif str(msg).startswith('invalid literal for int()'):
-						await ctx.send("Введён неверный айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.send("❗ Введён неверный айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
 					else:
-						await ctx.send("Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.send("❗ Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())

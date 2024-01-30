@@ -121,3 +121,4 @@ class Emojis:
     deta_rack = "<:deta_rack:1097434024928100412>"
     resource_rack = "<:resource_rack:1159947811849244723>"
     program_rack = "<:programrack:1191038718329495642>"
+    sparkles = "<:sparkles_be:1145692031625220216>"
