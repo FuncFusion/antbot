@@ -4,6 +4,7 @@ from discord import app_commands
 import re
 import json
 from Levenshtein import distance
+from utils.emojis import Emojis
 
 with open("cogs/faqs/faqs.json", 'r', encoding="utf-8") as file: db = json.load(file)
 faq_names = sorted(list(db.keys()))
@@ -59,6 +60,10 @@ class FAQs(commands.Cog):
                     for file_name in file_names:
                         files.append(discord.File(f'assets/faqs/{faq}/{file_name}'))
                     with open(f'assets/faqs/{faq}/{faq}.md', 'r', encoding="utf-8") as file: answer = file.read()
+                    emoji_instance = Emojis()
+                    for attr in dir(emoji_instance):
+                        if not attr.startswith("__") and not callable(getattr(emoji_instance, attr)):
+                            answer = answer.replace("{" + attr + "}", getattr(emoji_instance, attr))
                     
                     await msg.channel.send(answer, files = files, reference = msg, allowed_mentions = discord.AllowedMentions.none())
                         
