@@ -26,7 +26,7 @@ class MinecraftCommands(commands.Cog):
 					else:
 						message += f"```ansi\n{hl.highlight(reply_message)}```"
 				else:
-					await ctx.send("❗ Не хватает функции/ответа на сообщение с функцией", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+					await ctx.reply("❗ Не хватает функции/ответа на сообщение с функцией", allowed_mentions=discord.AllowedMentions.none())
 					return None
 			else:
 				if "```" in command:
@@ -36,7 +36,7 @@ class MinecraftCommands(commands.Cog):
 					message += f"```ansi\n{hl.highlight(command)}```"
 			# Building embed
 			embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if message.count("```") == 2 else "Подсвеченные функции", color=discord.Colour.dark_embed(), description=message)
-			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 	
 		@bot.tree.context_menu(name=f"🌈Подсветить функцию")
 		async def highlight_ctxmenu(interaction: discord.Interaction, message:discord.Message):

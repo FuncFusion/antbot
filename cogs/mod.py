@@ -46,13 +46,13 @@ class ModerationCommands(commands.Cog):
 			measure = findall(r"[A-zА-я]+", term)
 			# Handling errors
 			if user == None:
-				await ctx.send("❗ Пожалуйста, укажите пользователя", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=discord.AllowedMentions.none())
 			elif term == "":
-				await ctx.send("❗ Пожалуйста, укажите срок бана в формате <время><мера измерения времени сокращённо>", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите срок бана в формате <время><мера измерения времени сокращённо>", allowed_mentions=discord.AllowedMentions.none())
 			elif raw_term == []:
-				await ctx.send("❗ Пожалуйста, укажите целочисленное время бана", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите целочисленное время бана", allowed_mentions=discord.AllowedMentions.none())
 			elif measure == []:
-				await ctx.send("❗ Пожалуйста, укажите меру измерения времени бана", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите меру измерения времени бана", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				term = int(raw_term[0]) * time_multipliers[measure[0]]
 				# Building embed
@@ -61,7 +61,7 @@ class ModerationCommands(commands.Cog):
 				embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 				embed.add_field(name="Причина", value=reason)
 				embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
-				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 				# Ban
 				await user.ban(reason=reason)
 				# Unban
@@ -78,13 +78,13 @@ class ModerationCommands(commands.Cog):
 			measure = findall(r"[a-zA-Zа-яА-Я]+", term)
 			# Handling errors
 			if user == None:
-				await ctx.send("❗ Пожалуйста, укажите пользователя", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=discord.AllowedMentions.none())
 			elif term == "":
-				await ctx.send("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=discord.AllowedMentions.none())
 			elif raw_term == []:
-				await ctx.send("❗ Пожалуйста, укажите целочисленное время мута", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите целочисленное время мута", allowed_mentions=discord.AllowedMentions.none())
 			elif measure == []:
-				await ctx.send("❗ Пожалуйтса, укажите меру измерения времени мута", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйтса, укажите меру измерения времени мута", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				term = int(raw_term[0]) * time_multipliers[measure[0]]
 				# Building embed
@@ -93,7 +93,7 @@ class ModerationCommands(commands.Cog):
 				embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 				embed.add_field(name="Причина", value=reason)
 				embed.add_field(name="Замученый участник", value=user.mention, inline=False)
-				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 				# Da mute
 				await user.timeout(timedelta(seconds=term), reason=reason)
 		
@@ -104,7 +104,7 @@ class ModerationCommands(commands.Cog):
 			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
 			# Handling errors
 			if user == None:
-				await ctx.send("❗ Пожалуйста, укажите пользователя", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				# Building embed
 				embed = discord.Embed(title="🦵Кик", color=discord.Color.dark_embed())
@@ -112,7 +112,7 @@ class ModerationCommands(commands.Cog):
 				embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 				embed.add_field(name="Причина", value=reason)
 				embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)
-				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 				# Da kick
 				await user.kick(reason=reason)
 		
@@ -125,7 +125,7 @@ class ModerationCommands(commands.Cog):
 			channel = channel if channel != None else ctx.channel
 			# Handling errors
 			if count == None:
-				ctx.send("❗ Пожалуйста, укажите количество сообщений которое будет удалено", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите количество сообщений которое будет удалено", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				# Building embed
 				embed = discord.Embed(title="🗑 Очистка", color=discord.Color.dark_embed())
@@ -134,4 +134,4 @@ class ModerationCommands(commands.Cog):
 				# Clearing
 				await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
 				#
-				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())

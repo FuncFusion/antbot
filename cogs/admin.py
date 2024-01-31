@@ -5,11 +5,11 @@ from utils.msg_utils import get_msg_by_id_arg
 from utils.emojis import Emojis
 
 async def pfp_ratelimit_msg(ctx):
-	await ctx.send(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+	await ctx.reply(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", allowed_mentions=discord.AllowedMentions.none())
 	
 class AdminCommands(commands.Cog):
 	def __init__(self, bot):
-
+		
 		@bot.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
 							description="Отключает бота.")
 		@app_commands.default_permissions(manage_guild=True)
@@ -17,10 +17,10 @@ class AdminCommands(commands.Cog):
 			try:
 				with open("assets/pfps/offline.png", "rb") as file:
 					await bot.user.edit(avatar=file.read())
-				await ctx.send("Отключаюсь... 😴", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
-				await bot.close()
 			except Exception:
 				await pfp_ratelimit_msg(ctx)
+			await ctx.reply("Отключаюсь... 😴", allowed_mentions=discord.AllowedMentions.none())
+			await bot.close()
 
 		@bot.hybrid_command(aliases=["on", "онлайн", "всети", "в-сети", "щтдшту", "щт"],
 							description="Меняет статус бота на \"В сети\".")
@@ -29,10 +29,13 @@ class AdminCommands(commands.Cog):
 			try:
 				with open("assets/pfps/online.png", "rb") as file:
 					await bot.user.edit(avatar=file.read())
-				await ctx.send("Теперь мой статус - `В сети`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
-				await bot.change_presence(status=discord.Status.online)
 			except Exception:
 				await pfp_ratelimit_msg(ctx)
+			if bot.get_guild(1142344574501658694).me.status != discord.Status.online:
+				await ctx.reply("Теперь мой статус - `В сети`.", allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.online)
+			else:
+				await ctx.reply("У меня и так статус `В сети`.")
 
 		@bot.hybrid_command(aliases=["afk", "отошёл", "отойди", "айдл", "афк", "швду", "фал"],
 							description="Меняет статус бота на \"Отошёл\".")
@@ -41,10 +44,13 @@ class AdminCommands(commands.Cog):
 			try:
 				with open("assets/pfps/idle.png", "rb") as file:
 					await bot.user.edit(avatar=file.read())
-				await ctx.send("Теперь мой статус - `Отошёл`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
-				await bot.change_presence(status=discord.Status.idle)
 			except Exception:
 				await pfp_ratelimit_msg(ctx)
+			if bot.get_guild(1142344574501658694).me.status != discord.Status.idle:
+				await ctx.reply("Теперь мой статус - `Отошёл`.", allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.idle)
+			else:
+				await ctx.reply("У меня и так статус `Отошёл`.")
 
 		@bot.hybrid_command(aliases=["dnd", "do-not-disturb", "небеспокоить", "не-беспокоить", "днд", "вщтщевшыегки", "втв", "вщ-тще-вшыегки"],
 							description="Меняет статус бота на \"Не беспокоить\".")
@@ -53,10 +59,13 @@ class AdminCommands(commands.Cog):
 			try:
 				with open("assets/pfps/dnd.png", "rb") as file:
 					await bot.user.edit(avatar=file.read())
-				await ctx.send("Теперь мой статус - `Не беспокоить`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
-				await bot.change_presence(status=discord.Status.do_not_disturb)
 			except Exception:
 				await pfp_ratelimit_msg(ctx)
+			if bot.get_guild(1142344574501658694).me.status != discord.Status.do_not_disturb:
+				await ctx.reply("Теперь мой статус - `Не беспокоить`.", allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.do_not_disturb)
+			else:
+				await ctx.reply("У меня и так статус `Не беспокоить`.")
 
 		@bot.hybrid_command(aliases=["invis", "inv", "невидимка", "невидимый", "инвизибл", "инвиз", "инв", "штмшышиду", "штмшы", "штм"],
 							description="Меняет статус бота на \"Невидимка\".")
@@ -65,17 +74,20 @@ class AdminCommands(commands.Cog):
 			try:
 				with open("assets/pfps/offline.png", "rb") as file:
 					await bot.user.edit(avatar=file.read())
-				await ctx.send("Теперь мой статус - `Невидимка`.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
-				await bot.change_presence(status=discord.Status.invisible)
 			except Exception:
 				await pfp_ratelimit_msg(ctx)
+			if bot.get_guild(1142344574501658694).me.status != discord.Status.invisible:
+				await ctx.reply("Теперь мой статус - `Невидимка`.", allowed_mentions=discord.AllowedMentions.none())
+				await bot.change_presence(status=discord.Status.invisible)
+			else:
+				await ctx.reply("У меня и так статус `Невидимка`.")
 
 		@bot.hybrid_command(aliases=["p", "latency", "пинг", "п", "з", "зштп", "дфеутсн"],
 							description="Показывает пинг бота.")
 		async def ping(ctx):
 			embed = discord.Embed(title="🏓 Понг!", color=discord.Colour.dark_embed())
 			embed.add_field(name=f'Мой пинг: {round(bot.latency*1000)}ms', value="", inline=True)
-			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 
 		@bot.hybrid_command(aliases=["изменить", "эдит", "увше"],
 							description="Изменяет заданное сообщение.")
@@ -83,7 +95,7 @@ class AdminCommands(commands.Cog):
 		@app_commands.default_permissions(manage_messages=True)
 		async def edit(ctx, message:str=None, *, text:str=""):
 			if message == None:
-				await ctx.send("❗ Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Не хватает аргументов.", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				try:
 					if ctx.message.reference == None:
@@ -94,10 +106,10 @@ class AdminCommands(commands.Cog):
 						await discord.Message.edit(self=msg, content=message+" "+text)
 				except Exception as e:
 					if str(e).startswith('403'):
-						await ctx.send(f"❗ Не могу изменять чужие сообщения.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.reply(f"❗ Не могу изменять чужие сообщения.", allowed_mentions=discord.AllowedMentions.none())
 					elif str(msg).startswith('404'):
-						await ctx.send("❗ Не нашёл сообщения с таким айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.reply("❗ Не нашёл сообщения с таким айди.", allowed_mentions=discord.AllowedMentions.none())
 					elif str(msg).startswith('invalid literal for int()'):
-						await ctx.send("❗ Введён неверный айди.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.reply("❗ Введён неверный айди.", allowed_mentions=discord.AllowedMentions.none())
 					else:
-						await ctx.send("❗ Не хватает аргументов.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+						await ctx.reply("❗ Не хватает аргументов.", allowed_mentions=discord.AllowedMentions.none())

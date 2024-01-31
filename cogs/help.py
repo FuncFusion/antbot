@@ -65,11 +65,11 @@ class HelpCommands(commands.Cog):
 			is_moderator = ctx.channel.permissions_for(ctx.author).manage_messages
 			# Error handling
 			if type(ctx.channel) != discord.threads.Thread:
-				await ctx.send("❗ Эта команда работает только в ветках помощи", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=discord.AllowedMentions.none())
 			elif ctx.channel.parent_id != HELP_FORUM_ID:
-				await ctx.send("❗ Эта команда работает только в ветках помощи", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=discord.AllowedMentions.none())
 			elif ctx.author != ctx.channel.owner and not is_moderator:
-				await ctx.send("❗ Вы не являетесь автором этой ветки либо модератором", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Вы не являетесь автором этой ветки либо модератором", allowed_mentions=discord.AllowedMentions.none())
 			elif solution == None:
 				# Building embed
 				embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=discord.Color.dark_embed(),
@@ -77,9 +77,9 @@ class HelpCommands(commands.Cog):
 					это заархивирует ветку без решения".replace("\t", ""))
 				await ctx.send(embed=embed, view=HelpAdditionals.R_u_sure())
 			elif type((solution:=await get_msg_by_id_arg(ctx, bot, solution))) != discord.Message:
-				await ctx.send("❗ Неверная ссылка/айди сообщения", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Неверная ссылка/айди сообщения", allowed_mentions=discord.AllowedMentions.none())
 			elif helpers == None:
-				await ctx.send("❗ Пожалуйста, @упомяните людей, которые помогли вам с проблемой", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				# Setting up variables
 				heleprs_ids = [int(helepr_id) for helepr_id in re.findall(r"(?<=<@)([0-9]+)(?=>)", helpers)]
@@ -89,7 +89,7 @@ class HelpCommands(commands.Cog):
 				embed.add_field(name="Решение", value=f"🔗 {solution.jump_url}", inline=False)
 				embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
 					value=f"{"👥" if len(helpers_mentions) >= 2 else "👤"} {" ".join(helpers_mentions)}")
-				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 				await ctx.channel.edit(locked=True)
 		
 		@bot.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
@@ -98,13 +98,13 @@ class HelpCommands(commands.Cog):
 		async def syntax(ctx, command: str=None):
 			# Handling errors
 			if command == None:
-				await ctx.send("❗ Пожалуйста, укажите команду", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите команду", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				HelpAdditionals.Syntax.read_syntaxes()
 				#Bulding embed
 				embed = discord.Embed(title=f"🖥 /{command}", color=discord.Color.dark_embed(), 
 					description=HelpAdditionals.Syntax.syntaxes[command])
-				await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 		@syntax.autocomplete("command")
 		async def syntax_autocomplete(ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 			if curr == "":
