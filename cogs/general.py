@@ -57,7 +57,7 @@ class GeneralCommands(commands.Cog):
 			embed.add_field(name="Роли", value=f"🎭 {len(server.roles)}", inline=False)
 			embed.add_field(name="Приглашение (иссякает через сутки)", value=f"🔗 {invitation_link}")
 			embed.set_footer(text=f"🆔 {server.id}")
-			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 		
 		@bot.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
 					  description="Показывает информацию о пользователе")
@@ -78,7 +78,7 @@ class GeneralCommands(commands.Cog):
 			embed.add_field(name="Роли", value=" ".join([role.mention for role in user.roles[1:][::-1]]), inline=False)
 			embed.add_field(name="Статус", value=statuses[str(user.status)], inline=False)
 			embed.set_footer(text=f"🆔 {user.id}")
-			await ctx.send(embed=embed, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 		
 		@bot.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
 							description="Отправляет сообщение от имени бота")
@@ -97,11 +97,11 @@ class GeneralCommands(commands.Cog):
 			raw_time = findall(r"[0-9]+", time)
 			measure = findall(r"[A-zА-я]+", time)
 			if time == "":
-				await ctx.send("Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", allowed_mentions=discord.AllowedMentions.none())
 			elif raw_time == []:
-				await ctx.send("Пожалуйста, укажите целочисленное значение времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите целочисленное значение времени", allowed_mentions=discord.AllowedMentions.none())
 			elif measure == []:
-				await ctx.send("Пожалуйста, укажите меру измерения времени", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите меру измерения времени", allowed_mentions=discord.AllowedMentions.none())
 			else:
 				time = int(raw_time[0]) * time_multipliers[measure[0]]
 				time_name = ""
@@ -114,8 +114,8 @@ class GeneralCommands(commands.Cog):
 					embed_reason = f"по причине \"{reason}\""
 				if time < 1262278080:
 					if reason != "": embed.add_field(name=reason, value="", inline=False)
-					await ctx.send(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+					await ctx.reply(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", allowed_mentions=discord.AllowedMentions.none())
 					await sleep(time)
 					await ctx.send(user.mention,embed=embed)
 				else:
-					await ctx.send("Вы указали слишком большой промежуток времени.", reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+					await ctx.reply("❗ Вы указали слишком большой промежуток времени.", allowed_mentions=discord.AllowedMentions.none())

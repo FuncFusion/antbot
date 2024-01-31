@@ -37,8 +37,11 @@ bot = AntBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-	with open("assets/pfps/online.png", "rb") as file:
-		await bot.user.edit(avatar=file.read())
+	try:
+		with open("assets/pfps/online.png", "rb") as file:
+			await bot.user.edit(avatar=file.read())
+	except:
+		print("pfp ratelimit")
 	logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 	
 @bot.tree.command()
