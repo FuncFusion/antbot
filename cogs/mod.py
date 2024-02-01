@@ -24,7 +24,7 @@ time_multipliers = {
 	"с": 1
 }
 
-class ModerationCommands(commands.Cog):
+class ModerationCommands(commands.Cog, name="Модерация"):
 	def generate_stupid_reason():
 		return choice([
 			"Настолько жалок, что даже не достоин причины",

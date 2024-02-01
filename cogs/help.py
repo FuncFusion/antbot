@@ -54,7 +54,7 @@ HelpAdditionals.Syntax.read_syntaxes()
 #
 
 
-class HelpCommands(commands.Cog):
+class HelpCommands(commands.Cog, name="Помощь"):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(aliases=["solve", "ыщдму", "куыщдму", "решено", "ресолв", "солв"],

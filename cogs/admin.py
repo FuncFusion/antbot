@@ -7,7 +7,7 @@ from utils.emojis import Emojis
 async def pfp_ratelimit_msg(ctx):
 	await ctx.reply(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", allowed_mentions=discord.AllowedMentions.none())
 	
-class AdminCommands(commands.Cog):
+class AdminCommands(commands.Cog, name="Административные"):
 	def __init__(self, bot):
 		
 		@bot.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],

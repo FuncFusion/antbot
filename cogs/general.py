@@ -31,8 +31,29 @@ time_names = {
 	"лет": ["y", "г"]
 }
 
-class GeneralCommands(commands.Cog):
+class GeneralCommands(commands.Cog, name="Общие"):
 	def __init__(self, bot):
+
+		# @bot.hybrid_command()
+		# async def help(ctx):
+		# 	cog_names = ""
+		# 	#commands = []
+		# 	#for command in bot.commands:
+		# 		#commands.append(command.name)
+
+		# 	embed = discord.Embed(title="Список команд Antbot-a", color=discord.Color.dark_embed())
+		# 	for cog_name in bot.cogs:
+		# 		cog = bot.get_cog(cog_name)
+		# 		cmds = ""
+		# 		for cmd in bot.commands:
+		# 			print(cmd.cog)
+		# 			print(cog)
+					
+		# 			if cmd.cog == cog:
+		# 				cmds = ", ".join(f"`{cmd.name}`")
+		# 		embed.add_field(name=cog_name, value=cmds, inline=False)
+				
+		# 	await ctx.send(embed=embed)
 
 		@bot.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
 							description="Показывает информацию о сервере")
@@ -60,7 +81,7 @@ class GeneralCommands(commands.Cog):
 			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 		
 		@bot.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
-					  description="Показывает информацию о пользователе")
+					description="Показывает информацию о пользователе")
 		async def user(ctx, user:discord.Member):
 			# Setting up vars
 			statuses = {
@@ -91,7 +112,7 @@ class GeneralCommands(commands.Cog):
 			await ctx.message.delete()
 
 		@bot.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
-					  description="Напоминает о чём-то через определённое время с помощью пинга.")
+					description="Напоминает о чём-то через определённое время с помощью пинга.")
 		@app_commands.describe(time="Время, через которое бот пинганёт", reason="Причина, по которой бот будет напоиминать")
 		async def remind(ctx, time:str="", *, reason:str=""):
 			raw_time = findall(r"[0-9]+", time)

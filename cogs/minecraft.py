@@ -8,7 +8,7 @@ from utils.fake_user import fake_send
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
-class MinecraftCommands(commands.Cog):
+class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],
