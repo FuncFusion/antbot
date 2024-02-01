@@ -2,6 +2,9 @@
 desktop.ini
 antbot.ico
 
+# Ideas
+ideas.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

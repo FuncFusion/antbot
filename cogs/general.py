@@ -5,6 +5,8 @@ from asyncio import sleep
 from datetime import timedelta
 from re import findall
 
+from utils.shortcuts import no_ping, no_color
+
 time_multipliers = {
 	"y": 31556952,
 	"mo": 2678400,
@@ -78,12 +80,14 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			embed.add_field(name="Роли", value=f"🎭 {len(server.roles)}", inline=False)
 			embed.add_field(name="Приглашение (иссякает через сутки)", value=f"🔗 {invitation_link}")
 			embed.set_footer(text=f"🆔 {server.id}")
-			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		
 		@bot.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
-					description="Показывает информацию о пользователе")
-		async def user(ctx, user:discord.Member):
+					  description="Показывает информацию о пользователе")
+		async def user(ctx, user:discord.Member=None):
 			# Setting up vars
+			if user == None:
+				user = ctx.author
 			statuses = {
 				"online": "🟢 В сети",
 				"offline": "⚫ Не в сети",
@@ -99,7 +103,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			embed.add_field(name="Роли", value=" ".join([role.mention for role in user.roles[1:][::-1]]), inline=False)
 			embed.add_field(name="Статус", value=statuses[str(user.status)], inline=False)
 			embed.set_footer(text=f"🆔 {user.id}")
-			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		
 		@bot.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
 							description="Отправляет сообщение от имени бота")
@@ -110,33 +114,37 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			await ctx.channel.send(text)
 			await temp.delete()
 			await ctx.message.delete()
+		@say.error
+		async def say_error(ctx, error):
+			if isinstance(error, commands.MissingRequiredArgument):
+				await ctx.reply("Введите текст который хотите сказать от моего имени")
 
 		@bot.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
 					description="Напоминает о чём-то через определённое время с помощью пинга.")
 		@app_commands.describe(time="Время, через которое бот пинганёт", reason="Причина, по которой бот будет напоиминать")
-		async def remind(ctx, time:str="", *, reason:str=""):
+		async def remind(ctx, time:str, *, reason:str):
 			raw_time = findall(r"[0-9]+", time)
 			measure = findall(r"[A-zА-я]+", time)
 			if time == "":
-				await ctx.reply("❗ Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
 			elif raw_time == []:
-				await ctx.reply("❗ Пожалуйста, укажите целочисленное значение времени", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите целочисленное значение времени", allowed_mentions=no_ping)
 			elif measure == []:
-				await ctx.reply("❗ Пожалуйста, укажите меру измерения времени", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите меру измерения времени", allowed_mentions=no_ping)
 			else:
 				time = int(raw_time[0]) * time_multipliers[measure[0]]
 				time_name = ""
 				for key, values in time_names.items():
 					if measure[0] in values: time_name = key
 				user = ctx.author
-				embed = discord.Embed(title="🔔 Напоминание", color=discord.Color.dark_embed())
+				embed = discord.Embed(title="🔔 Напоминание", color=no_color)
 				embed_reason = ""
 				if reason != "":
 					embed_reason = f"по причине \"{reason}\""
 				if time < 1262278080:
 					if reason != "": embed.add_field(name=reason, value="", inline=False)
-					await ctx.reply(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", allowed_mentions=discord.AllowedMentions.none())
+					await ctx.reply(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", allowed_mentions=no_ping)
 					await sleep(time)
 					await ctx.send(user.mention,embed=embed)
 				else:
-					await ctx.reply("❗ Вы указали слишком большой промежуток времени.", allowed_mentions=discord.AllowedMentions.none())
+					await ctx.reply("❗ Вы указали слишком большой промежуток времени.", allowed_mentions=no_ping)

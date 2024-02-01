@@ -4,6 +4,8 @@ from discord import app_commands
 from random import randint, choice
 import re
 
+from utils.shortcuts import no_ping, no_color
+
 normal2sga_table = {
 	"a": "ᔑ",
 	"b": "ʖ",
@@ -72,7 +74,11 @@ class FunCommands(commands.Cog, name="Развлечения"):
 			enchanted = text
 			for char in normal2sga_table:
 				enchanted = enchanted.replace(char, normal2sga_table[char]+"\u200b")
-			await ctx.reply(enchanted, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(enchanted, allowed_mentions=no_ping)
+		@enchant.error
+		async def enchant_error(ctx, error):
+			if isinstance(error, commands.MissingRequiredArgument):
+				await ctx.reply("Введите текст который хотите зачаровать")
 		
 		@bot.hybrid_command(aliases=["unench", "раззачаровать", "разчарить", "разчарь", "разчаруй", "гтутср", "гтутсрфте"],
 					  description="Переводит сообщение с языка стола зачарования")
@@ -81,7 +87,11 @@ class FunCommands(commands.Cog, name="Развлечения"):
 			unenchanted = text
 			for char in sga2normal_table:
 				unenchanted = unenchanted.replace(char, sga2normal_table[char])
-			await ctx.reply(unenchanted, allowed_mentions=discord.AllowedMentions.none())
+			await ctx.reply(unenchanted, allowed_mentions=no_ping)
+		@unenchant.error
+		async def unenchant_error(ctx, error):
+			if isinstance(error, commands.MissingRequiredArgument):
+				await ctx.reply("Введите текст который хотите раззачаровать")
 
 		@bot.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
 					  description="Генерирует рандомное число в заданном промежутке")
@@ -89,34 +99,31 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		async def randomrange(ctx, first: str='-2147483648', second: str='2147483647'):
 			minInt, maxInt = -2147483648, 2147483647
 			clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
-			try:
-				first, second = clamp(int(float(first)), minInt, maxInt), clamp(int(float(second)), minInt, maxInt)
-				minimum = min(first, second)
-				maximum = max(first, second)
-				result = randint(minimum, maximum)
-				embed = discord.Embed(color=discord.Colour.dark_embed(), title=f"Рандомное число между {minimum} и {maximum}:")
-				embed.add_field(name=result, value='', inline=True)
-				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
-			except Exception as error:
-				eArg = str(error).split("'")[1].replace("\\\\", "\\")
-				await ctx.reply(f"❗ Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", allowed_mentions=discord.AllowedMentions.none())
+			first, second = clamp(int(float(first)), minInt, maxInt), clamp(int(float(second)), minInt, maxInt)
+			minimum = min(first, second)
+			maximum = max(first, second)
+			result = randint(minimum, maximum)
+			embed = discord.Embed(color=no_color, title=f"Рандомное число между {minimum} и {maximum}:")
+			embed.add_field(name=result, value='', inline=True)
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		@randomrange.error
+		async def randomrange_error(ctx, error):
+			eArg = str(error).split("'")[1].replace("\\\\", "\\")
+			await ctx.reply(f"❗ Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", allowed_mentions=no_ping)
 
 		@bot.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 					  description="Выдаёт случайный ответ из заданных на заданный вопрос")
 		@app_commands.describe(text="Текст вопроса и ответов. Разделяются символом \"|\" или переносом строки")
-		async def random(ctx, *, text: str="Не хватает аргументов?|Да."):
+		async def random(ctx, *, text: str):
 			pattern = r'[|\n]'
 			args = re.split(pattern, text)[1:]
-			if (len(args) >= 2):
-				title = re.split(pattern, text)[0]
-				result = choice(args)
-			else:
-				title = "Не хватает аргументов?"
-				result = "Да."
-			embed = discord.Embed(title=title, color=discord.Colour.dark_embed())
+			title = re.split(pattern, text)[0]
+			result = choice(args)
+			embed = discord.Embed(title=title, color=no_color)
 			embed.add_field(name="Ответ:", value=result, inline=False)
-			await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
-
-
-
-
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		@random.error
+		async def random_error(ctx, error):
+			embed = discord.Embed(title="Не хватает аргументов?", color=no_color)
+			embed.add_field(name="Ответ:", value="Да")
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)

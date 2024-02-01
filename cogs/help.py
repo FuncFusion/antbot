@@ -4,6 +4,7 @@ from discord import app_commands
 
 from settings import HELP_FORUM_ID
 from utils.msg_utils import get_msg_by_id_arg
+from utils.shortcuts import no_ping, no_color
 
 import re
 import os
@@ -22,9 +23,9 @@ class HelpAdditionals:
 		async def submit(self, ctx: discord.Interaction, button: discord.ui.Button):
 			is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
 			if ctx.user != ctx.channel.owner and not is_moderator:
-				await ctx.response.send_message("❗ Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.response.send_message("❗ Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=no_ping)
 			else:
-				resolve_embed = discord.Embed(title="❎ Ветка закрыта без решения", color=discord.Color.dark_embed())
+				resolve_embed = discord.Embed(title="❎ Ветка закрыта без решения", color=no_color)
 				await ctx.response.edit_message(embed=resolve_embed, view=None)
 				await ctx.channel.edit(locked=True)
 				self.stop()
@@ -32,7 +33,7 @@ class HelpAdditionals:
 		async def cancel(self, ctx: discord.Interaction, button: discord.ui.Button):
 			is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
 			if ctx.user != ctx.channel.owner and not is_moderator:
-				await ctx.response.send_message("❗ Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.response.send_message("❗ Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=no_ping)
 			else:
 				await ctx.message.delete()
 				await ctx.response.send_message("❗ Пожалуйста, укажите в `resolve` ссылку на сообщение которое помголо \
@@ -65,31 +66,31 @@ class HelpCommands(commands.Cog, name="Помощь"):
 			is_moderator = ctx.channel.permissions_for(ctx.author).manage_messages
 			# Error handling
 			if type(ctx.channel) != discord.threads.Thread:
-				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
 			elif ctx.channel.parent_id != HELP_FORUM_ID:
-				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
 			elif ctx.author != ctx.channel.owner and not is_moderator:
-				await ctx.reply("❗ Вы не являетесь автором этой ветки либо модератором", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Вы не являетесь автором этой ветки либо модератором", allowed_mentions=no_ping)
 			elif solution == None:
 				# Building embed
-				embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=discord.Color.dark_embed(),
+				embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=no_color,
 					description="❗ Вы не указали ни сообщение, ни людей которые помогли решить проблему, \
 					это заархивирует ветку без решения".replace("\t", ""))
 				await ctx.send(embed=embed, view=HelpAdditionals.R_u_sure())
 			elif type((solution:=await get_msg_by_id_arg(ctx, bot, solution))) != discord.Message:
-				await ctx.reply("❗ Неверная ссылка/айди сообщения", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Неверная ссылка/айди сообщения", allowed_mentions=no_ping)
 			elif helpers == None:
-				await ctx.reply("❗ Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=no_ping)
 			else:
 				# Setting up variables
 				heleprs_ids = [int(helepr_id) for helepr_id in re.findall(r"(?<=<@)([0-9]+)(?=>)", helpers)]
 				helpers_mentions = re.findall(r"<@[0-9]+>", helpers)
 				# Building embed
-				embed = discord.Embed(title="✅ Проблема решена", color=discord.Color.dark_embed())
+				embed = discord.Embed(title="✅ Проблема решена", color=no_color)
 				embed.add_field(name="Решение", value=f"🔗 {solution.jump_url}", inline=False)
 				embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
 					value=f"{"👥" if len(helpers_mentions) >= 2 else "👤"} {" ".join(helpers_mentions)}")
-				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=no_ping)
 				await ctx.channel.edit(locked=True)
 		
 		@bot.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
@@ -98,13 +99,13 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		async def syntax(ctx, command: str=None):
 			# Handling errors
 			if command == None:
-				await ctx.reply("❗ Пожалуйста, укажите команду", allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply("❗ Пожалуйста, укажите команду", allowed_mentions=no_ping)
 			else:
 				HelpAdditionals.Syntax.read_syntaxes()
 				#Bulding embed
-				embed = discord.Embed(title=f"🖥 /{command}", color=discord.Color.dark_embed(), 
+				embed = discord.Embed(title=f"🖥 /{command}", color=no_color, 
 					description=HelpAdditionals.Syntax.syntaxes[command])
-				await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+				await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		@syntax.autocomplete("command")
 		async def syntax_autocomplete(ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 			if curr == "":
@@ -121,7 +122,7 @@ class HelpListeners(commands.Cog):
 		async def help_in_chat(trd):
 			if trd.parent_id == HELP_FORUM_ID:
 				# Building embed
-				embed = discord.Embed(title="📌 Ознакомся с правилами", color=discord.Color.dark_embed(), 
+				embed = discord.Embed(title="📌 Ознакомся с правилами", color=no_color, 
 					description=f"Если ещё не читал, прочти в закрепе ({links['pinned_help']}) рекомендации \
 					к веткам помощи, и о том, как работают некоторые её аспекты. Следование всем рекомендациям \
 					поможет тебе получить как можно более эффективную помощь.".replace("\t", ""))

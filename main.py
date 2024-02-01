@@ -1,6 +1,7 @@
 import settings
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 from cogs.general import GeneralCommands
 from cogs.fun import FunCommands
@@ -9,6 +10,7 @@ from cogs.minecraft import MinecraftCommands
 from cogs.mod import ModerationCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.faqs.faqs import FAQs
+from cogs.ideas.ideas import IdeaCommand, IdeaView
 
 logger = settings.logging.getLogger("bot")
 
@@ -26,6 +28,8 @@ class AntBot(commands.Bot):
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))
 		await self.add_cog(FAQs(self))
+		await self.add_cog(IdeaCommand(self))
+		self.add_view(IdeaView())
 		await self.tree.sync()
 
 intents = discord.Intents.all()
