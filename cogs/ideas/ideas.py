@@ -4,6 +4,7 @@ from discord import app_commands
 
 from settings import IDEAS_CHANNEL_ID
 from utils.emojis import Emojis
+from utils.shortcuts import no_ping, no_color
 
 from json import load, dump
 
@@ -65,6 +66,7 @@ class IdeaVerdict(discord.ui.Modal):
 		if self.verdict != "":
 			embed.add_field(name="📃 Вердикт", value=self.verdict.value)
 		await self.msg.edit(embed=embed, view=None)
+		await self.msg.thread.edit(archived=True)
 		await interaction.response.send_message(f"Идея {self.idea_num} {action_to_word[self.action]}", ephemeral=True)
 
 
@@ -72,16 +74,23 @@ class IdeaCommand(commands.Cog):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"])
+		@app_commands.describe(suggestion="Идея")
 		async def idea(ctx, *, suggestion: str):
 			ideas = Ideas.get()
 			ideas_count = len(ideas)
 			# Building embed
-			embed = discord.Embed(color=discord.Color.dark_embed())
+			embed = discord.Embed(color=no_color)
 			embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
 			embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 			idea_msg = await ctx.guild.get_channel(IDEAS_CHANNEL_ID).send(embed=embed, view=IdeaView())
 			await idea_msg.create_thread(name="Обсуждение", reason="Auto-thread for idea")
 			Ideas.create(ideas_count, suggestion, idea_msg.id)
+		@idea.error
+		async def idea_error(ctx, error):
+			if isinstance(error, commands.MissingRequiredArgument):
+				await ctx.reply("Пожалуйста, укажите вашу идею", allowed_mentions=no_ping)
+			else:
+				await ctx.reply(f"Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
 		
 		@bot.tree.context_menu(name="👥 Просмотреть голоса")
 		@app_commands.default_permissions(administrator=True)
@@ -95,7 +104,7 @@ class IdeaCommand(commands.Cog):
 				upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
 				downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
 				# Building embed
-				embed = discord.Embed(title="👥 Голоса", color=discord.Color.dark_embed())
+				embed = discord.Embed(title="👥 Голоса", color=no_color)
 				embed.add_field(name="За", value=upvoters)
 				embed.add_field(name="Против", value=downvoters)
 				await ctx.response.send_message(embed=embed, ephemeral=True)
