@@ -10,7 +10,7 @@ from utils.shortcuts import no_ping, no_color
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
-class MinecraftCommands(commands.Cog):
+class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	def __init__(self, bot):
 
 		@bot.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],

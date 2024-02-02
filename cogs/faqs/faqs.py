@@ -16,7 +16,7 @@ faq_list = list(db.keys())
 for value in db.values():
     faq_list.extend(value.get('aliases', []))
 
-class FAQs(commands.Cog):
+class FAQs(commands.Cog, name="Факьюшки"):
     def __init__(self, bot):
 
         @bot.hybrid_command(aliases=["факьюшки","вопросы-и-ответы","вопросыиответы", "вопросыответы","афйы"],

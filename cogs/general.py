@@ -4,6 +4,7 @@ from discord import app_commands
 from asyncio import sleep
 from datetime import timedelta
 from re import findall
+from utils.emojis import Emojis
 
 from utils.shortcuts import no_ping, no_color
 
@@ -33,8 +34,29 @@ time_names = {
 	"лет": ["y", "г"]
 }
 
-class GeneralCommands(commands.Cog):
+class GeneralCommands(commands.Cog, name="Общие"):
 	def __init__(self, bot):
+
+		# @bot.hybrid_command()
+		# async def help(ctx):
+		# 	cog_names = ""
+		# 	#commands = []
+		# 	#for command in bot.commands:
+		# 		#commands.append(command.name)
+
+		# 	embed = discord.Embed(title="Список команд Antbot-a", color=discord.Color.dark_embed())
+		# 	for cog_name in bot.cogs:
+		# 		cog = bot.get_cog(cog_name)
+		# 		cmds = ""
+		# 		for cmd in bot.commands:
+		# 			print(cmd.cog)
+		# 			print(cog)
+					
+		# 			if cmd.cog == cog:
+		# 				cmds = ", ".join(f"`{cmd.name}`")
+		# 		embed.add_field(name=cog_name, value=cmds, inline=False)
+				
+		# 	await ctx.send(embed=embed)
 
 		@bot.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
 							description="Показывает информацию о сервере")
@@ -55,7 +77,7 @@ class GeneralCommands(commands.Cog):
 			embed.add_field(name="Владелец", value=f"👑 <@{server.owner_id}>", inline=False)
 			embed.add_field(name="Сервер создан", value=f"📅 <t:{int(server.created_at.timestamp())}>", inline=False)
 			embed.add_field(name="Участники", value=f"👤 {member_count} • 🤖 {bot_count}", inline=False)
-			embed.add_field(name="Каналы", value=f"⌨ {len(server.text_channels)} • 🔊 {len(server.voice_channels)} • 💬 {len(server.forums)}", inline=False)
+			embed.add_field(name="Каналы", value=f"⌨ {len(server.text_channels)} • 🔊 {len(server.voice_channels)} • {Emojis.chat_type} {len(server.forums)}", inline=False)
 			embed.add_field(name="Роли", value=f"🎭 {len(server.roles)}", inline=False)
 			embed.add_field(name="Приглашение (иссякает через сутки)", value=f"🔗 {invitation_link}")
 			embed.set_footer(text=f"🆔 {server.id}")
@@ -99,7 +121,7 @@ class GeneralCommands(commands.Cog):
 				await ctx.reply("Введите текст который хотите сказать от моего имени")
 
 		@bot.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
-					  description="Напоминает о чём-то через определённое время с помощью пинга.")
+					description="Напоминает о чём-то через определённое время с помощью пинга.")
 		@app_commands.describe(time="Время, через которое бот пинганёт", reason="Причина, по которой бот будет напоиминать")
 		async def remind(ctx, time:str, *, reason:str):
 			raw_time = findall(r"[0-9]+", time)

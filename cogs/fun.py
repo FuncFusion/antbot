@@ -64,7 +64,7 @@ sga2normal_table = {
 	"\u200b": ""
 }
 
-class FunCommands(commands.Cog):
+class FunCommands(commands.Cog, name="Развлечения"):
 	def __init__(self, bot):
 		
 		@bot.hybrid_command(aliases=["ench", "зачаровать", "зачарить", "зачарь", "зачаруй", "утср", "утсрфте"],

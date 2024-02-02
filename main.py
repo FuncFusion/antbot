@@ -17,7 +17,7 @@ logger = settings.logging.getLogger("bot")
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
-		super().__init__(intents=intents, command_prefix=command_prefix)
+		super().__init__(intents=intents, command_prefix=command_prefix, help_command=None)
 
 	async def setup_hook(self):
 		await self.add_cog(GeneralCommands(self))

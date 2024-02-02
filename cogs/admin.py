@@ -9,7 +9,7 @@ from utils.shortcuts import no_ping, no_color
 async def pfp_ratelimit_msg(ctx, error):
 	await ctx.reply(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", allowed_mentions=no_ping)
 	
-class AdminCommands(commands.Cog):
+class AdminCommands(commands.Cog, name="Административные"):
 	def __init__(self, bot):
 		
 		@bot.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
