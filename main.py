@@ -33,7 +33,7 @@ class AntBot(commands.Bot):
 		await self.tree.sync()
 
 intents = discord.Intents.all()
-bot = AntBot(command_prefix=".", intents=intents)
+bot = AntBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():

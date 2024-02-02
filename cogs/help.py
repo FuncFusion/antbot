@@ -27,7 +27,7 @@ class HelpAdditionals:
 			else:
 				resolve_embed = discord.Embed(title="❎ Ветка закрыта без решения", color=no_color)
 				await ctx.response.edit_message(embed=resolve_embed, view=None)
-				await ctx.channel.edit(locked=True)
+				await ctx.channel.edit(archived=True)
 				self.stop()
 		@discord.ui.button(label="Нет", style=discord.ButtonStyle.gray)
 		async def cancel(self, ctx: discord.Interaction, button: discord.ui.Button):
@@ -91,7 +91,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 				embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
 					value=f"{"👥" if len(helpers_mentions) >= 2 else "👤"} {" ".join(helpers_mentions)}")
 				await ctx.reply(embed=embed, allowed_mentions=no_ping)
-				await ctx.channel.edit(locked=True)
+				await ctx.channel.edit(archived=True)
 		
 		@bot.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
 					  		description="Показывает синтакс введеной майнкрафт команды")
@@ -122,9 +122,10 @@ class HelpListeners(commands.Cog):
 		async def help_in_chat(trd):
 			if trd.parent_id == HELP_FORUM_ID:
 				# Building embed
-				embed = discord.Embed(title="📌 Ознакомся с правилами", color=no_color, 
+				embed = discord.Embed(title="📌 Ознакомься с правилами", color=no_color, 
 					description=f"Если ещё не читал, прочти в закрепе ({links['pinned_help']}) рекомендации \
 					к веткам помощи, и о том, как работают некоторые её аспекты. Следование всем рекомендациям \
-					поможет тебе получить как можно более эффективную помощь.".replace("\t", ""))
+					(особенно 4 пункту) поможет тебе получить наиболее эффективную помощь.".replace("\t", ""))
 				#
 				await trd.send(embed=embed)
+				await trd.starter_message.pin()

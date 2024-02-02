@@ -4,6 +4,7 @@ from discord import app_commands
 from asyncio import sleep
 from datetime import timedelta
 from re import findall
+from utils.emojis import Emojis
 
 from utils.shortcuts import no_ping, no_color
 
@@ -76,7 +77,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			embed.add_field(name="Владелец", value=f"👑 <@{server.owner_id}>", inline=False)
 			embed.add_field(name="Сервер создан", value=f"📅 <t:{int(server.created_at.timestamp())}>", inline=False)
 			embed.add_field(name="Участники", value=f"👤 {member_count} • 🤖 {bot_count}", inline=False)
-			embed.add_field(name="Каналы", value=f"⌨ {len(server.text_channels)} • 🔊 {len(server.voice_channels)} • 💬 {len(server.forums)}", inline=False)
+			embed.add_field(name="Каналы", value=f"⌨ {len(server.text_channels)} • 🔊 {len(server.voice_channels)} • {Emojis.chat_type} {len(server.forums)}", inline=False)
 			embed.add_field(name="Роли", value=f"🎭 {len(server.roles)}", inline=False)
 			embed.add_field(name="Приглашение (иссякает через сутки)", value=f"🔗 {invitation_link}")
 			embed.set_footer(text=f"🆔 {server.id}")
