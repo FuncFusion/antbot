@@ -62,15 +62,16 @@ class HelpCommands(commands.Cog, name="Помощь"):
 							description="Архивирует ветку помощи при решении проблемы") 
 		@app_commands.describe(solution="Сообщение которое помогло решить проблему (ссылка)",
 							   helpers="Люди, которые помогли решить проблему")
-		async def resolve(ctx, solution: str=None, *, helpers: str=None):
+		async def resolve(ctx, solution: str=None, *, helpers: str="None"):
+			# Setting up variables
+			heleprs_ids = [int(helepr_id) for helepr_id in re.findall(r"(?<=<@)([0-9]+)(?=>)", helpers)]
+			helpers_mentions = re.findall(r"<@[0-9]+>", helpers)
 			is_moderator = ctx.channel.permissions_for(ctx.author).manage_messages
 			# Error handling
-			if type(ctx.channel) != discord.threads.Thread:
-				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
-			elif ctx.channel.parent_id != HELP_FORUM_ID:
-				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
+			if ctx.channel.parent_id != HELP_FORUM_ID:
+				raise Exception("Channel is not help forum")
 			elif ctx.author != ctx.channel.owner and not is_moderator:
-				await ctx.reply("❗ Вы не являетесь автором этой ветки либо модератором", allowed_mentions=no_ping)
+				raise Exception("User not author/op")
 			elif solution == None:
 				# Building embed
 				embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=no_color,
@@ -78,34 +79,41 @@ class HelpCommands(commands.Cog, name="Помощь"):
 					это заархивирует ветку без решения".replace("\t", ""))
 				await ctx.send(embed=embed, view=HelpAdditionals.R_u_sure())
 			elif type((solution:=await get_msg_by_id_arg(ctx, bot, solution))) != discord.Message:
+				raise Exception("Wrong message")
+			elif helpers == "None" or "@" not in helpers:
+				raise Exception("Missing arg")
+			# Building embed
+			embed = discord.Embed(title="✅ Проблема решена", color=no_color)
+			embed.add_field(name="Решение", value=f"🔗 {solution.jump_url}", inline=False)
+			embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
+				value=f"{"👥" if len(helpers_mentions) >= 2 else "👤"} {" ".join(helpers_mentions)}")
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+			await ctx.channel.edit(archived=True)
+		@resolve.error
+		async def resolve_error(ctx, error):
+			error_msg = str(error)
+			if "has no attribute 'parent_id'" in error_msg or "not help forum" in error_msg:
+				await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
+			elif "not author/op" in error_msg:
+				await ctx.reply("❗ Вы не являетесь автором этой ветки либо модератором", allowed_mentions=no_ping)
+			elif "Wrong message" in error_msg:
 				await ctx.reply("❗ Неверная ссылка/айди сообщения", allowed_mentions=no_ping)
-			elif helpers == None:
+			elif "Missing arg" in error_msg:
 				await ctx.reply("❗ Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=no_ping)
-			else:
-				# Setting up variables
-				heleprs_ids = [int(helepr_id) for helepr_id in re.findall(r"(?<=<@)([0-9]+)(?=>)", helpers)]
-				helpers_mentions = re.findall(r"<@[0-9]+>", helpers)
-				# Building embed
-				embed = discord.Embed(title="✅ Проблема решена", color=no_color)
-				embed.add_field(name="Решение", value=f"🔗 {solution.jump_url}", inline=False)
-				embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
-					value=f"{"👥" if len(helpers_mentions) >= 2 else "👤"} {" ".join(helpers_mentions)}")
-				await ctx.reply(embed=embed, allowed_mentions=no_ping)
-				await ctx.channel.edit(archived=True)
 		
 		@bot.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
 					  		description="Показывает синтакс введеной майнкрафт команды")
 		@app_commands.describe(command="Команда с майнкрафта")
-		async def syntax(ctx, command: str=None):
-			# Handling errors
-			if command == None:
+		async def syntax(ctx, command: str):
+			HelpAdditionals.Syntax.read_syntaxes()
+			#Bulding embed
+			embed = discord.Embed(title=f"🖥 /{command}", color=no_color, 
+				description=HelpAdditionals.Syntax.syntaxes[command])
+			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		@syntax.error
+		async def syntax_error(error, ctx):
+			if isinstance(error, commands.MissingRequiredArgument):
 				await ctx.reply("❗ Пожалуйста, укажите команду", allowed_mentions=no_ping)
-			else:
-				HelpAdditionals.Syntax.read_syntaxes()
-				#Bulding embed
-				embed = discord.Embed(title=f"🖥 /{command}", color=no_color, 
-					description=HelpAdditionals.Syntax.syntaxes[command])
-				await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		@syntax.autocomplete("command")
 		async def syntax_autocomplete(ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 			if curr == "":
