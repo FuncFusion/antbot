@@ -122,3 +122,4 @@ class Emojis:
     resource_rack = "<:resource_rack:1159947811849244723>"
     program_rack = "<:programrack:1191038718329495642>"
     sparkles = "<:sparkles_be:1145692031625220216>"
+    pack_mcmeta2 = "<:packmcmeta2:1188841036898914335>"
