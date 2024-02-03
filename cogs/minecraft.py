@@ -11,6 +11,7 @@ from utils.highlighter.main import Highlighter as hl
 from utils.fake_user import fake_send
 from utils.shortcuts import no_ping, no_color
 from utils.msg_utils import unknown_error
+from utils.msg_utils import get_msg_by_id_arg
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
@@ -23,10 +24,10 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 
 		@bot.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],
 							description="Подсвечивает синтаксис для mcfunction")
-		async def highlight(ctx, *, command:str="default_variant"):
+		async def highlight(ctx, *, command:str=None):
 			# Setting up vars
 			message = ""
-			if command == "default_variant":
+			if command == None:
 				if (reply:=ctx.message.reference) != None:
 					reply_message = await ctx.channel.fetch_message(reply.message_id)
 					reply_message = reply_message.content
@@ -36,8 +37,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 					else:
 						message += f"```ansi\n{hl.highlight(reply_message)}```"
 				else:
-					await ctx.reply("❗ Не хватает функции/ответа на сообщение с функцией", allowed_mentions=no_ping)
-					return None
+					raise Exception("Missing arg")
 			else:
 				if "```" in command:
 					for code_block in re.split(code_block_content_re, command)[1::2]:
@@ -47,6 +47,11 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			# Building embed
 			embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if message.count("```") == 2 else "Подсвеченные функции", color=no_color, description=message)
 			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		@highlight.error
+		async def hl_error(ctx, error):
+			error_msg = str(error)
+			if "Missing arg" in error_msg:
+				await ctx.reply("❗ Не хватает функции/ответа на сообщение с функцией", allowed_mentions=no_ping)
 	
 		@bot.tree.context_menu(name=f"🌈Подсветить функцию")
 		async def highlight_ctxmenu(interaction: discord.Interaction, message:discord.Message):

@@ -126,26 +126,31 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		async def remind(ctx, time:str, *, reason:str):
 			raw_time = findall(r"[0-9]+", time)
 			measure = findall(r"[A-zА-я]+", time)
-			if time == "":
-				await ctx.reply("❗ Пожалуйста, укажите время, через которое бот напомнит вас в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
-			elif raw_time == []:
-				await ctx.reply("❗ Пожалуйста, укажите целочисленное значение времени", allowed_mentions=no_ping)
-			elif measure == []:
-				await ctx.reply("❗ Пожалуйста, укажите меру измерения времени", allowed_mentions=no_ping)
+			time = int(raw_time[0]) * time_multipliers[measure[0]]
+			time_name = ""
+			for key, values in time_names.items():
+				if measure[0] in values: time_name = key
+			user = ctx.author
+			embed = discord.Embed(title="🔔 Напоминание", color=no_color)
+			embed_reason = ""
+			if reason != "":
+				embed_reason = f"по причине \"{reason}\""
+			if time < 1262278080:
+				if reason != "": embed.add_field(name=reason, value="", inline=False)
+				await ctx.reply(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", allowed_mentions=no_ping)
+				await sleep(time)
+				await ctx.send(user.mention,embed=embed)
 			else:
-				time = int(raw_time[0]) * time_multipliers[measure[0]]
-				time_name = ""
-				for key, values in time_names.items():
-					if measure[0] in values: time_name = key
-				user = ctx.author
-				embed = discord.Embed(title="🔔 Напоминание", color=no_color)
-				embed_reason = ""
-				if reason != "":
-					embed_reason = f"по причине \"{reason}\""
-				if time < 1262278080:
-					if reason != "": embed.add_field(name=reason, value="", inline=False)
-					await ctx.reply(f"Я вас упомяну через {raw_time[0]} {time_name} {embed_reason}", allowed_mentions=no_ping)
-					await sleep(time)
-					await ctx.send(user.mention,embed=embed)
-				else:
-					await ctx.reply("❗ Вы указали слишком большой промежуток времени.", allowed_mentions=no_ping)
+				await ctx.reply("❗ Вы указали слишком большой промежуток времени.", allowed_mentions=no_ping)
+		@remind.error
+		async def remind_error(ctx, error):
+			print(error , type(error))
+			error_msg = str(error)
+			missing_args = {
+				"time": "Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>",
+				"reason": "Укажите напоминание"
+			}
+			if isinstance(error, commands.MissingRequiredArgument):
+				await ctx.reply(missing_args[error_msg.split(" ")[0]], allowed_mentions=no_ping)
+			elif "IndexError" in error_msg:
+				await ctx.reply(missing_args["time"], allowed_mentions=no_ping)
