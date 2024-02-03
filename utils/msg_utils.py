@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 from utils.shortcuts import no_ping
 
-async def get_msg_by_id_arg(ctx, bot, arg:str):
+async def get_msg_by_id_arg(self, ctx, bot, arg:str):
 	try:
 		id = (arg.split("/")[-2:])
 		if len(id) == 2 or (len(id:=id[0].split("-")) == 2): 
@@ -15,7 +15,7 @@ async def get_msg_by_id_arg(ctx, bot, arg:str):
 	except Exception as e:
 		return e
 	
-async def unknown_error(ctx, error):
+async def unknown_error(self, ctx, error):
 	await ctx.reply(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
 					<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`", allowed_mentions=no_ping).replace("\t", "")
 	print(type(error), error)

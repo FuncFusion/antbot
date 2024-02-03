@@ -72,58 +72,68 @@ class IdeaVerdict(discord.ui.Modal):
 
 class IdeaCommand(commands.Cog):
 	def __init__(self, bot):
+		self.bot = bot
+		bot.tree.add_command(app_commands.ContextMenu(
+			name="👥 Просмотреть голоса",
+			callback=self.view_voters
+		))
+		bot.tree.add_command(app_commands.ContextMenu(
+			name="🟢 Одобрить идею",
+			callback=self.apprpve_idea
+		))
+		bot.tree.add_command(app_commands.ContextMenu(
+			name="🔴 Отклонить идею",
+			callback=self.cancel_idea
+		))
 
-		@bot.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"])
-		@app_commands.describe(suggestion="Идея")
-		async def idea(ctx, *, suggestion: str):
-			ideas = Ideas.get()
-			ideas_count = len(ideas)
+	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"])
+	@app_commands.describe(suggestion="Идея")
+	async def idea(self, ctx, *, suggestion: str):
+		ideas = Ideas.get()
+		ideas_count = len(ideas)
+		# Building embed
+		embed = discord.Embed(color=no_color)
+		embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
+		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+		idea_msg = await ctx.guild.get_channel(IDEAS_CHANNEL_ID).send(embed=embed, view=IdeaView())
+		await idea_msg.create_thread(name="Обсуждение", reason="Auto-thread for idea")
+		Ideas.create(ideas_count, suggestion, idea_msg.id)
+	@idea.error
+	async def idea_error(self, ctx, error):
+		if isinstance(error, commands.MissingRequiredArgument):
+			await ctx.reply("Пожалуйста, укажите вашу идею", allowed_mentions=no_ping)
+		else:
+			await ctx.reply(f"Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
+	
+	@app_commands.default_permissions(administrator=True)
+	async def view_voters(self, ctx: discord.Interaction, message:discord.Message):
+		if ctx.channel.id != IDEAS_CHANNEL_ID:
+			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
+		else:
+			# Setting up vars
+			idea_num = message.embeds[0].fields[0].name.split(" ")[-1]
+			idea = Ideas.get()[idea_num]
+			upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
+			downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
 			# Building embed
-			embed = discord.Embed(color=no_color)
-			embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
-			embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-			idea_msg = await ctx.guild.get_channel(IDEAS_CHANNEL_ID).send(embed=embed, view=IdeaView())
-			await idea_msg.create_thread(name="Обсуждение", reason="Auto-thread for idea")
-			Ideas.create(ideas_count, suggestion, idea_msg.id)
-		@idea.error
-		async def idea_error(ctx, error):
-			if isinstance(error, commands.MissingRequiredArgument):
-				await ctx.reply("Пожалуйста, укажите вашу идею", allowed_mentions=no_ping)
-			else:
-				await ctx.reply(f"Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
-		
-		@bot.tree.context_menu(name="👥 Просмотреть голоса")
-		@app_commands.default_permissions(administrator=True)
-		async def view_voters(ctx: discord.Interaction, message:discord.Message):
-			if ctx.channel.id != IDEAS_CHANNEL_ID:
-				await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
-			else:
-				# Setting up vars
-				idea_num = message.embeds[0].fields[0].name.split(" ")[-1]
-				idea = Ideas.get()[idea_num]
-				upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
-				downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
-				# Building embed
-				embed = discord.Embed(title="👥 Голоса", color=no_color)
-				embed.add_field(name="За", value=upvoters)
-				embed.add_field(name="Против", value=downvoters)
-				await ctx.response.send_message(embed=embed, ephemeral=True)
-		
-		@bot.tree.context_menu(name="🟢 Одобрить идею")
-		@app_commands.default_permissions(administrator=True)
-		async def view_voters(ctx: discord.Interaction, message:discord.Message):
-			if ctx.channel.id != IDEAS_CHANNEL_ID:
-				await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
-			else:
-				await ctx.response.send_modal(IdeaVerdict(message, "approve"))
-		
-		@bot.tree.context_menu(name="🔴 Отклонить идею")
-		@app_commands.default_permissions(administrator=True)
-		async def view_voters(ctx: discord.Interaction, message:discord.Message):
-			if ctx.channel.id != IDEAS_CHANNEL_ID:
-				await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
-			else:
-				await ctx.response.send_modal(IdeaVerdict(message, "cancel"))
+			embed = discord.Embed(title="👥 Голоса", color=no_color)
+			embed.add_field(name="За", value=upvoters)
+			embed.add_field(name="Против", value=downvoters)
+			await ctx.response.send_message(embed=embed, ephemeral=True)
+	
+	@app_commands.default_permissions(administrator=True)
+	async def apprpve_idea(self, ctx: discord.Interaction, message:discord.Message):
+		if ctx.channel.id != IDEAS_CHANNEL_ID:
+			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
+		else:
+			await ctx.response.send_modal(IdeaVerdict(message, "approve"))
+	
+	@app_commands.default_permissions(administrator=True)
+	async def cancel_idea(self, ctx: discord.Interaction, message:discord.Message):
+		if ctx.channel.id != IDEAS_CHANNEL_ID:
+			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
+		else:
+			await ctx.response.send_modal(IdeaVerdict(message, "cancel"))
 
 class Ideas:
 	def get():

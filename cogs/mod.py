@@ -39,106 +39,107 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		])
 	
 	def __init__(self, bot):
+		self.bot = bot
 		
-		@bot.command(aliases=["ифт", "бан", "банчек", "заблокировать"])
-		@app_commands.default_permissions(ban_members=True)
-		async def ban(ctx, user: discord.Member, reason: str=None):
-			# Setting up variables
-			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
-			# Ban
-			await user.ban(reason=reason)
-			# Building embed
-			embed = discord.Embed(title="🔨Бан", color=no_color)
-			embed.set_thumbnail(url=user.avatar.url)
-			embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-			embed.add_field(name="Причина", value=reason)
-			embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
-			await ctx.reply(embed=embed, allowed_mentions=no_ping)
-		@ban.error
-		async def ban_error(ctx, error):
-			error_msg = str(error)
-			if isinstance(error, commands.MissingRequiredArgument):
-				if "user" in error_msg:
-					await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
-			elif "Forbidden" in error_msg:
-				await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
+	@commands.command(aliases=["ифт", "бан", "банчек", "заблокировать"])
+	@app_commands.default_permissions(ban_members=True)
+	async def ban(self, ctx, user: discord.Member, reason: str=None):
+		# Setting up variables
+		reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
+		# Ban
+		await user.ban(reason=reason)
+		# Building embed
+		embed = discord.Embed(title="🔨Бан", color=no_color)
+		embed.set_thumbnail(url=user.avatar.url)
+		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+		embed.add_field(name="Причина", value=reason)
+		embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
+		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	@ban.error
+	async def ban_error(self, ctx, error):
+		error_msg = str(error)
+		if isinstance(error, commands.MissingRequiredArgument):
+			if "user" in error_msg:
+				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
+		elif "Forbidden" in error_msg:
+			await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
 
 		
-		@bot.command(aliases=["ьгеу", "мут"])
-		@app_commands.default_permissions(mute_members=True)
-		async def mute(ctx, user: discord.Member, term: str, *, reason: str=None):
-			# Setting up variables
-			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
-			raw_term = findall(r"[0-9]+", term)
-			measure = findall(r"[a-zA-Zа-яА-Я]+", term)
-			term = int(raw_term[0]) * time_multipliers[measure[0]]
-			# Da mute
-			await user.timeout(timedelta(seconds=term), reason=reason)
-			# Building embed
-			embed = discord.Embed(title="🔇Мут", color=no_color)
-			embed.set_thumbnail(url=user.avatar.url)
-			embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-			embed.add_field(name="Причина", value=reason)
-			embed.add_field(name="Замученый участник", value=user.mention, inline=False)
-			await ctx.reply(embed=embed, allowed_mentions=no_ping)
-		@mute.error
-		async def mute_error(ctx, error):
-			error_msg = str(error)
-			if isinstance(error, commands.MissingRequiredArgument):
-				if "user" in error_msg:
-					await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
-				elif "term" in error_msg:
-					await ctx.reply("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
-			elif isinstance(error, commands.MemberNotFound):
-				await ctx.reply(f"❗ Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
-			elif "IndexError" in error_msg:
+	@commands.command(aliases=["ьгеу", "мут"])
+	@app_commands.default_permissions(mute_members=True)
+	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
+		# Setting up variables
+		reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
+		raw_term = findall(r"[0-9]+", term)
+		measure = findall(r"[a-zA-Zа-яА-Я]+", term)
+		term = int(raw_term[0]) * time_multipliers[measure[0]]
+		# Da mute
+		await user.timeout(timedelta(seconds=term), reason=reason)
+		# Building embed
+		embed = discord.Embed(title="🔇Мут", color=no_color)
+		embed.set_thumbnail(url=user.avatar.url)
+		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+		embed.add_field(name="Причина", value=reason)
+		embed.add_field(name="Замученый участник", value=user.mention, inline=False)
+		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	@mute.error
+	async def mute_error(self, ctx, error):
+		error_msg = str(error)
+		if isinstance(error, commands.MissingRequiredArgument):
+			if "user" in error_msg:
+				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
+			elif "term" in error_msg:
 				await ctx.reply("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
-			elif "KeyError" in error_msg:
-				await ctx.reply(f"❗ `{error_msg.split('\'')[1]}` не является мерой измерения времени", allowed_mentions=no_ping)
-			elif "Forbidden" in error_msg:
-				await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
+		elif isinstance(error, commands.MemberNotFound):
+			await ctx.reply(f"❗ Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
+		elif "IndexError" in error_msg:
+			await ctx.reply("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
+		elif "KeyError" in error_msg:
+			await ctx.reply(f"❗ `{error_msg.split('\'')[1]}` не является мерой измерения времени", allowed_mentions=no_ping)
+		elif "Forbidden" in error_msg:
+			await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
 		
-		@bot.command(aliases=["лшсл", "кик", "изгнать"])
-		@app_commands.default_permissions(kick_members=True)
-		async def kick(ctx, user: discord.Member, *, reason: str=None):
-			# Setting up variables
-			reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
-			# Da kick
-			await user.kick(reason=reason)
+	@commands.command(aliases=["лшсл", "кик", "изгнать"])
+	@app_commands.default_permissions(kick_members=True)
+	async def kick(self, ctx, user: discord.Member, *, reason: str=None):
+		# Setting up variables
+		reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
+		# Da kick
+		await user.kick(reason=reason)
+		# Building embed
+		embed = discord.Embed(title="🦵Кик", color=no_color)
+		embed.set_thumbnail(url=user.avatar.url)
+		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+		embed.add_field(name="Причина", value=reason)
+		embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)
+		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	@kick.error
+	async def kick_error(self, ctx, error):
+		error_msg = str(error)
+		if isinstance(error, commands.MissingRequiredArgument):
+			if "user" in error_msg:
+				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
+		elif isinstance(error, commands.MemberNotFound):
+			await ctx.reply(f"❗ Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
+		elif "Forbidden" in error_msg:
+			await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
+		
+	@commands.hybrid_command(aliases=["сдуфк", "клир", "очистить"], 
+						description="Очищает сообщения")
+	@app_commands.default_permissions(manage_messages=True)
+	@app_commands.describe(count="Количество сообщений которое будет удалено", channel="Канал в котором будут удалены сообщения")
+	async def clear(self, ctx, count: int=None, channel: discord.TextChannel=None):
+		# Setting up variables
+		channel = channel if channel != None else ctx.channel
+		# Handling errors
+		if count == None:
+			await ctx.reply("❗ Пожалуйста, укажите количество сообщений которое будет удалено", allowed_mentions=no_ping)
+		else:
 			# Building embed
-			embed = discord.Embed(title="🦵Кик", color=no_color)
-			embed.set_thumbnail(url=user.avatar.url)
-			embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-			embed.add_field(name="Причина", value=reason)
-			embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)
+			embed = discord.Embed(title="🗑 Очистка", color=no_color)
+			embed.add_field(name="Канал", value=channel.jump_url, inline=False)
+			embed.add_field(name="Удалённые сообщения", value=f"💬 {count}", inline=False)
+			# Clearing
+			await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
+			#
 			await ctx.reply(embed=embed, allowed_mentions=no_ping)
-		@kick.error
-		async def kick_error(ctx, error):
-			error_msg = str(error)
-			if isinstance(error, commands.MissingRequiredArgument):
-				if "user" in error_msg:
-					await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
-			elif isinstance(error, commands.MemberNotFound):
-				await ctx.reply(f"❗ Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
-			elif "Forbidden" in error_msg:
-				await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
-		
-		@bot.hybrid_command(aliases=["сдуфк", "клир", "очистить"], 
-							description="Очищает сообщения")
-		@app_commands.default_permissions(manage_messages=True)
-		@app_commands.describe(count="Количество сообщений которое будет удалено", channel="Канал в котором будут удалены сообщения")
-		async def clear(ctx, count: int=None, channel: discord.TextChannel=None):
-			# Setting up variables
-			channel = channel if channel != None else ctx.channel
-			# Handling errors
-			if count == None:
-				await ctx.reply("❗ Пожалуйста, укажите количество сообщений которое будет удалено", allowed_mentions=no_ping)
-			else:
-				# Building embed
-				embed = discord.Embed(title="🗑 Очистка", color=no_color)
-				embed.add_field(name="Канал", value=channel.jump_url, inline=False)
-				embed.add_field(name="Удалённые сообщения", value=f"💬 {count}", inline=False)
-				# Clearing
-				await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
-				#
-				await ctx.reply(embed=embed, allowed_mentions=no_ping)
