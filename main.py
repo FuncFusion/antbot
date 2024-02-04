@@ -11,6 +11,7 @@ from cogs.mod import ModerationCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.faqs.faqs import FAQs
 from cogs.ideas.ideas import IdeaCommand, IdeaView
+from cogs.logs import LogListeners
 
 logger = settings.logging.getLogger("bot")
 
@@ -30,10 +31,11 @@ class AntBot(commands.Bot):
 		await self.add_cog(FAQs(self))
 		await self.add_cog(IdeaCommand(self))
 		self.add_view(IdeaView())
+		await self.add_cog(LogListeners(self))
 		await self.tree.sync()
 
 intents = discord.Intents.all()
-bot = AntBot(command_prefix="`", intents=intents)
+bot = AntBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
