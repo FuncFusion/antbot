@@ -7,13 +7,12 @@ import asyncio
 from settings import LOGS_CHANNEL_ID
 from utils.shortcuts import no_ping, no_color
 
-class LogListeners(commands.Cog):
+class LogListeners(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
 		self.bot = bot
 	
 	@commands.Cog.listener(name="on_message_edit")
 	async def edited(self, before, after):
-		print("aa")
 		if after.author.id != self.bot.user.id and not isinstance(after.channel, discord.DMChannel):
 			# Build ebmed
 			embed = discord.Embed(title="📝 Сообщение отредактировано", color=no_color)
