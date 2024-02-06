@@ -14,10 +14,9 @@ from cogs.ideas.ideas import IdeaCommand, IdeaView
 
 logger = settings.logging.getLogger("bot")
 
-
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
-		super().__init__(intents=intents, command_prefix=command_prefix, help_command=None)
+		super().__init__(intents=intents, command_prefix=command_prefix)
 
 	async def setup_hook(self):
 		await self.add_cog(GeneralCommands(self))
@@ -33,7 +32,7 @@ class AntBot(commands.Bot):
 		await self.tree.sync()
 
 intents = discord.Intents.all()
-bot = AntBot(command_prefix="`", intents=intents)
+bot = AntBot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
@@ -41,7 +40,7 @@ async def on_ready():
 		with open("assets/pfps/online.png", "rb") as file:
 			await bot.user.edit(avatar=file.read())
 	except:
-		print("pfp ratelimit")
+		logger.warn("pfp ratelimit")
 	logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 	
 @bot.tree.command()

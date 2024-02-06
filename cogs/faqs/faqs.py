@@ -16,7 +16,7 @@ faq_list = list(db.keys())
 for value in db.values():
     faq_list.extend(value.get('aliases', []))
 
-class FAQs(commands.Cog, name="Факьюшки"):
+class FAQs(commands.Cog, name="FAQ команды"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -27,7 +27,7 @@ class FAQs(commands.Cog, name="Факьюшки"):
         embed = discord.Embed(color=no_color)
         if name == None:
             faqs_str = ", ".join([f"`{faq}`" for faq in faq_names])
-            embed.title = f"{Emojis.no_dp_icons} Список всех факьюшек"
+            embed.title = f"{Emojis.no_dp_icons} Список всех факьюшек ({len(faq_names)}):"
             embed.add_field(name="", value=faqs_str, inline=False)
             embed.add_field(name="", value="", inline=False)
             embed.add_field(name="Как использовать факьюшки?", value="Чтобы вызвать ответ на какую либо факьюшку, напишите вопросительный знак и после него название факьюшки. Вы также можете вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. Примеры:\n`?логи`\n`Тебе стоит открыть **?**логи, потому что в нём полезная инфа`")
@@ -64,13 +64,21 @@ class FAQs(commands.Cog, name="Факьюшки"):
                 files = []
                 for file_name in file_names:
                     files.append(discord.File(f'assets/faqs/{faq}/{file_name}'))
-                with open(f'assets/faqs/{faq}/{faq}.md', 'r', encoding="utf-8") as file: answer = file.read()
+                with open(f'assets/faqs/{faq}/{faq}.md', 'r', encoding="utf-8") as file: content = file.read()
                 emoji_instance = Emojis()
                 for attr in dir(emoji_instance):
                     if not attr.startswith("__") and not callable(getattr(emoji_instance, attr)):
-                        answer = answer.replace("{" + attr + "}", getattr(emoji_instance, attr))
-                
-                await msg.channel.send(answer, files = files, reference = msg, allowed_mentions = no_ping)
+                        content = content.replace("{" + attr + "}", getattr(emoji_instance, attr))
+                answers = content.split("\n---separator---\n")
+                for answer in answers:
+                    if len(answers) == 1:
+                        await msg.channel.send(answer, files=files, reference=msg, allowed_mentions=no_ping)
+                    elif answers.index(answer) == 0:
+                        await msg.channel.send(answer, reference=msg, allowed_mentions=no_ping)
+                    elif answer != answers[-1]:
+                        await msg.channel.send(answer, allowed_mentions=no_ping)
+                    else:
+                        await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
                         
 def get_faq(arg):
     for faq in faq_list:

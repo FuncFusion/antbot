@@ -115,6 +115,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 							desc += f"`{num}` — `{release}`\n"
 		embed = discord.Embed(title=title, color=no_color)
 		embed.add_field(name="Число — Версии", value=desc)
+		embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@packformat.error
 	async def packformat_error(self, ctx, error: Exception):
