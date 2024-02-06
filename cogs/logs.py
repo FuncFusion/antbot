@@ -4,8 +4,10 @@ from discord import app_commands
 
 import asyncio
 
-from settings import LOGS_CHANNEL_ID
+from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID
 from utils.shortcuts import no_ping, no_color
+from utils.fake_user import fake_send
+from utils.users_db import DB
 
 class LogListeners(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
@@ -13,7 +15,9 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 	
 	@commands.Cog.listener(name="on_message_edit")
 	async def edited(self, before, after):
-		if after.author.id != self.bot.user.id and not isinstance(after.channel, discord.DMChannel):
+		if after.author.id != self.bot.user.id and before.content != after.content\
+		and not isinstance(after.channel, discord.DMChannel):
+			print(before.content == after.content)
 			# Build ebmed
 			embed = discord.Embed(title="📝 Сообщение отредактировано", color=no_color)
 			embed.set_author(icon_url=after.author.avatar.url, name=after.author.name)
@@ -48,13 +52,17 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 	#dms
 	@commands.Cog.listener(name="on_message")
 	async def dms(self, msg):
-		if msg.author.id != self.bot.user.id and isinstance(msg.channel, discord.DMChannel):
-			# Build embed
-			embed = discord.Embed(color=no_color, description=msg.content)
-			embed.set_author(icon_url=msg.author.avatar.url, name=msg.author.name)
-			#
-			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(embed=embed)
+		if isinstance(msg.channel, discord.DMChannel):
+			if msg.author == self.bot.user:
+				async for dmmsg in msg.channel.history(limit=15):
+					if dmmsg.author != self.bot.user:
+						dm_author_id = dmmsg.author.id
+						break
+				dm_log_channel = await DB.DMs.get_channel(dm_author_id, self.bot)
+			else:
+				dm_log_channel = await DB.DMs.get_channel(msg.author.id, self.bot)
+			await fake_send(msg.author, dm_log_channel, msg.content, msg.attachments, msg.embeds)
+
 
 
 class JumpMessage(discord.ui.View):

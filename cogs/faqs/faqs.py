@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+from settings import DMS_LOGS_GUILD_ID
+
 import re
 import json
 
@@ -42,6 +44,8 @@ class FAQs(commands.Cog, name="FAQ команды"):
     @commands.Cog.listener("on_message")
     async def main(self, msg):
         if msg.author == self.bot.user:
+            return
+        if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID:
             return
         segments = re.findall(r'(?:^\?|\*\*\?\*\*)([^?*]+)(?:\*\*\?\*\*)*?', msg.content)
         if segments == []:
