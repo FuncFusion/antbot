@@ -34,30 +34,41 @@ time_names = {
 	"лет": ["y", "г"]
 }
 
+help_attrs = {'name': 'help', 'aliases': ["helps", "хелп", "h", "рудз", "рудзы", "х", "р"]}
+class CustomHelpCommand(commands.HelpCommand):
+	# !help
+	async def send_bot_help(self, mapping):
+		embed = discord.Embed(title="Список команд AntBot-a", color=no_color)
+		thumbnail = discord.File("assets/pfps/online.png", filename="online.png")
+		embed.set_thumbnail(url="attachment://online.png")
+		for cog, cmds in mapping.items():
+			cmd_str = ", ".join(f"`{cmd.name}`" for cmd in cmds)
+			cmd_signature = [self.get_command_signature(cmd) for cmd in cmds]
+			cog_name = getattr(cog, "qualified_name", "no_help")
+			if cog_name != "no_help":
+				embed.add_field(name=cog_name, value=cmd_str, inline=False)
+		await self.context.reply(embed=embed, file=thumbnail, allowed_mentions=no_ping)
+	
+	# !help <command>
+	async def send_command_help(self, command):
+		await self.context.send("This is help command")
+	
+	# !help <group>
+	async def send_group_help(self, group):
+		await self.context.send("This is help group")
+	
+	# !help <cog>
+	async def send_cog_help(self, cog):
+		await self.context.send("This is help cog")
 class GeneralCommands(commands.Cog, name="Общие"):
 	def __init__(self, bot):
+		self._original_help_command = bot.help_command
+		bot.help_command = CustomHelpCommand(command_attrs=help_attrs)
+		bot.help_command.cog = self
 		self.bot = bot
 
-		# @commands.hybrid_command()
-		# async def help(ctx):
-		# 	cog_names = ""
-		# 	#commands = []
-		# 	#for command in bot.commands:
-		# 		#commands.append(command.name)
-
-		# 	embed = discord.Embed(title="Список команд Antbot-a", color=discord.Color.dark_embed())
-		# 	for cog_name in bot.cogs:
-		# 		cog = bot.get_cog(cog_name)
-		# 		cmds = ""
-		# 		for cmd in bot.commands:
-		# 			print(cmd.cog)
-		# 			print(cog)
-					
-		# 			if cmd.cog == cog:
-		# 				cmds = ", ".join(f"`{cmd.name}`")
-		# 		embed.add_field(name=cog_name, value=cmds, inline=False)
-				
-		# 	await ctx.send(embed=embed)
+	def cog_unload(self):
+		self.bot.help_command = self._original_help_command
 
 	@commands.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
 						description="Показывает информацию о сервере")
