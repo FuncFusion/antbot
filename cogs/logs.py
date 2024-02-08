@@ -9,7 +9,7 @@ from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
 from utils.users_db import DB
 
-class LogListeners(commands.Cog):
+class LogListeners(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
 		self.bot = bot
 	

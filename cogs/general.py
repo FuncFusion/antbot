@@ -1,9 +1,11 @@
+from Levenshtein import distance
 import discord
 from discord.ext import commands
 from discord import app_commands
 from asyncio import sleep
 from datetime import timedelta
 from re import findall
+
 from utils.emojis import Emojis
 
 from utils.shortcuts import no_ping, no_color
@@ -36,7 +38,7 @@ time_names = {
 
 help_attrs = {'name': 'help', 'aliases': ["helps", "хелп", "h", "рудз", "рудзы", "х", "р"]}
 class CustomHelpCommand(commands.HelpCommand):
-	# !help
+
 	async def send_bot_help(self, mapping):
 		embed = discord.Embed(title="Список команд AntBot-a", color=no_color)
 		thumbnail = discord.File("assets/pfps/online.png", filename="online.png")
@@ -45,21 +47,35 @@ class CustomHelpCommand(commands.HelpCommand):
 			cmd_str = ", ".join(f"`{cmd.name}`" for cmd in cmds)
 			cmd_signature = [self.get_command_signature(cmd) for cmd in cmds]
 			cog_name = getattr(cog, "qualified_name", "no_help")
-			if cog_name != "no_help":
+			if not cog_name.startswith("no_help"):
 				embed.add_field(name=cog_name, value=cmd_str, inline=False)
 		await self.context.reply(embed=embed, file=thumbnail, allowed_mentions=no_ping)
 	
-	# !help <command>
-	async def send_command_help(self, command):
-		await self.context.send("This is help command")
+	async def send_command_help(self, cmd):
+		embed = discord.Embed(title=f"Команда `{cmd.name}`", color=no_color)
+		embed.description = cmd.description
+		params = ""
+		if cmd.clean_params != {}: params = " " + " ".join(f"[{param}]" for param in cmd.clean_params)
+		embed.add_field(name="Использование", value=f"`{self.context.clean_prefix}{cmd.name}{params}`", inline=False)
+		alias_str = ", ".join(f"`{alias}`" for alias in cmd.aliases)
+		embed.add_field(name="Алиасы", value=alias_str, inline=False)
+		await self.context.reply(embed=embed, allowed_mentions=no_ping)
 	
-	# !help <group>
-	async def send_group_help(self, group):
-		await self.context.send("This is help group")
-	
-	# !help <cog>
+	async def command_not_found(self, string: str) -> str:
+		possible_cmds, assumption = [], ""
+		for cmd in self.context.bot.commands:
+			if distance(string, cmd.name) <= len(cmd.name)/2:
+				possible_cmds.append(cmd.name)
+		if possible_cmds != []:
+			cmds_str = "\n".join(f"`{cmd}`" for cmd in possible_cmds)
+			assumption = f" Возможно, вы имели ввиду:\n{cmds_str}"
+		await self.context.reply(f"Не нашёл такой команды - `{string.replace('`', ' ')}`.{assumption}", allowed_mentions=no_ping)
+
+	async def subcommand_not_found(self, cmd, string) -> str:
+		await CustomHelpCommand.send_command_help(self, cmd)
+
 	async def send_cog_help(self, cog):
-		await self.context.send("This is help cog")
+		await CustomHelpCommand.command_not_found(self, cog.qualified_name)
 class GeneralCommands(commands.Cog, name="Общие"):
 	def __init__(self, bot):
 		self._original_help_command = bot.help_command

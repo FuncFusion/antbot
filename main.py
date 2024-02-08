@@ -32,18 +32,15 @@ class AntBot(commands.Bot):
 		self.add_view(IdeaView())
 		await self.add_cog(LogListeners(self))
 		await self.tree.sync()
+		logger.info(f"User: {bot.user} (ID: {bot.user.id})")
+		try:
+			with open("assets/pfps/online.png", "rb") as file:
+				await bot.user.edit(avatar=file.read())
+		except:
+			logger.warn("pfp ratelimit")
 
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
-
-@bot.event
-async def on_ready():
-	try:
-		with open("assets/pfps/online.png", "rb") as file:
-			await bot.user.edit(avatar=file.read())
-	except:
-		logger.warn("pfp ratelimit")
-	logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 	
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):

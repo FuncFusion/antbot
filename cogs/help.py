@@ -124,7 +124,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		return [app_commands.Choice(name=command, value=command) for command in commands[:25]]
 		
 
-class HelpListeners(commands.Cog, name="no_help"):
+class HelpListeners(commands.Cog, name="no_help_help"):
 	def __init__(self, bot):
 		self.bot = bot
 	
