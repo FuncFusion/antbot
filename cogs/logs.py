@@ -17,7 +17,6 @@ class LogListeners(commands.Cog):
 	async def edited(self, before, after):
 		if after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
-			print(before.content == after.content)
 			# Build ebmed
 			embed = discord.Embed(title="📝 Сообщение отредактировано", color=no_color)
 			embed.set_author(icon_url=after.author.avatar.url, name=after.author.name)
@@ -61,8 +60,14 @@ class LogListeners(commands.Cog):
 				dm_log_channel = await DB.DMs.get_channel(dm_author_id, self.bot)
 			else:
 				dm_log_channel = await DB.DMs.get_channel(msg.author.id, self.bot)
+			print(msg.attachments)
 			await fake_send(msg.author, dm_log_channel, msg.content, msg.attachments, msg.embeds)
-
+	
+	@commands.Cog.listener(name="on_message")
+	async def send2dms(self, msg):
+		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID and not msg.author.bot:
+			target_user = self.bot.get_user(int(msg.channel.topic))
+			await target_user.send(msg.content)
 
 
 class JumpMessage(discord.ui.View):

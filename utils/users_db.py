@@ -26,7 +26,7 @@ class DB:
 		# Creating dms channel
 		user = await bot.fetch_user(int(id))
 		dms_log_guild = await bot.fetch_guild(DMS_LOGS_GUILD_ID)
-		dms_log_channel = await dms_log_guild.create_text_channel(user.name)
+		dms_log_channel = await dms_log_guild.create_text_channel(user.name, topic=id)
 		# Adding user intо db
 		db[id] = {
 			"economy": {
