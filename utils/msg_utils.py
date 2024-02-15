@@ -17,5 +17,5 @@ async def get_msg_by_id_arg(self, ctx, bot, arg:str):
 	
 async def unknown_error(self, ctx, error):
 	await ctx.reply(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
-					<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`", allowed_mentions=no_ping).replace("\t", "")
+					<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`".replace("\t", ""), allowed_mentions=no_ping)
 	print(type(error), error)
