@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from settings import HELP_FORUM_ID
+from utils.msg_utils import Emojis
 from utils.msg_utils import get_msg_by_id_arg
 from utils.shortcuts import no_ping, no_color
 
@@ -23,9 +24,9 @@ class HelpAdditionals:
 		async def submit(self, ctx: discord.Interaction, button: discord.ui.Button):
 			is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
 			if ctx.user != ctx.channel.owner and not is_moderator:
-				await ctx.response.send_message("❗ Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=no_ping)
+				await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=no_ping)
 			else:
-				resolve_embed = discord.Embed(title="❎ Ветка закрыта без решения", color=no_color)
+				resolve_embed = discord.Embed(title=f"{Emojis.cross} Ветка закрыта без решения", color=no_color)
 				await ctx.response.edit_message(embed=resolve_embed, view=None)
 				await ctx.channel.edit(archived=True)
 				self.stop()
@@ -33,10 +34,10 @@ class HelpAdditionals:
 		async def cancel(self, ctx: discord.Interaction, button: discord.ui.Button):
 			is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
 			if ctx.user != ctx.channel.owner and not is_moderator:
-				await ctx.response.send_message("❗ Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=no_ping)
+				await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", view=None, ephemeral=True, reference=ctx.message, allowed_mentions=no_ping)
 			else:
 				await ctx.message.delete()
-				await ctx.response.send_message("❗ Пожалуйста, укажите в `resolve` ссылку на сообщение которое помголо \
+				await ctx.response.send_message(f"{Emojis.exclamation_mark} Пожалуйста, укажите в `resolve` ссылку на сообщение которое помголо \
 					вам решить проблему и @упомяните людей которые помогли вам её решить".replace("\t", ""), view=None, ephemeral=True)
 				self.stop()
 
@@ -76,7 +77,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		elif solution == None:
 			# Building embed
 			embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=no_color,
-				description="❗ Вы не указали ни сообщение, ни людей которые помогли решить проблему, \
+				description=f"{Emojis.exclamation_mark} Вы не указали ни сообщение, ни людей которые помогли решить проблему, \
 				это заархивирует ветку без решения".replace("\t", ""))
 			await ctx.send(embed=embed, view=HelpAdditionals.R_u_sure())
 		elif type((solution:=await get_msg_by_id_arg(self, ctx, self.bot, solution))) != discord.Message:
@@ -84,23 +85,23 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		elif helpers == "None" or "@" not in helpers:
 			raise Exception("Missing arg")
 		# Building embed
-		embed = discord.Embed(title="✅ Проблема решена", color=no_color)
-		embed.add_field(name="Решение", value=f"🔗 {solution.jump_url}", inline=False)
+		embed = discord.Embed(title=f"{Emojis.check} Проблема решена", color=no_color)
+		embed.add_field(name="Решение", value=f"{Emojis.link} {solution.jump_url}", inline=False)
 		embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
-			value=f"{"👥" if len(helpers_mentions) >= 2 else "👤"} {" ".join(helpers_mentions)}")
+			value=f"{Emojis.user if len(helpers_mentions) >= 2 else Emojis.users} {" ".join(helpers_mentions)}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		await ctx.channel.edit(archived=True)
 	@resolve.error
 	async def resolve_error(self, ctx, error):
 		error_msg = str(error)
 		if "has no attribute 'parent_id'" in error_msg or "not help forum" in error_msg:
-			await ctx.reply("❗ Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
 		elif "not author/op" in error_msg:
-			await ctx.reply("❗ Вы не являетесь автором этой ветки либо модератором", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", allowed_mentions=no_ping)
 		elif "Wrong message" in error_msg:
-			await ctx.reply("❗ Неверная ссылка/айди сообщения", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверная ссылка/айди сообщения", allowed_mentions=no_ping)
 		elif "Missing arg" in error_msg:
-			await ctx.reply("❗ Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=no_ping)
 		
 	@commands.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
 				  		description="Показывает синтакс введеной майнкрафт команды")
@@ -114,7 +115,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 	@syntax.error
 	async def syntax_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply("❗ Пожалуйста, укажите команду", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите команду", allowed_mentions=no_ping)
 	@syntax.autocomplete("command")
 	async def syntax_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		if curr == "":

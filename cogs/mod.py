@@ -6,7 +6,7 @@ from re import findall
 from random import choice
 from asyncio import sleep
 from datetime import timedelta
-from utils.emojis import Emojis
+from utils.msg_utils import Emojis
 
 from utils.shortcuts import no_ping, no_color
 
@@ -61,7 +61,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		error_msg = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
 			if "user" in error_msg:
-				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
+				await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
 		elif "Forbidden" in error_msg:
 			await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
 
@@ -88,15 +88,15 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		error_msg = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
 			if "user" in error_msg:
-				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
+				await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
 			elif "term" in error_msg:
-				await ctx.reply("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
+				await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
 		elif isinstance(error, commands.MemberNotFound):
-			await ctx.reply(f"❗ Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
 		elif "IndexError" in error_msg:
-			await ctx.reply("❗ Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>", allowed_mentions=no_ping)
 		elif "KeyError" in error_msg:
-			await ctx.reply(f"❗ `{error_msg.split('\'')[1]}` не является мерой измерения времени", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} `{error_msg.split('\'')[1]}` не является мерой измерения времени", allowed_mentions=no_ping)
 		elif "Forbidden" in error_msg:
 			await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
 		
@@ -119,9 +119,9 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		error_msg = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
 			if "user" in error_msg:
-				await ctx.reply("❗ Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
+				await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя", allowed_mentions=no_ping)
 		elif isinstance(error, commands.MemberNotFound):
-			await ctx.reply(f"❗ Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пользователь `{error_msg.split('\"')[1]}` не найден", allowed_mentions=no_ping)
 		elif "Forbidden" in error_msg:
 			await ctx.reply("Кудааа, не туда воюешь", allowed_mentions=no_ping)
 		
@@ -134,12 +134,12 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		channel = channel if channel != None else ctx.channel
 		# Handling errors
 		if count == None:
-			await ctx.reply("❗ Пожалуйста, укажите количество сообщений которое будет удалено", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите количество сообщений которое будет удалено", allowed_mentions=no_ping)
 		else:
 			# Building embed
 			embed = discord.Embed(title="🗑 Очистка", color=no_color)
 			embed.add_field(name="Канал", value=channel.jump_url, inline=False)
-			embed.add_field(name="Удалённые сообщения", value=f"💬 {count}", inline=False)
+			embed.add_field(name="Удалённые сообщения", value=f"{Emojis.chat_type} {count}", inline=False)
 			# Clearing
 			await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
 			#

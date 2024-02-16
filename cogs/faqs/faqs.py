@@ -9,7 +9,7 @@ import json
 
 from Levenshtein import distance
 
-from utils.emojis import Emojis
+from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
 with open("cogs/faqs/faqs.json", 'r', encoding="utf-8") as file: db = json.load(file)
@@ -29,7 +29,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
         embed = discord.Embed(color=no_color)
         if name == None:
             faqs_str = ", ".join([f"`{faq}`" for faq in faq_names])
-            embed.title = f"{Emojis.no_dp_icons} Список всех факьюшек ({len(faq_names)}):"
+            embed.title = f"{Emojis.question_mark} Список всех факьюшек ({len(faq_names)}):"
             embed.add_field(name="", value=faqs_str, inline=False)
             embed.add_field(name="", value="", inline=False)
             embed.add_field(name="Как использовать факьюшки?", value="Чтобы вызвать ответ на какую либо факьюшку, напишите вопросительный знак и после него название факьюшки. Вы также можете вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. Примеры:\n`?логи`\n`Тебе стоит открыть **?**логи, потому что в нём полезная инфа`")

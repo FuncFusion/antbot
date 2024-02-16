@@ -6,7 +6,7 @@ import requests
 from Levenshtein import distance
 from bs4 import BeautifulSoup
 
-from utils.emojis import Emojis
+from utils.msg_utils import Emojis
 from utils.highlighter.main import Highlighter as hl
 from utils.fake_user import fake_send
 from utils.shortcuts import no_ping, no_color
@@ -57,7 +57,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	async def hl_error(self, ctx, error):
 		error_msg = str(error)
 		if "Missing arg" in error_msg:
-			await ctx.reply("❗ Не хватает функции/ответа на сообщение с функцией", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией", allowed_mentions=no_ping)
 	
 	async def highlight_ctxmenu(self, interaction: discord.Interaction, message:discord.Message):
 		# Setting up variables
@@ -121,8 +121,8 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	async def packformat_error(self, ctx, error: Exception):
 		error_msg = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply("❗ Не хватает аргументов.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping)
 		elif error_msg.find("AttributeError"):
-			await ctx.reply("❗ Неверно указан тип пакформата", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверно указан тип пакформата", allowed_mentions=no_ping)
 		else:
 			await unknown_error(self, ctx, error)

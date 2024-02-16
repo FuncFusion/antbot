@@ -6,7 +6,7 @@ from asyncio import sleep
 from datetime import timedelta
 from re import findall
 
-from utils.emojis import Emojis
+from utils.msg_utils import Emojis
 
 from utils.shortcuts import no_ping, no_color
 
@@ -102,12 +102,12 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		# Building embed
 		embed = discord.Embed(title=server.name, color=server.owner.color)
 		embed.set_thumbnail(url=server.icon.url)
-		embed.add_field(name="Владелец", value=f"👑 <@{server.owner_id}>", inline=False)
-		embed.add_field(name="Сервер создан", value=f"📅 <t:{int(server.created_at.timestamp())}>", inline=False)
-		embed.add_field(name="Участники", value=f"👤 {member_count} • 🤖 {bot_count}", inline=False)
-		embed.add_field(name="Каналы", value=f"⌨ {len(server.text_channels)} • 🔊 {len(server.voice_channels)} • {Emojis.chat_type} {len(server.forums)}", inline=False)
-		embed.add_field(name="Роли", value=f"🎭 {len(server.roles)}", inline=False)
-		embed.add_field(name="Приглашение (иссякает через сутки)", value=f"🔗 {invitation_link}")
+		embed.add_field(name="Владелец", value=f"{Emojis.crown} <@{server.owner_id}>", inline=False)
+		embed.add_field(name="Сервер создан", value=f"{Emojis.calendar} <t:{int(server.created_at.timestamp())}>", inline=False)
+		embed.add_field(name="Участники", value=f"{Emojis.users} {member_count} • {Emojis.bot} {bot_count}", inline=False)
+		embed.add_field(name="Каналы", value=f"{Emojis.text_channel} {len(server.text_channels)} • {Emojis.speaker} {len(server.voice_channels)} • {Emojis.chat_type} {len(server.forums)}", inline=False)
+		embed.add_field(name="Роли", value=f"{Emojis.role} {len(server.roles)}", inline=False)
+		embed.add_field(name="Приглашение (иссякает через сутки)", value=f"{Emojis.link} {invitation_link}")
 		embed.set_footer(text=f"🆔 {server.id}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		
@@ -127,8 +127,8 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		# Build embed
 		embed = discord.Embed(title=user.display_name, color=user.color)
 		embed.set_thumbnail(url=user.avatar.url)
-		embed.add_field(name="Присоединился к серверу", value=f"📅 <t:{int(user.joined_at.timestamp())}>", inline=False)
-		embed.add_field(name="Зарегистрировался(ась)", value=f"📅 <t:{int(user.created_at.timestamp())}>", inline=False)
+		embed.add_field(name="Присоединился к серверу", value=f"{Emojis.calendar} <t:{int(user.joined_at.timestamp())}>", inline=False)
+		embed.add_field(name="Зарегистрировался(ась)", value=f"{Emojis.calendar} <t:{int(user.created_at.timestamp())}>", inline=False)
 		embed.add_field(name="Роли", value=" ".join([role.mention for role in user.roles[1:][::-1]]), inline=False)
 		embed.add_field(name="Статус", value=statuses[str(user.status)], inline=False)
 		embed.set_footer(text=f"🆔 {user.id}")
@@ -146,7 +146,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 	@say.error
 	async def say_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply("Введите текст который хотите сказать от моего имени")
+			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите сказать от моего имени")
 
 	@commands.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
 				description="Напоминает о чём-то через определённое время с помощью пинга.")
@@ -169,13 +169,13 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			await sleep(time)
 			await ctx.send(user.mention,embed=embed)
 		else:
-			await ctx.reply("❗ Вы указали слишком большой промежуток времени.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Вы указали слишком большой промежуток времени.", allowed_mentions=no_ping)
 	@remind.error
 	async def remind_error(self, ctx, error):
 		error_msg = str(error)
 		missing_args = {
-			"time": "Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>",
-			"reason": "Укажите напоминание"
+			"time": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>",
+			"reason": f"{Emojis.exclamation_mark} Укажите напоминание"
 		}
 		if isinstance(error, commands.MissingRequiredArgument):
 			await ctx.reply(missing_args[error_msg.split(" ")[0]], allowed_mentions=no_ping)

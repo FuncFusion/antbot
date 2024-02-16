@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from settings import IDEAS_CHANNEL_ID
-from utils.emojis import Emojis
+from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
 from json import load, dump
@@ -16,7 +16,7 @@ class IdeaView(discord.ui.View):
 		self.upvote.label = votes[0]
 		self.downvote.label = votes[1]
 
-	@discord.ui.button(label="0", emoji=Emojis.mojo, style=discord.ButtonStyle.grey, custom_id="ideas:upvote")
+	@discord.ui.button(label="0", emoji=Emojis.check, style=discord.ButtonStyle.grey, custom_id="ideas:upvote")
 	async def upvote(self, ctx: discord.Interaction, button: discord.ui.Button):
 		# Setting up variables
 		idea_num = ctx.message.embeds[0].fields[0].name.split(" ")[-1]
@@ -27,7 +27,7 @@ class IdeaView(discord.ui.View):
 		# Chnaging votes
 		await ctx.response.edit_message(view=IdeaView(votes=[upvoters, downvoters]))
 	
-	@discord.ui.button(label="0", emoji=Emojis.exe, style=discord.ButtonStyle.grey, custom_id="ideas:downvote")
+	@discord.ui.button(label="0", emoji=Emojis.cross, style=discord.ButtonStyle.grey, custom_id="ideas:downvote")
 	async def downvote(self, ctx: discord.Interaction, button: discord.ui.Button):
 		# Setting up variables
 		idea_num = ctx.message.embeds[0].fields[0].name.split(" ")[-1]
@@ -64,7 +64,7 @@ class IdeaVerdict(discord.ui.Modal):
 		embed = self.msg.embeds[0]
 		embed.set_footer(text=f"{action_to_emoji[self.action]} Идея {action_to_word[self.action]}")
 		if self.verdict != "":
-			embed.add_field(name="📃 Вердикт", value=self.verdict.value)
+			embed.add_field(name=f"{Emojis.txt} Вердикт", value=self.verdict.value)
 		await self.msg.edit(embed=embed, view=None)
 		await self.msg.thread.edit(archived=True)
 		await interaction.response.send_message(f"Идея {self.idea_num} {action_to_word[self.action]}", ephemeral=True)
@@ -101,9 +101,9 @@ class IdeaCommand(commands.Cog):
 	@idea.error
 	async def idea_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply("Пожалуйста, укажите вашу идею", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите вашу идею", allowed_mentions=no_ping)
 		else:
-			await ctx.reply(f"Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.question_mark} Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
 	
 	@app_commands.default_permissions(administrator=True)
 	async def view_voters(self, ctx: discord.Interaction, message:discord.Message):
@@ -116,7 +116,7 @@ class IdeaCommand(commands.Cog):
 			upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
 			downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
 			# Building embed
-			embed = discord.Embed(title="👥 Голоса", color=no_color)
+			embed = discord.Embed(title=f"{Emojis.users} Голоса", color=no_color)
 			embed.add_field(name="За", value=upvoters)
 			embed.add_field(name="Против", value=downvoters)
 			await ctx.response.send_message(embed=embed, ephemeral=True)
@@ -124,14 +124,14 @@ class IdeaCommand(commands.Cog):
 	@app_commands.default_permissions(administrator=True)
 	async def apprpve_idea(self, ctx: discord.Interaction, message:discord.Message):
 		if ctx.channel.id != IDEAS_CHANNEL_ID:
-			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
 		else:
 			await ctx.response.send_modal(IdeaVerdict(message, "approve"))
 	
 	@app_commands.default_permissions(administrator=True)
 	async def cancel_idea(self, ctx: discord.Interaction, message:discord.Message):
 		if ctx.channel.id != IDEAS_CHANNEL_ID:
-			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
 		else:
 			await ctx.response.send_modal(IdeaVerdict(message, "cancel"))
 

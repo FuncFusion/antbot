@@ -4,7 +4,7 @@ from discord import app_commands
 from random import randint, choice
 import re
 
-from utils.emojis import Emojis
+from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
 normal2sga_table = {
@@ -80,7 +80,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 	@enchant.error
 	async def enchant_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply("Введите текст который хотите зачаровать")
+			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать")
 		
 	@commands.hybrid_command(aliases=["unench", "раззачаровать", "разчарить", "разчарь", "разчаруй", "гтутср", "гтутсрфте"],
 				  description="Переводит сообщение с языка стола зачарования")
@@ -93,7 +93,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 	@unenchant.error
 	async def unenchant_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply("Введите текст который хотите раззачаровать")
+			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать")
 
 	@commands.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
 				  description="Генерирует рандомное число в заданном промежутке")
@@ -111,7 +111,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 	@randomrange.error
 	async def randomrange_error(self, ctx, error):
 		eArg = str(error).split("'")[1].replace("\\\\", "\\")
-		await ctx.reply(f"❗ Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", allowed_mentions=no_ping)
+		await ctx.reply(f"{Emojis.exclamation_mark} Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", allowed_mentions=no_ping)
 
 	@commands.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 				  description="Выдаёт случайный ответ из заданных на заданный вопрос")
@@ -126,20 +126,32 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@random.error
 	async def random_error(self, ctx, error):
-		embed = discord.Embed(title="Не хватает аргументов?", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.exclamation_mark} Не хватает аргументов?", color=no_color)
 		embed.add_field(name="Ответ:", value="Да")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	
 	@commands.hybrid_command(name="look-for", aliases=["q"])
 	async def look_for(self, ctx, game: str, *, details: str):
+		# Setting up variables
+		games = {
+			"minecraft": {
+				"banners_count": 3
+			},
+			"terraria": {
+				"banners_count": 0
+			},
+			"gartic": {
+				"banners_count": 0
+			}
+		}
 		# Building embed
-		embed = discord.Embed(title=f"🔎 Ищу тиммейта для {game}", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {game}", color=no_color)
 		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 		embed.add_field(name="Подробности", value=details, inline=False)
-		embed.add_field(name="✅Присоединились", value="")
-		embed.add_field(name="❎Отклонили", value="")
-		if game in ["minecraft", "terraria", "gartic"]:
-			game_banner = discord.File(f"assets/game_banners/{game}.png", filename="say_gex.png")
+		embed.add_field(name=f"{Emojis.check} Присоединились", value="")
+		embed.add_field(name=f"{Emojis.cross} Отклонили", value="")
+		if game in games:
+			game_banner = discord.File(f"assets/game_banners/{game}{randint(0, games[game]["banners_count"])}.png", filename="say_gex.png")
 			embed.set_image(url="attachment://say_gex.png")
 		await ctx.send(embed=embed, view=LookFor(), file=game_banner)
 
@@ -167,10 +179,10 @@ class LookFor(discord.ui.View):
 		embed.set_field_at(2, name=embed.fields[2].name, value="\n".join(declined_users))
 		await ctx.response.edit_message(embed=embed, attachments=[])
 	
-	@discord.ui.button(label="Присоединится", emoji=Emojis.android, style=discord.ButtonStyle.gray)
+	@discord.ui.button(label="Присоединится", emoji=Emojis.check, style=discord.ButtonStyle.gray)
 	async def join(self, ctx: discord.Interaction, button: discord.ui.Button):
 		await LookFor.response(ctx, "join")
 	
-	@discord.ui.button(label="Отказатся", emoji=Emojis.exe, style=discord.ButtonStyle.gray)
+	@discord.ui.button(label="Отказатся", emoji=Emojis.cross, style=discord.ButtonStyle.gray)
 	async def decline(self, ctx: discord.Interaction, button: discord.ui.Button):
 		await LookFor.response(ctx, "decline")

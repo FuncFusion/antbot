@@ -5,6 +5,7 @@ from discord import app_commands
 import asyncio
 
 from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID
+from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
 from utils.users_db import DB
@@ -18,7 +19,7 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 		if after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
 			# Build ebmed
-			embed = discord.Embed(title="📝 Сообщение отредактировано", color=no_color)
+			embed = discord.Embed(title=f"{Emojis.edited_msg} Сообщение отредактировано", color=no_color)
 			embed.set_author(icon_url=after.author.avatar.url, name=after.author.name)
 			embed.add_field(name="Автор", value=after.author.mention)
 			embed.add_field(name="Канал", value=after.channel.jump_url)
@@ -38,7 +39,7 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 			for attachment in msg.attachments:
 				files.append(await attachment.to_file())
 			# Build ebmed
-			embed = discord.Embed(title="🚫 Сообщение удалено", color=no_color)
+			embed = discord.Embed(title=f"{Emojis.deleted_msg} Сообщение удалено", color=no_color)
 			embed.set_author(icon_url=msg.author.avatar.url, name=msg.author.name)
 			embed.add_field(name="Автор", value=msg.author.mention)
 			embed.add_field(name="Канал", value=msg.channel.jump_url)
@@ -75,6 +76,6 @@ class JumpMessage(discord.ui.View):
 		super().__init__()
 		self.add_item(discord.ui.Button(
 			label="Перейти к сообщению",
-			emoji="↗️",
+			emoji=f"{Emojis.link}",
 			url=msg_link
 		))
