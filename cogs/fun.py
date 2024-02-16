@@ -4,6 +4,7 @@ from discord import app_commands
 from random import randint, choice
 import re
 
+from utils.emojis import Emojis
 from utils.shortcuts import no_ping, no_color
 
 normal2sga_table = {
@@ -128,3 +129,48 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		embed = discord.Embed(title="Не хватает аргументов?", color=no_color)
 		embed.add_field(name="Ответ:", value="Да")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	
+	@commands.hybrid_command(name="look-for", aliases=["q"])
+	async def look_for(self, ctx, game: str, *, details: str):
+		# Building embed
+		embed = discord.Embed(title=f"🔎 Ищу тиммейта для {game}", color=no_color)
+		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+		embed.add_field(name="Подробности", value=details, inline=False)
+		embed.add_field(name="✅Присоединились", value="")
+		embed.add_field(name="❎Отклонили", value="")
+		if game in ["minecraft", "terraria", "gartic"]:
+			game_banner = discord.File(f"assets/game_banners/{game}.png", filename="say_gex.png")
+			embed.set_image(url="attachment://say_gex.png")
+		await ctx.send(embed=embed, view=LookFor(), file=game_banner)
+
+
+class LookFor(discord.ui.View):
+	def __init__(self):
+		super().__init__()
+	
+	async def response(ctx, action):
+		# Setting up variables
+		embed = ctx.message.embeds[0]
+		joined_users = embed.fields[1].value.split("\n")
+		declined_users = embed.fields[2].value.split("\n")
+		action_users_list = joined_users if action == "join" else declined_users
+		opposite_users_list = declined_users if action == "join" else joined_users
+		# Building embed
+		usr_ping = ctx.user.mention
+		if usr_ping not in action_users_list:
+			action_users_list.append(usr_ping)
+		else:
+			action_users_list.remove(usr_ping)
+		if usr_ping in opposite_users_list:
+			opposite_users_list.remove(usr_ping)
+		embed.set_field_at(1, name=embed.fields[1].name, value="\n".join(joined_users))
+		embed.set_field_at(2, name=embed.fields[2].name, value="\n".join(declined_users))
+		await ctx.response.edit_message(embed=embed, attachments=[])
+	
+	@discord.ui.button(label="Присоединится", emoji=Emojis.android, style=discord.ButtonStyle.gray)
+	async def join(self, ctx: discord.Interaction, button: discord.ui.Button):
+		await LookFor.response(ctx, "join")
+	
+	@discord.ui.button(label="Отказатся", emoji=Emojis.exe, style=discord.ButtonStyle.gray)
+	async def decline(self, ctx: discord.Interaction, button: discord.ui.Button):
+		await LookFor.response(ctx, "decline")
