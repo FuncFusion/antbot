@@ -140,3 +140,17 @@ class HelpListeners(commands.Cog, name="no_help_help"):
 			#
 			await trd.send(embed=embed)
 			await trd.starter_message.pin()
+
+	@commands.Cog.listener("on_raw_reaction_add")
+	async def react_to_pin(self, reaction):
+		chnl = self.bot.get_channel(reaction.channel_id)
+		msg = None
+		try:
+			if chnl.parent_id == HELP_FORUM_ID and reaction.emoji.name == "📌":
+				if reaction.member.id == chnl.owner_id:
+					msg = await chnl.fetch_message(reaction.message_id)
+					await msg.pin()
+				else:
+					await chnl.send(f"<@{reaction.member.id}> Ты не автор ветки, чтоб закреплять сообщения")
+		except AttributeError:
+			await chnl.send(f"<@{reaction.member.id}> Это не ветка помощи или творчества, чтоб закреплять сообщения реакцией")
