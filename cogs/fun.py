@@ -96,13 +96,13 @@ class FunCommands(commands.Cog, name="Развлечения"):
 
 	@commands.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
 				  description="Генерирует рандомное число в заданном промежутке")
-	@app_commands.describe(first="Минимальное число в промежутке", second="Максимальное число в промежутке")
-	async def randomrange(self, ctx, first: str='-2147483648', second: str='2147483647'):
+	@app_commands.describe(minimum="Минимальное число в промежутке", maximum="Максимальное число в промежутке")
+	async def randomrange(self, ctx, minimum: str='-2147483648', maximum: str='2147483647'):
 		minInt, maxInt = -2147483648, 2147483647
 		clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
-		first, second = clamp(int(float(first)), minInt, maxInt), clamp(int(float(second)), minInt, maxInt)
-		minimum = min(first, second)
-		maximum = max(first, second)
+		minimum, maximum = clamp(int(float(minimum)), minInt, maxInt), clamp(int(float(maximum)), minInt, maxInt)
+		minimum = min(minimum, maximum)
+		maximum = max(minimum, maximum)
 		result = randint(minimum, maximum)
 		embed = discord.Embed(color=no_color, title=f"Рандомное число между {minimum} и {maximum}:")
 		embed.add_field(name=result, value='', inline=True)
@@ -113,7 +113,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(f"❗ Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", allowed_mentions=no_ping)
 
 	@commands.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
-				  description="Выдаёт случайный ответ из заданных на заданный вопрос")
+				  description="Выдаёт случайный ответ из заданных на вопрос. [text] разделяется символом \"|\" или переносом строки")
 	@app_commands.describe(text="Текст вопроса и ответов. Разделяются символом \"|\" или переносом строки")
 	async def random(self, ctx, *, text: str):
 		pattern = r'[|\n]'
