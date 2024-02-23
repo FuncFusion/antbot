@@ -223,9 +223,8 @@ class LookFor(discord.ui.View):
 	@discord.ui.button(label="Пингануть участников", emoji=Emojis.users, custom_id="look-for:ping-all")
 	async def ping_all(self, ctx: discord.Interaction, button: discord.ui.Button):
 		joined_users = ctx.message.embeds[0].fields[1].value.split("\n")
-		if ctx.user.mention in joined_users: joined_users.remove(ctx.user.mention)
 		if str(ctx.user.id) == ctx.message.embeds[0].footer.text:
-			if joined_users[0] != "":
+			if joined_users[0] not in ["", ctx.user.mention]:
 				await ctx.response.send_message(" ".join(joined_users) + f" вас зовёт {ctx.user.mention}")
 			else:
 				await ctx.response.send_message(f"{Emojis.exclamation_mark} Пока нет кого пинговать", ephemeral=True)
