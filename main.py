@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from cogs.general import GeneralCommands
-from cogs.fun import FunCommands
+from cogs.fun import FunCommands, LookFor
 from cogs.admin import AdminCommands
 from cogs.minecraft import MinecraftCommands
 from cogs.mod import ModerationCommands
@@ -22,6 +22,7 @@ class AntBot(commands.Bot):
 	async def setup_hook(self):
 		await self.add_cog(GeneralCommands(self))
 		await self.add_cog(FunCommands(self))
+		self.add_view(LookFor())
 		await self.add_cog(AdminCommands(self))
 		await self.add_cog(MinecraftCommands(self))
 		await self.add_cog(ModerationCommands(self))

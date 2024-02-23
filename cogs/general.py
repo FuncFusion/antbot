@@ -1,10 +1,10 @@
-from Levenshtein import distance
 import discord
 from discord.ext import commands
 from discord import app_commands
 from asyncio import sleep
 from datetime import timedelta
 from re import findall
+from Levenshtein import distance
 
 from utils.msg_utils import Emojis
 

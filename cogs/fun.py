@@ -4,6 +4,8 @@ from discord import app_commands
 from random import randint, choice
 import re
 
+from Levenshtein import distance
+
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
@@ -130,35 +132,64 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		embed.add_field(name="Ответ:", value="Да")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	
-	@commands.hybrid_command(name="look-for", aliases=["q"])
+	@commands.hybrid_command(name="look-for", aliases=["lf", "дщщл-ащк", "да", "ищу-тиммейта"])
 	async def look_for(self, ctx, game: str, *, details: str):
 		# Setting up variables
 		games = {
 			"minecraft": {
-				"banners_count": 3
+				"banners_count": 3,
+				"ru_name": "майнкрафт",
+				"accusative": "майнкрафта"
 			},
 			"terraria": {
-				"banners_count": 0
+				"banners_count": 0,
+				"ru_name": "террария",
+				"accusative": "террарии"
 			},
 			"gartic": {
-				"banners_count": 0
+				"banners_count": 0,
+				"ru_name": "гартик",
+				"accusative": "гартика"
+			},
+			"other": {
+				"banners_count": 0,
+				"ru_name": game,
+				"accusative": game
 			}
 		}
+		for game_name in games:
+			if distance(game, game_name) <= len(game_name)/2 \
+				or distance(game, games[game_name]["ru_name"]) <= len(games[game_name]["ru_name"])/2:
+				game = game_name
+				break
+		else:
+			game = "other"
 		# Building embed
-		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {game}", color=no_color)
-		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {games[game]["accusative"]}", color=no_color)
+		embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar.url)
 		embed.add_field(name="Подробности", value=details, inline=False)
 		embed.add_field(name=f"{Emojis.check} Присоединились", value="")
 		embed.add_field(name=f"{Emojis.cross} Отклонили", value="")
+		embed.set_footer(text=str(ctx.author.id))
 		if game in games:
 			game_banner = discord.File(f"assets/game_banners/{game}{randint(0, games[game]["banners_count"])}.png", filename="say_gex.png")
 			embed.set_image(url="attachment://say_gex.png")
-		await ctx.send(embed=embed, view=LookFor(), file=game_banner)
+		lf_msg = await ctx.send(embed=embed, view=LookFor(), file=game_banner)
+		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
+	@look_for.error
+	async def lf_error(self, ctx, error):
+		error_msg = str(error)
+		print(error)
+		if isinstance(error, commands.MissingRequiredArgument):
+			if "game" in error_msg:
+				await ctx.reply(f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта", allowed_mentions=no_ping)
+			elif "details" in error_msg:
+				await ctx.reply(f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)", allowed_mentions=no_ping)
 
 
 class LookFor(discord.ui.View):
 	def __init__(self):
-		super().__init__()
+		super().__init__(timeout=None)
 	
 	async def response(ctx, action):
 		# Setting up variables
@@ -179,10 +210,23 @@ class LookFor(discord.ui.View):
 		embed.set_field_at(2, name=embed.fields[2].name, value="\n".join(declined_users))
 		await ctx.response.edit_message(embed=embed, attachments=[])
 	
-	@discord.ui.button(label="Присоединится", emoji=Emojis.check, style=discord.ButtonStyle.gray)
+	@discord.ui.button(label="Присоединится", emoji=Emojis.check, custom_id="look-for:join")
 	async def join(self, ctx: discord.Interaction, button: discord.ui.Button):
 		await LookFor.response(ctx, "join")
 	
-	@discord.ui.button(label="Отказатся", emoji=Emojis.cross, style=discord.ButtonStyle.gray)
+	@discord.ui.button(label="Отказатся", emoji=Emojis.cross, custom_id="look-for:decline")
 	async def decline(self, ctx: discord.Interaction, button: discord.ui.Button):
 		await LookFor.response(ctx, "decline")
+	
+	@discord.ui.button(label="Пингануть участников", emoji=Emojis.users, custom_id="look-for:ping-all")
+	async def ping_all(self, ctx: discord.Interaction, button: discord.ui.Button):
+		joined_users = ctx.message.embeds[0].fields[1].value.split("\n")
+		if ctx.user.mention in joined_users: joined_users.remove(ctx.user.mention)
+		if str(ctx.user.id) == ctx.message.embeds[0].footer.text:
+			if joined_users[0] != "":
+				await ctx.response.send_message(" ".join(joined_users) + f" вас зовёт {ctx.user.mention}")
+			else:
+				await ctx.response.send_message(f"{Emojis.exclamation_mark} Пока нет кого пинговать", ephemeral=True)
+		else:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являеетесь автором поста", ephemeral=True)
+	
