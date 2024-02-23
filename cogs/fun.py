@@ -6,6 +6,7 @@ import re
 
 from Levenshtein import distance
 
+from settings import LOOK_FOR_ID
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
@@ -164,6 +165,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 				break
 		else:
 			game = "other"
+		look_for_channel = await self.bot.fetch_channel(LOOK_FOR_ID)
 		# Building embed
 		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {games[game]["accusative"]}", color=no_color)
 		embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar.url)
@@ -174,7 +176,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		if game in games:
 			game_banner = discord.File(f"assets/game_banners/{game}{randint(0, games[game]["banners_count"])}.png", filename="say_gex.png")
 			embed.set_image(url="attachment://say_gex.png")
-		lf_msg = await ctx.send(embed=embed, view=LookFor(), file=game_banner)
+		lf_msg = await look_for_channel.send(embed=embed, view=LookFor(), file=game_banner)
 		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
 	@look_for.error
 	async def lf_error(self, ctx, error):
