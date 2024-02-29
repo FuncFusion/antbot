@@ -6,6 +6,7 @@ import requests
 from Levenshtein import distance
 from bs4 import BeautifulSoup
 
+from cogs.mc.pack_generator import PGenerator, Modals
 from utils.msg_utils import Emojis
 from utils.highlighter.main import Highlighter as hl
 from utils.fake_user import fake_send
@@ -126,3 +127,19 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			await ctx.reply(f"{Emojis.exclamation_mark} Неверно указан тип пакформата", allowed_mentions=no_ping)
 		else:
 			await unknown_error(self, ctx, error)
+	
+	@commands.hybrid_command(aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"])
+	async def template(self, ctx: commands.Context, template: str="datapack", type: str="basic"):
+		pack_ctx = {
+			"datapack": {"emoji": Emojis.deta_rack, "accusative": "датапака", "modal": Modals.DP},
+			"resourcepack": {"emoji": Emojis.resource_rack, "accusative": "ресурспака", "modal": Modals.RP}
+		}
+		if type == "customizable":
+			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"])
+		elif type == "extended":
+			with open("assets/templates/Extended {template}.zip", "rb") as pack:
+				await ctx.send(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", file=discord.File(pack))
+		elif type == "basic":
+			with open("assets/templates/Basic {template}.zip", "rb") as pack:
+				await ctx.send(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", file=discord.File(pack))
+
