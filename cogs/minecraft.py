@@ -135,7 +135,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			"resourcepack": {"emoji": Emojis.resource_rack, "accusative": "ресурспака", "modal": Modals.RP}
 		}
 		if type == "customizable":
-			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"])
+			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"]())
 		elif type == "extended":
 			with open("assets/templates/Extended {template}.zip", "rb") as pack:
 				await ctx.send(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", file=discord.File(pack))
