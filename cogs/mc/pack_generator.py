@@ -1,6 +1,7 @@
 import discord
 
 from utils.msg_utils import Emojis
+from utils.validator import validate
 
 import io
 from string import ascii_lowercase, digits
@@ -9,7 +10,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from Levenshtein import distance
 
 class Templates:
-	mcmeta = '{{\n\t"pack": {{\n\t\t"pack_format": {0},\n\t\t"description": ""\n\t}}\n}}'
+	mcmeta = '{{\n\t"pack": {{\n\t\t"pack_format": {0},\n\t\t"description": "https://discord.gg/anthill-914772142300749854"\n\t}}\n}}'
 	load_json = {"values": ["namespace:load"]}
 	tick_json = {"values": ["namespace:tick"]}
 	load = "say Это лоад функция"
@@ -45,16 +46,10 @@ class PGenerator:
 		}
 		existing_fldrs = dp_folders if type == "dp" else rp_folders
 		valid_folders = set()
-		if type == "dp":
-			for folder in folders:
-				for existing_fldr in existing_fldrs:
-					if distance(folder, existing_fldr) <= len(existing_fldr)/2:
-						valid_folders.add(existing_fldr)
-					else:
-						for alias in existing_fldrs[existing_fldr]:
-							if distance(folder, alias) <= len(alias)/2:
-								valid_folders.add(existing_fldr)
-								break
+		for folder in folders:
+			valid_folder = validate(folder, existing_fldrs)
+			if valid_folder != None:
+				valid_folders.add(valid_folder)
 		return list(valid_folders)
 	
 	def validate_namespaces(namespaces):
