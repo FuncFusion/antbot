@@ -1,201 +1,318 @@
-import re
+from re import match, findall, sub, search, MULTILINE
 from json import loads
+from string import ascii_letters
 
-class Highlighter:
+class Hl:
 	class Database:
 		with open("utils/highlighter/database.json", "r", encoding="utf-8") as db:
 			database_content = loads(db.read())
 		color_codes = database_content["color_codes"]
-		color_classes = database_content["color_classes"]
 		commands = database_content["commands"]
-		regexes = {
-			"general": {
-				"link-comment": r'(?m)^# ?[#~>].*$',
-				"comment": r'(?m)^#.*$',
-				"string": r'(?<!\\)(?:"(?:\\.|[^"])*"|\'(?:\\.|[^\'])*\')',
-				"macro": r'\$\([a-zA-Z0-9_-]*\)',
-				"path": r'[\.\-_A-Za-z0-9]+:[\.\-_A-Za-z0-9]+',
-				"selector": r'[#@][a-zA-Z0-9]+',
-				"number": r'[~^|0-9]+\.?[0-9]*[bdfs]?(?=[^%])',
-				"text": r'\$?[A-Za-z_\-\.]+'
-			},
-			"extended": {
-				"nbt_parts": r'(\\\n|\$\([a-zA-Z0-9_-]*\)|string[0-9]+|[a-zA-Z_]\w*|[0-9]+.?[0-9]*[bdfs]?|[\[\]{},:;])'
-			}
+		color_classes = database_content["color_classes"]
+
+	def lex(func):
+		state = {
+			"mode": "normal",
+			"history": ["normal"],
+			"string_type": "",
+			"is_macro": "",
 		}
-	root_command = ""
-
-	def remove_duplicates(list):
-		unique_list = []
-		for item in list:
-			if item not in unique_list:
-				unique_list.append(item)
-		return unique_list
-
-	def highlight(function, mode="ansi"):
-		function_elements = Highlighter.general_lexer(function)
-		ansi_highlighted = Highlighter.colorizer(function, function_elements)
-		if mode == "ansi":
-			return ansi_highlighted
-		elif mode == "html":
-			return Highlighter.ansi2html(ansi_highlighted)
-
-	def brackets_slice(brackets_type, slice_string, replace_slices, replace_string=""):
-		slices = []
-		current_slice = ""
-		brackets_count = 0
-		strings = []
-		for index, char in enumerate(slice_string[0]):
-			if len(strings) >= 1:
-				if char == strings[-1] and slice_string[0][index-1: index] != "\\":
-					strings.pop(-1)
-				current_slice += char
-			elif char in "\"'":
-				strings.append(char)
-				current_slice += char
-			elif char == brackets_type[0]:
-				brackets_count += 1
-				current_slice += char
-			elif char == brackets_type[1]:
-				brackets_count -= 1
-				current_slice += char
-				if brackets_count == 0:
-					slices.append(current_slice)
-					if replace_slices:
-						slice_string[0] = slice_string[0].replace(current_slice, replace_string.format(len(slices) - 1))
-					current_slice = ""
-			elif brackets_count >= 1:
-				current_slice += char
-		return slices
-
-	def general_lexer(function):
-		Highlighter.function_copy = function + " "
-		regexes = Highlighter.Database.regexes["general"]
-		function_elements = {
-			"link-comment": [],
-			"comment": [],
-			"selector_filter": [],
-			"nbt": [],
-			"string": [],
-			"macro": [],
-			"path": [],
-			"number": [],
-			"selector": [],
-			"text": [],
-			"command": [],
-			"subcommand": [],
-			"backslash": ["\\\n"]
-		}
-		def cut_by_regex(matches_list, regex):
-			function_elements[matches_list] = Highlighter.remove_duplicates(re.findall(regex, Highlighter.function_copy))
-			for match in function_elements[matches_list]:
-				Highlighter.function_copy = Highlighter.function_copy.replace(match, "")
-		# Lexing
-		temp = [Highlighter.function_copy]
-		function_elements["nbt"] = Highlighter.brackets_slice("{}", temp, True)
-		function_elements["selector_filter"] = Highlighter.brackets_slice("[]", temp, True)
-		for name, regex in regexes.items():
-			cut_by_regex(name, regex)
-		return function_elements
-
-	def colorizer(function, function_elements):
-		# Shortcuts
-		colors = Highlighter.Database.color_codes
-		possible_commands = Highlighter.Database.commands
-		multiple_colors_types = Highlighter.Database.multiple_colors_types
-		# Extending command_elements with commands and subcommands
-		possible_subcommands = []
-		for word in list(function_elements["text"]):
-			raw_word = word.replace("$", "")
-			if raw_word in possible_commands:
-				function_elements["command"].append(word)
-				function_elements["text"].remove(word)
-				possible_subcommands += possible_commands[raw_word]["subcommands"]
-			elif word in possible_subcommands:
-				function_elements["subcommand"].append(word)
-				function_elements["text"].remove(word)
-			elif raw_word != word:
-				function_elements["selector"].append(word)
-				function_elements["text"].remove(word)
-		# ✨ Colorizing
-		raw_nbt_thing = '|(?=\u001b)'
-		for type, tokens in function_elements.items():
-			for token in tokens:
-				if type not in multiple_colors_types:
-				#                                   Formatting token to aviod regex perceive "$" as a start of line
-				#                                                                 |
-				#                                                                 v
-					function = re.sub("(?m)(?:(?<=\\s)|(?<=^))"+token.replace("$", "\\$")+f"(?:(?=\\s)|(?=$){raw_nbt_thing if type in 'text selector' else ''})", f"{colors[type]}{token}", function)
-				else:
-					function = function.replace(token, multiple_colors_types[type](token))
-		return function
-
-	def selector_filter(filters):
-		# Shortcut
-		colors = Highlighter.Database.color_codes
-		# Main
-		temp = [filters]
-		nbts = Highlighter.brackets_slice("{}", temp, True, "%%%nbt{0}%%%")
-		highlighted = temp[0].replace("[", f"{colors['bracket0']}[{colors['key']}")\
-			.replace("]", f"{colors['bracket0']}]")\
-			.replace("=", f"{colors['delimiter']}={colors['value']}")\
-			.replace(",", f"{colors['delimiter']},{colors['key']}")\
-			.replace("!", f"{colors['delimiter']}!{colors['value']}")\
-			.replace("..", f"{colors['bracket1']}..{colors['value']}")\
-			.replace("#", f"{colors['selector']}#")
-		for index, tag in enumerate(nbts):
-			highlighted = highlighted.replace(f"%%%nbt{index}%%%", tag)
-		return highlighted
-
-	def nbt(tag, brackets_depth=-1):
-		colors = Highlighter.Database.color_codes
-		# Strings are highlighted separately bc they has really hard regex and idk
-		# if there a way to put it into nbt regex
-		string_re = Highlighter.Database.regexes["general"]["string"]
-		strings = re.findall(string_re, tag)
-		for index, string in enumerate(strings):
-			tag = tag.replace(string, f"string{index}")
-		def lexer(tag, brackets_depth):
-			tokens = []
-			nbt_re = Highlighter.Database.regexes["extended"]["nbt_parts"]
-			for match in re.finditer(nbt_re, tag):
-				token = match.group()
-				if token[0].isdigit() or token in "BIL":
-					tokens.append((token, "value"))
-				elif token[:6] == "string":
-					tokens.append((token, "string"))
-				elif token in "[{":
-					brackets_depth += 1
-					brackets_depth %= 3
-					tokens.append((token, f"bracket{brackets_depth}"))
-				elif token in "}]":
-					tokens.append((token, f"bracket{brackets_depth}"))
-					brackets_depth -= 1
-					brackets_depth %= 3
-				elif token in ':,;':
-					tokens.append((token, "delimiter"))
-				elif token[:2] == "$(":
-					tokens.append((token, f"bracket{(brackets_depth + 1) % 3}"))
-				elif token == "\\\n":
-					tokens.append((token, "backslash"))
-				else:
-					tokens.append((token, "key"))
-			return tokens
-		lexed = lexer(tag, brackets_depth)
-		highlighted = ''
-		for token, type in lexed:
-			if token[:2] == "$(":
-				highlighted += f"{colors['macro']}${colors[type]}({colors['text']}{token[2:-1]}{colors[type]})"
-			elif type == "string":
-				highlighted += f"{colors['string']}{strings[int(token.replace('string', ''))]}"
+		def reset_token(need_to_append_char=False):
+			nonlocal tokens, curr_token
+			tokens.append(curr_token) if curr_token != "" else None
+			if need_to_append_char:
+				tokens.append(char)
+			curr_token = ""
+		def switch_mode(mode):
+			if mode == "back":
+				state["history"].pop(-1)
+				state["mode"] = state["history"][-1]
 			else:
-				highlighted += colors[type] + token
-				if type == "delimiter":
-					highlighted += " "
+				state["mode"] = mode
+				state["history"].append(mode)
+		# Setting up vars
+		closed_bracktes = {"{":"}", "[":"]"}
+		tokens = []
+		curr_token = ""
+		# Magec
+		for idx, char in enumerate(func):
+			next_char = func[idx+1:idx+2]
+			prev_char = func[idx-1]
+			prev_tokens = tokens[::-1]
+			next_chars = func[idx+1:]
+			if state["mode"] == "normal":
+				if char not in " \\\n\t#[]{}.\"'$":
+					curr_token += char
+				else:
+					need_to_append_char = True
+					need_to_reset = True
+					if char == "[":
+						if "@" in curr_token:
+							switch_mode("filter")
+						else:
+							switch_mode("component")
+					elif char == "{":
+						switch_mode("nbt")
+						opened_brackets = 1
+						state["nbt_type"] = char
+					elif char == "$":
+						need_to_reset = False
+						if next_char == "(":
+							switch_mode("macro")
+							reset_token()
+						curr_token += char
+					elif char in "\"'":
+						switch_mode("string")
+						state["string_type"] = char
+						curr_token += char
+						need_to_reset = False
+					elif char == ".":
+						if curr_token == char:
+							curr_token += char
+						else:
+							if next_char == char:
+								reset_token()
+								curr_token = char
+								need_to_reset = False
+							else:
+								curr_token += char
+								need_to_reset = False
+						need_to_append_char = False
+					elif char == "#":
+						is_comment = [True] if prev_tokens == [] or "\n" not in prev_tokens else [True if i == '\n' else False for i in prev_tokens if i not in " \t"]
+						next_word = next_chars.split(" ")[0]
+						if is_comment[0] and not any([True for command in ["define", "declare", "alias"] if command == next_word]):
+							switch_mode("comment")
+							reset_token()
+							curr_token += "\u200b"
+						curr_token += char
+						need_to_reset = False
+					if need_to_reset:
+						reset_token(need_to_append_char)
+			elif state["mode"] == "filter":
+				if char not in " \t{}\"']$)\\\n=,.":
+					curr_token += char
+				else:
+					need_to_append_char = True
+					need_to_reset = True
+					if char == "]":
+						switch_mode("back")
+					elif char == "{":
+						if tokens[-2] == "nbt":
+							opened_brackets = 1
+							switch_mode("nbt")
+					elif char in "\"'":
+						switch_mode("string")
+						state["string_type"] = char
+						curr_token += char
+						need_to_reset = False
+					elif char == ".":
+						if curr_token == char:
+							curr_token += char
+						else:
+							if next_char == char:
+								reset_token()
+								curr_token = char
+								need_to_reset = False
+							else:
+								curr_token += char
+								need_to_reset = False
+						need_to_append_char = False
+					elif char == "$":
+						need_to_reset = False
+						if next_char == "(":
+							switch_mode("macro")
+							reset_token()
+						curr_token += char
+					if need_to_reset:
+						reset_token(need_to_append_char)
+			elif state["mode"] == "macro":
+				curr_token += char
+				if char == ")":
+					switch_mode("back")
+					reset_token()
+			elif state["mode"] == "component":
+				if char not in " \\\n\t[]{}\"'$;,=":
+					curr_token += char
+				else:
+					need_to_append_char = True
+					need_to_reset = True
+					if char in "{[":
+						switch_mode("nbt")
+						opened_brackets = 1
+						state["nbt_type"] = char
+					elif char in "\"'":
+						switch_mode("string")
+						state["string_type"] = char
+						curr_token += char
+						need_to_reset = False
+					elif char == "$":
+						need_to_reset = False
+						if next_char == "(":
+							switch_mode("macro")
+							reset_token()
+						curr_token += char
+					if need_to_reset:
+						reset_token(need_to_append_char)
+				# Exiting component stte if it closed
+				if char == "]":
+					switch_mode("back")
+			elif state["mode"] == "nbt":
+				if char not in " \t[]{}\"'$)\\\n;:,":
+					curr_token += char
+				else:
+					need_to_append_char = True
+					need_to_reset = True
+					if char in "\"'":
+						switch_mode("string")
+						state["string_type"] = char
+						curr_token += char
+						need_to_reset = False
+					elif char == "$":
+						need_to_reset = False
+						if next_char == "(":
+							switch_mode("macro")
+							reset_token()
+						curr_token += char
+					if need_to_reset:
+						reset_token(need_to_append_char)
+				# Exiting nbt stte if it closed
+				if char == state["nbt_type"]:
+					opened_brackets += 1
+				elif char == closed_bracktes[state["nbt_type"]]:
+					opened_brackets -= 1
+					if opened_brackets == 0:
+						switch_mode("back")
+			elif state["mode"] == "string":
+				curr_token += char
+				if char == state["string_type"] and curr_token[-2] != "\\":
+					switch_mode("back")
+					reset_token()
+			elif state["mode"] == "comment":
+				if char != "\n":
+					curr_token += char
+				else:
+					switch_mode("back")
+					reset_token(True)
+			if idx+1 == len(func) and curr_token != "":
+				tokens.append(curr_token)
+				break
+		return tokens
+
+	def highlight(func, theme="default"):
+		# Shotcuts
+		colors = Hl.Database.color_codes if theme == "default" else theme
+		commands = Hl.Database.commands
+		# Setting up vars
+		commands_count = 0
+		possible_subcommands = []
+		bracket_index = 0
+		highlighted = ""
+		# Магія ✨
+		tokens = Hl.lex(func)
+		clear_tokens = tokens[:]
+		# god sorry me for that
+		for i in range(clear_tokens.count(" ")):
+			clear_tokens.remove(" ")
+		for i in range(clear_tokens.count("\\")):
+			clear_tokens.remove("\\")
+		for i in range(clear_tokens.count("\n")):
+			clear_tokens.remove("\n")
+		for i in range(clear_tokens.count("\t")):
+			clear_tokens.remove("\t")
+		clear_tokens.append('')
+		clear_index = 0
+		#
+		for index, token in enumerate(tokens):
+			prev_tokens = tokens[index::-1]
+			clear_index += 1 if token not in " \\\n\t" else 0
+			next_clear_tokens = clear_tokens[clear_index:]
+			prev_clear_tokens = clear_tokens[clear_index-2::-1]
+			fut_tokens = tokens[index+1:]
+			if token[0] == "\u200b":
+				token = token[1:]
+				comment_content = sub(r"^\s*#(#|>)?", "", token, flags=MULTILINE)
+				edited_content = comment_content[:]
+				if token[1] in "#>":
+					comment_type = "link-comment"
+				else:
+					comment_type = "comment"
+				# path and @this stuff
+				pathes = findall(r"#[a-zA-z_\-]+:[a-zA-z_\-/]", comment_content)
+				decaorator_maybe_idkhonestly = findall(r"@\w+", comment_content)
+				for path in pathes:
+					edited_content = comment_content.replace(path, colors["path"] + path + colors[comment_type])
+				for i in decaorator_maybe_idkhonestly:
+					edited_content = edited_content.replace(i, colors["subcommand"] + i + colors[comment_type])
+				#
+				highlighted += colors["comment"] + token.replace(comment_content, "") + (colors[comment_type] if comment_type == "link-comment" else "") + edited_content
+			elif token in possible_subcommands and bracket_index <= 0:
+				highlighted += colors["subcommand"] + token
+			elif (raw_command:=token.replace("$", "")) in commands and bracket_index <= 0:
+				if raw_command != "execute":
+					possible_subcommands = []
+				highlighted += (colors["macro_bf_command"]+"$" if "$" in token else "") + colors["command"] + raw_command
+				possible_subcommands += commands[raw_command]["subcommands"]
+			elif token[0] in "\"'":
+				# Highlighting macros
+				macros = findall(r"\$\([0-9A-z-_\.]+\)", token)
+				for macro in macros:
+					token = token.replace(macro, macro.replace("$", colors["macro"]+"$")\
+					.replace("(", colors[f"bracket{bracket_index}"]+"("+colors["text"])\
+					.replace(")", colors[f"bracket{bracket_index}"]+")"+colors["string"]))
+				#
+				highlighted += colors["string"] + token
+			elif token == "..":
+				highlighted += colors["range"] + token
+			elif ":" in token and token != ":" and next_clear_tokens[0] != "=":
+				highlighted += colors["path"] + token
+			elif token[0] in "@#$%." and len(token) > 1 and token[1] != "(" and prev_tokens[0] != "]":
+				highlighted += colors["selector"] + token
+			elif token in ":;=,":
+				highlighted += colors["separator"] + token
+			elif token in "[{(":
+				highlighted += colors[f"bracket{bracket_index%3}"] + token
+				bracket_index += 1
+			elif token in ")}]":
+				bracket_index -= 1
+				highlighted += colors[f"bracket{bracket_index%3}"] + token
+			elif match(r"^(~-?[0-9]*\.?[0-9]*|\^-?[0-9]*\.?[0-9]*|-?[0-9]+\.?[0-9]*[bsdf]?|-?\.?[0-9]+[bsdf]?)$", token):
+				highlighted += colors["number"] + token
+			elif match(r"\$\([0-9A-z-_\.]+\)", token):
+				highlighted += f"{colors['macro']}${colors[f'bracket{bracket_index}']}({colors['text']}{token[2:-1]}{colors[f'bracket{bracket_index}']})"
+			elif token == "\\":
+				highlighted += colors["backslash"] + token
+			elif token in " \t\n":
+				highlighted += token
+			else:
+				text_type = "text"
+				if bracket_index > 0:
+					text_type = "key"
+					if prev_clear_tokens[1] in ":=":
+						text_type = "value"
+				highlighted += colors[text_type] + token
 		return highlighted
 
-	def macro(macro):
-		colors = Highlighter.Database.color_codes
-		return f"{colors['macro']}${colors['bracket0']}({colors['text']}{macro[2:-1]}{colors['bracket0']})"
+	def ansi2html(function):
+		color_classes = Hl.Database.color_classes
+		ansi_codes_re = r'(([30][0-7]?)(;(4[0-7]))?m)'
+		converted = ""
+		function_elements = function.replace("\n", "<br>").split("\u001b[")[1:]
+		for element in function_elements:
+			matches = search(ansi_codes_re, element)
+			converted += f'<span class="ansi_{color_classes[matches.group(2)]}{" "+color_classes[matches.group(4)] if matches.group(4) != None else ""}">{element.replace(matches.group(1), "")}</span>'
+		return f"<pre>{converted}</pre>"
 
-Highlighter.Database.multiple_colors_types = {"selector_filter": Highlighter.selector_filter, "nbt": Highlighter.nbt, "macro": Highlighter.macro}
+
+# print(Hl.highlight("""xp set @s 0 points
+# xp set @s 129 levels
+
+# data remove storage ns:storage root.temp.xp
+
+# scoreboard players operation $temp ns.int = @s ns.xp.current
+# scoreboard players operation $temp ns.int *= #1000 ns.int
+# execute store result storage ns:storage root.temp.xp.current int 1 run scoreboard players operation $temp ns.int /= @s ns.xp.max
+
+# execute store result storage ns:storage root.temp.xp.level int 1 run scoreboard players get @s ns.xp.level
+
+# function ns:set_xp_bar with storage ns:storage root.temp.xp"""))
