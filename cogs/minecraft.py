@@ -138,11 +138,19 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			"resourcepack": {"emoji": Emojis.resource_rack, "accusative": "ресурспака", "modal": Modals.RP}
 		}
 		#Validating args
-		template = validate(template, {"datapack": ["dp", "дп", "датапак", "детарак", "патадак"], "resourcepack": ["rp", "рп", "ресурспак", "репуксрак"]})
-		type = validate(type, {"basic": ["базовый", "стандартный", "обычный"], "extended": ["расширенный", "полный"], "custom": ["кастомынй", "настраиваемый"]})
+		if (v_template:=validate(template, {"datapack": ["dp", "дп", "датапак", "детарак", "патадак"], "resourcepack": ["rp", "рп", "ресурспак", "репуксрак"]}))\
+			!= None:
+			template = v_template
+		else:
+			raise commands.BadArgument(template)
+		if (v_type:=validate(type, {"basic": ["базовый", "стандартный", "обычный"], "extended": ["расширенный", "полный"], "custom": ["кастомынй", "настраиваемый"]}))\
+			!= None:
+			type = v_type
+		else:
+			raise commands.BadArgument(type)
 		for arg in [template, type]:
 			if arg == None:
-				raise ValueError(f"Wrong argument: '{arg}'")
+				raise commands.BadArgument(f"{arg}")
 		#
 		if type == "custom":
 			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"]())
@@ -152,6 +160,15 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		elif type == "basic":
 			with open(f"assets/templates/Basic {template}.zip", "rb") as pack:
 				await ctx.send(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", file=discord.File(pack))
+	@template.error
+	async def template_error(self, ctx: commands.Context, error):
+		error_str = str(error)
+		if isinstance(error, commands.MissingRequiredArgument):
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов", allowed_mentions=no_ping)
+		elif isinstance(error, commands.BadArgument):
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверный аргумент: {error_str}", allowed_mentions=no_ping)
+		else:
+			await unknown_error(ctx, error)
 	@template.autocomplete("template")
 	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		return [app_commands.Choice(name="Датапак", value="datapack"), app_commands.Choice(name="Ресурспак", value="resourcepack")]
