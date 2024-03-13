@@ -156,10 +156,12 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"]())
 		elif type == "extended":
 			with open(f"assets/templates/Extended {template}.zip", "rb") as pack:
-				await ctx.send(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", file=discord.File(pack))
+				await ctx.send(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", 
+				file=discord.File(pack, filename=f"Extended_{template}_(UNZIP).zip"))
 		elif type == "basic":
 			with open(f"assets/templates/Basic {template}.zip", "rb") as pack:
-				await ctx.send(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", file=discord.File(pack))
+				await ctx.send(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", 
+				file=discord.File(pack, filename=f"Basic_{template}_(UNZIP).zip"))
 	@template.error
 	async def template_error(self, ctx: commands.Context, error):
 		error_str = str(error)

@@ -1,6 +1,7 @@
 import discord
 
 from utils.msg_utils import Emojis
+from utils.minecraft import get_mcmeta_ver
 from utils.validator import validate
 
 import io
@@ -63,6 +64,21 @@ class PGenerator:
 			if curr_nspc != "":
 				valid_namespaces.add(curr_nspc)
 		return list(valid_namespaces)
+	
+	def validate_version(version, type):
+		version = version.replace(" ", "")
+		if version.isnumeric():
+			return int(version)
+		else:
+			cleaned_version = ''.join(filter(str.isdigit, version))
+			try:
+				major, *rest = cleaned_version
+				minor, *patch = rest
+				version = f"{major}.{minor}{'.'.join(patch)}"
+			except:
+				version = "latest"
+			version = get_mcmeta_ver(type, version)
+			return version
 
 	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version=32):
 		# Validating stuff
@@ -70,6 +86,7 @@ class PGenerator:
 		folders_exclude = PGenerator.validate_folders(folders_exclude, "dp")
 		namespaces = PGenerator.validate_namespaces(namespaces)
 		main_namespace = "namespace" if namespaces == [] else namespaces[0]
+		version = PGenerator.validate_version(version, "dp")
 		all_folders = ["advancement", "chat_type", "damage_type", "dimension", "dimension_type", "functions", "loot_tables", "predicates", "recipes", "structures", "tags", "worldgen"]
 		# Generating dp
 		dp_f = io.BytesIO()
@@ -97,6 +114,7 @@ class PGenerator:
 		folders_include = PGenerator.validate_folders(folders_include, "rp"); folders_include = folders_include if folders_include != [] else all_folders
 		folders_exclude = PGenerator.validate_folders(folders_exclude, "rp")
 		namespaces = PGenerator.validate_namespaces(namespaces)
+		version = PGenerator.validate_version(version, "rp")
 		main_namespace = "namespace" if namespaces == [] else namespaces[0]
 		# Generating rp
 		rp_f = io.BytesIO()

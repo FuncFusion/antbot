@@ -1,7 +1,6 @@
 import requests
 from collections import OrderedDict as odict
 
-from Levenshtein import distance
 from bs4 import BeautifulSoup
 
 def get_mcmeta_ver(type="dp", version="latest"):
@@ -22,14 +21,15 @@ def get_mcmeta_ver(type="dp", version="latest"):
 				snapshot = cells[1].get_text()
 				release = cells[2].get_text()
 				for rel in release.split("–"):
-					versions.update({rel: num})
-				versions.update({snapshot: num})
+					versions[rel.replace(" ", "")] = num
+				for snap in snapshot.split("–"):
+					versions[snap.replace(" ", "")] = num
+	#
 	if version == "latest":
-		return int(list(versions.items())[0][1])
+		return int(list(versions.items())[-1][1])
 	else:
-		for ver in versions:
-			if distance(version, ver) <= len(ver)/4:
-				return versions[ver]
+		if version in versions:
+			return versions[version]
 		else:
-			return int(list(versions.items())[0][1])
+			return int(list(versions.items())[-1][1])
 
