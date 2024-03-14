@@ -23,6 +23,7 @@ class PGenerator:
 	def validate_folders(folders, type):
 		dp_folders = {
 			"advancement": ["адванцмент", "ачивки", "достижения"],
+			"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
 			"chat_type": ["чат тайп", "тип чата"],
 			"damage_type": ["дэмедж тайп", "тип урона"],
 			"dimension": ["дименшон", "измерение"],
@@ -32,6 +33,9 @@ class PGenerator:
 			"recipes": ["ресипис", "рецепты", "рецепты крафта"],
 			"structures": ["стракчерс", "структуры", "данжи"],
 			"tags": ["тэгс", "теги", "ярлыки"],
+			"trim_material": ["трим материал", "материал шаблона"],
+			"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
+			"wolf_variant": ["волф враинат", "вариант волка"],
 			"worldgen": ["ворлдген", "генерация", "генерация мира"]
 			}
 		rp_folders = {
@@ -175,7 +179,7 @@ class Modals:
 				self.folders_exclude.value.replace(" ", "").split(), 
 				self.version.value if self.version.value != "" else 32
 				)
-			await Interaction.response.send_message(f"{Emojis.deta_rack} Кастомный шаблон датапака", file=discord.File(dp, filename="Custom datapack.zip"))
+			await Interaction.response.send_message(f"{Emojis.deta_rack} Кастомный шаблон датапака", file=discord.File(dp, filename="Custom datapack UNZIP.zip"))
 	
 	class RP(discord.ui.Modal):
 		def __init__(self):
@@ -220,5 +224,5 @@ class Modals:
 				self.folders_exclude.value.replace(" ", "").split(), 
 				self.version.value if self.version.value != "" else 32
 				)
-			await Interaction.response.send_message(f"{Emojis.resource_rack} Кастомный шаблон ресурспака", file=discord.File(rp, filename="Custom resourcepack.zip"))
+			await Interaction.response.send_message(f"{Emojis.resource_rack} Кастомный шаблон ресурспака", file=discord.File(rp, filename="Custom resourcepack UNZIP.zip"))
 
