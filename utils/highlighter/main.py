@@ -4,7 +4,7 @@ from string import ascii_letters
 
 class Hl:
 	class Database:
-		with open("utils/highlighter/database.json", "r", encoding="utf-8") as db:
+		with open("database.json", "r", encoding="utf-8") as db:
 			database_content = loads(db.read())
 		color_codes = database_content["color_codes"]
 		commands = database_content["commands"]
@@ -304,15 +304,14 @@ class Hl:
 		return f"<pre>{converted}</pre>"
 
 
-# print(Hl.highlight("""xp set @s 0 points
-# xp set @s 129 levels
+# print(Hl.highlight("""# set the .damage to their cDamage tag
+# execute store result score .damage hc.temp run data get entity @s Inventory[{Slot:103b}].tag.cDamage
 
-# data remove storage ns:storage root.temp.xp
+# # remove one from the .damage score
+# scoreboard players remove .damage hc.temp 1
 
-# scoreboard players operation $temp ns.int = @s ns.xp.current
-# scoreboard players operation $temp ns.int *= #1000 ns.int
-# execute store result storage ns:storage root.temp.xp.current int 1 run scoreboard players operation $temp ns.int /= @s ns.xp.max
+# # put the score into a data storage so we can copy it to the item
+# execute store result storage hc:damage_store NewDamage int 1 run scoreboard players get .damage hc.temp
 
-# execute store result storage ns:storage root.temp.xp.level int 1 run scoreboard players get @s ns.xp.level
-
-# function ns:set_xp_bar with storage ns:storage root.temp.xp"""))
+# # modify the item
+# item modify entity @s <slot> <namespace>:change_durablilty"""))
