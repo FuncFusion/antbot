@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from cogs.mc.pack_generator import PGenerator, Modals
 from utils.validator import validate
 from utils.msg_utils import Emojis
-from utils.highlighter.main import Hl as hl
+from cogs.mc.highlighter.main import Hl as hl
 from utils.fake_user import fake_send
 from utils.shortcuts import no_ping, no_color
 from utils.msg_utils import unknown_error
