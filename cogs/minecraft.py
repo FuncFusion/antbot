@@ -1,13 +1,17 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+
+from typing import List
 import re
 import requests
 from Levenshtein import distance
 from bs4 import BeautifulSoup
 
+from cogs.mc.pack_generator import PGenerator, Modals
+from utils.validator import validate
 from utils.msg_utils import Emojis
-from utils.highlighter.main import Highlighter as hl
+from cogs.mc.highlighter.main import Hl as hl
 from utils.fake_user import fake_send
 from utils.shortcuts import no_ping, no_color
 from utils.msg_utils import unknown_error
@@ -126,3 +130,52 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			await ctx.reply(f"{Emojis.exclamation_mark} Неверно указан тип пакформата", allowed_mentions=no_ping)
 		else:
 			await unknown_error(self, ctx, error)
+	
+	@commands.hybrid_command(aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"])
+	async def template(self, ctx: commands.Context, template: str="datapack", type: str="basic"):
+		pack_ctx = {
+			"datapack": {"emoji": Emojis.deta_rack, "accusative": "датапака", "modal": Modals.DP},
+			"resourcepack": {"emoji": Emojis.resource_rack, "accusative": "ресурспака", "modal": Modals.RP}
+		}
+		#Validating args
+		if (v_template:=validate(template, {"datapack": ["dp", "дп", "датапак", "детарак", "патадак"], "resourcepack": ["rp", "рп", "ресурспак", "репуксрак"]}))\
+			!= None:
+			template = v_template
+		else:
+			raise commands.BadArgument(template)
+		if (v_type:=validate(type, {"basic": ["базовый", "стандартный", "обычный"], "extended": ["расширенный", "полный"], "custom": ["кастомынй", "настраиваемый"]}))\
+			!= None:
+			type = v_type
+		else:
+			raise commands.BadArgument(type)
+		for arg in [template, type]:
+			if arg == None:
+				raise commands.BadArgument(f"{arg}")
+		#
+		if type == "custom":
+			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"]())
+		elif type == "extended":
+			with open(f"assets/templates/Extended {template}.zip", "rb") as pack:
+				await ctx.send(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", 
+				file=discord.File(pack, filename=f"Extended_{template}_(UNZIP).zip"))
+		elif type == "basic":
+			with open(f"assets/templates/Basic {template}.zip", "rb") as pack:
+				await ctx.send(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", 
+				file=discord.File(pack, filename=f"Basic_{template}_(UNZIP).zip"))
+	@template.error
+	async def template_error(self, ctx: commands.Context, error):
+		error_str = str(error)
+		if isinstance(error, commands.MissingRequiredArgument):
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов", allowed_mentions=no_ping)
+		elif isinstance(error, commands.BadArgument):
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверный аргумент: {error_str}", allowed_mentions=no_ping)
+		else:
+			await unknown_error(ctx, error)
+	@template.autocomplete("template")
+	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
+		return [app_commands.Choice(name="Датапак", value="datapack"), app_commands.Choice(name="Ресурспак", value="resourcepack")]
+	@template.autocomplete("type")
+	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
+		return [app_commands.Choice(name="Базовый", value="basic"), app_commands.Choice(name="Расширенный", value="extended"),
+		  app_commands.Choice(name="Настраиваемый", value="custom")]
+

@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
+MONGO_URI = os.getenv("MONGO_URI")
 
 HELP_FORUM_ID = 1169322456125800498
 IDEAS_CHANNEL_ID = 1125102361942183987

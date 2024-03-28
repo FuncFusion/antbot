@@ -2,12 +2,17 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
 from settings import IDEAS_CHANNEL_ID
+from settings import MONGO_URI
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
 from json import load, dump
 
+db = MongoClient(MONGO_URI, server_api=ServerApi('1')).antbot.ideas
 
 class IdeaView(discord.ui.View):
 	def __init__(self, votes=["0", "0"]):
@@ -21,7 +26,7 @@ class IdeaView(discord.ui.View):
 		# Setting up variables
 		idea_num = ctx.message.embeds[0].fields[0].name.split(" ")[-1]
 		Ideas.vote(idea_num, ctx.user.id, "up")
-		idea = Ideas.get()[idea_num]
+		idea = Ideas.get(idea_num)
 		upvoters = str(len(idea["upvoters"]))
 		downvoters = str(len(idea["downvoters"]))
 		# Chnaging votes
@@ -32,7 +37,7 @@ class IdeaView(discord.ui.View):
 		# Setting up variables
 		idea_num = ctx.message.embeds[0].fields[0].name.split(" ")[-1]
 		Ideas.vote(idea_num, ctx.user.id, "down")
-		idea = Ideas.get()[idea_num]
+		idea = Ideas.get(idea_num)
 		upvoters = str(len(idea["upvoters"]))
 		downvoters = str(len(idea["downvoters"]))
 		# Chnaging votes
@@ -89,8 +94,7 @@ class IdeaCommand(commands.Cog):
 	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"])
 	@app_commands.describe(suggestion="Идея")
 	async def idea(self, ctx, *, suggestion: str):
-		ideas = Ideas.get()
-		ideas_count = len(ideas)
+		ideas_count = str(db.count_documents({}))
 		# Building embed
 		embed = discord.Embed(color=no_color)
 		embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
@@ -112,7 +116,7 @@ class IdeaCommand(commands.Cog):
 		else:
 			# Setting up vars
 			idea_num = message.embeds[0].fields[0].name.split(" ")[-1]
-			idea = Ideas.get()[idea_num]
+			idea = Ideas.get(idea_num)
 			upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
 			downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
 			# Building embed
@@ -136,20 +140,17 @@ class IdeaCommand(commands.Cog):
 			await ctx.response.send_modal(IdeaVerdict(message, "cancel"))
 
 class Ideas:
-	def get():
-		with open("cogs/ideas/ideas.json", "r", encoding="utf-8") as ideas_f:
-			return load(ideas_f)
+	def get(index):
+		return db.find_one({"_id":index})
 	
 	def create(idea_num, suggestion, linked_msg_id):
-		ideas = Ideas.get()
-		ideas[idea_num] = {
+		db.insert_one({
+			"_id": idea_num,
 			"suggestion": suggestion,
 			"linked_msg_id": linked_msg_id,
 			"upvoters": [],
 			"downvoters": []
-			}
-		with open("cogs/ideas/ideas.json", "w", encoding="utf-8") as ideas_f:
-			dump(ideas, ideas_f, indent="\t", ensure_ascii=False)
+			})
 	
 	def vote(idea_num, voter, vote_type):
 		# Setting up variables
@@ -157,17 +158,13 @@ class Ideas:
 			"up": "down",
 			"down": "up"
 		}
-		ideas = Ideas.get()
-		voters_list = ideas[idea_num][f"{vote_type}voters"]
-		opposite_voters_list = ideas[idea_num][f"{opposite_types[vote_type]}voters"]
+		idea = Ideas.get(idea_num)
+		voters_list = idea[f"{vote_type}voters"]
+		opposite_voters_list = idea[f"{opposite_types[vote_type]}voters"]
 		# Da voting megik
 		if voter in voters_list:
-			voters_list.remove(voter)
-			with open("cogs/ideas/ideas.json", "w", encoding="utf-8") as ideas_f:
-				dump(ideas, ideas_f, indent="\t", ensure_ascii=False)
+			db.update_one({"_id":idea_num}, {"$pull": {f"{vote_type}voters": voter}})
 		else:
 			if voter in opposite_voters_list:
-				opposite_voters_list.remove(voter)
-			voters_list.append(voter)
-			with open("cogs/ideas/ideas.json", "w", encoding="utf-8") as ideas_f:
-				dump(ideas, ideas_f, indent="\t", ensure_ascii=False)
+				db.update_one({"_id":idea_num}, {"$pull": {f"{opposite_types[vote_type]}voters": voter}})
+			db.update_one({"_id":idea_num}, {"$push": {f"{vote_type}voters": voter}})
