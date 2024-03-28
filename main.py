@@ -46,6 +46,6 @@ bot = AntBot(command_prefix="!", intents=intents)
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
 	await Interaction.response.send_message("gex")
-
+# lets try
 	
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)
