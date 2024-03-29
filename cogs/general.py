@@ -76,6 +76,8 @@ class CustomHelpCommand(commands.HelpCommand):
 
 	async def send_cog_help(self, cog):
 		await CustomHelpCommand.command_not_found(self, cog.qualified_name)
+
+
 class GeneralCommands(commands.Cog, name="Общие"):
 	def __init__(self, bot):
 		self._original_help_command = bot.help_command
@@ -87,7 +89,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		self.bot.help_command = self._original_help_command
 
 	@commands.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
-						description="Показывает информацию о сервере")
+		description="Показывает информацию о сервере")
 	async def serverinfo(self, ctx):
 		# setup vars
 		server = ctx.guild
@@ -112,7 +114,8 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		
 	@commands.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
-				  description="Показывает информацию о пользователе")
+		description="Показывает информацию о пользователе")
+	@app_commands.describe(user="Пользователь, информацию о котором вы хотите узнать")
 	async def user(self, ctx, user:discord.Member=None):
 		# Setting up vars
 		if user == None:
@@ -135,7 +138,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	
 	@commands.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
-						description="Отправляет сообщение от имени бота")
+		description="Отправляет сообщение от имени бота")
 	@app_commands.describe(text="Текст сообщения, которое отправит бот")
 	@app_commands.default_permissions(manage_messages=True)
 	async def say(self, ctx, *, text: str):
@@ -149,7 +152,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите сказать от моего имени")
 
 	@commands.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
-				description="Напоминает о чём-то через определённое время с помощью пинга.")
+		description="Напоминает о чём-то через определённое время с помощью пинга.")
 	@app_commands.describe(time="Время, через которое бот пинганёт", reason="Причина, по которой бот будет напоиминать")
 	async def remind(self, ctx, time:str, *, reason:str):
 		raw_time = findall(r"[0-9]+", time)

@@ -91,7 +91,8 @@ class IdeaCommand(commands.Cog):
 			callback=self.cancel_idea
 		))
 
-	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"])
+	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"],
+		description="Предложить идею")
 	@app_commands.describe(suggestion="Идея")
 	async def idea(self, ctx, *, suggestion: str):
 		ideas_count = str(db.count_documents({}))

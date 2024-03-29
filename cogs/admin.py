@@ -14,7 +14,7 @@ class AdminCommands(commands.Cog, name="Административные"):
 		self.bot = bot
 		
 	@commands.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
-						description="Отключает бота.")
+		description="Отключает бота.")
 	@app_commands.default_permissions(manage_guild=True)
 	async def shutdown(self, ctx):
 		with open("assets/pfps/offline.png", "rb") as file:
@@ -24,7 +24,7 @@ class AdminCommands(commands.Cog, name="Административные"):
 	shutdown.error(pfp_ratelimit_msg)
 
 	@commands.hybrid_command(aliases=["on", "онлайн", "всети", "в-сети", "щтдшту", "щт"],
-						description="Меняет статус бота на \"В сети\".")
+		description="Меняет статус бота на \"В сети\".")
 	@app_commands.default_permissions(manage_guild=True)
 	async def online(self, ctx):
 		with open("assets/pfps/online.png", "rb") as file:
@@ -37,7 +37,7 @@ class AdminCommands(commands.Cog, name="Административные"):
 	online.error(pfp_ratelimit_msg)
 
 	@commands.hybrid_command(aliases=["afk", "отошёл", "отойди", "айдл", "афк", "швду", "фал"],
-						description="Меняет статус бота на \"Отошёл\".")
+		description="Меняет статус бота на \"Отошёл\".")
 	@app_commands.default_permissions(manage_guild=True)
 	async def idle(self, ctx):
 		with open("assets/pfps/idle.png", "rb") as file:
@@ -50,7 +50,7 @@ class AdminCommands(commands.Cog, name="Административные"):
 	idle.error(pfp_ratelimit_msg)
 
 	@commands.hybrid_command(aliases=["dnd", "do-not-disturb", "небеспокоить", "не-беспокоить", "днд", "вщтщевшыегки", "втв", "вщ-тще-вшыегки"],
-						description="Меняет статус бота на \"Не беспокоить\".")
+		description="Меняет статус бота на \"Не беспокоить\".")
 	@app_commands.default_permissions(manage_guild=True)
 	async def donotdisturb(self, ctx):
 		with open("assets/pfps/dnd.png", "rb") as file:
@@ -63,7 +63,7 @@ class AdminCommands(commands.Cog, name="Административные"):
 	donotdisturb.error(pfp_ratelimit_msg)
 
 	@commands.hybrid_command(aliases=["invis", "inv", "невидимка", "невидимый", "инвизибл", "инвиз", "инв", "штмшышиду", "штмшы", "штм"],
-						description="Меняет статус бота на \"Невидимка\".")
+		description="Меняет статус бота на \"Невидимка\".")
 	@app_commands.default_permissions(manage_guild=True)
 	async def invisible(self, ctx):
 		with open("assets/pfps/offline.png", "rb") as file:
@@ -76,14 +76,14 @@ class AdminCommands(commands.Cog, name="Административные"):
 	invisible.error(pfp_ratelimit_msg)
 
 	@commands.hybrid_command(aliases=["p", "latency", "пинг", "п", "з", "зштп", "дфеутсн"],
-						description="Показывает пинг бота.")
+		description="Показывает пинг бота.")
 	async def ping(self, ctx):
 		embed = discord.Embed(title="🏓 Понг!", color=no_color)
 		embed.add_field(name=f'Мой пинг: {round(self.bot.latency*1000)}ms', value="", inline=True)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@commands.hybrid_command(aliases=["изменить", "эдит", "увше"],
-						description="Изменяет заданное сообщение.")
+		description="Изменяет заданное сообщение.")
 	@app_commands.describe(message="Сообщение, которое будет изменяться.", text="Текст, на который изменится сообщение.")
 	@app_commands.default_permissions(manage_messages=True)
 	async def edit(self, ctx, message:str, *, text:str):

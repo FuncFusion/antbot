@@ -33,7 +33,8 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 
 
 	@commands.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],
-						description="Подсвечивает синтаксис для mcfunction")
+		description="Подсвечивает синтаксис для mcfunction")
+	@app_commands.describe(command="mcfunction функция")
 	async def highlight(self, ctx, *, command:str=None):
 		# Setting up vars
 		message = ""
@@ -131,7 +132,9 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		else:
 			await unknown_error(self, ctx, error)
 	
-	@commands.hybrid_command(aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"])
+	@commands.hybrid_command(aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"],
+		description="Создаёт шаблон датапака/ресурспака")
+	@app_commands.describe(template="Датапак/ресусрпак", type="Тип пака")
 	async def template(self, ctx: commands.Context, template: str="datapack", type: str="basic"):
 		pack_ctx = {
 			"datapack": {"emoji": Emojis.deta_rack, "accusative": "датапака", "modal": Modals.DP},

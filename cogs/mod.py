@@ -44,6 +44,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		
 	@commands.command(aliases=["ифт", "бан", "банчек", "заблокировать"])
 	@app_commands.default_permissions(ban_members=True)
+	@app_commands.describe(user="Пользователь", reason="Причина бана")
 	async def ban(self, ctx, user: discord.Member, reason: str=None):
 		# Setting up variables
 		reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
@@ -68,6 +69,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		
 	@commands.command(aliases=["ьгеу", "мут"])
 	@app_commands.default_permissions(mute_members=True)
+	@app_commands.describe(user="Пользователь", term="Срок мута", reason="Причина мута")
 	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
 		# Setting up variables
 		reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
@@ -102,6 +104,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		
 	@commands.command(aliases=["лшсл", "кик", "изгнать"])
 	@app_commands.default_permissions(kick_members=True)
+	@app_commands.describe(user="Пользователь", reason="Причина кика")
 	async def kick(self, ctx, user: discord.Member, *, reason: str=None):
 		# Setting up variables
 		reason = reason if reason != None else ModerationCommands.generate_stupid_reason()
