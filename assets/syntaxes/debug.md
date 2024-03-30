@@ -1,8 +1,14 @@
-`debug start`
-        Starts a new debug time profiler session.
-`debug stop`
-    Stops the active debug time profiler session.
+```ansi
+[35mdebug [34mstart
+```
+Запускает новый сеанс профилировщика времени отладки.
 
-`debug function <name>`
+```ansi
+[35mdebug [34mstop
+```
+Останавливает активный сеанс профилировщика времени отладки.
 
-    Used the same way as /function to get more detailed information of commands' execution.
+```ansi
+[35mdebug [34mfunction [33m<[0mname[33m>
+```
+Использует тот самый способ как и /function что бы получить более детальную информацию об исполнении команды.
