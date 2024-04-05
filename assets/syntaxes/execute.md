@@ -1,38 +1,38 @@
-execute ...
-... align <оси> -> execute
-... anchored <anchor> -> execute
-... as <селектор> -> execute
-... at <селектор> -> execute
-... facing (<позиция>|entity <селектор> <anchor>) -> execute
-... in <измерение> -> execute
-... on <отношение> -> execute
-... positioned (<позиция>|as <селектор>|over <heightmap>) -> execute
-... rotated (<rot>|as <targets>) -> execute
-... store (result|success) ...
-    ... block <targetPos> <path> <type> <scale> -> execute
-    ... bossbar <id> (max|value) -> execute
-    ... entity <target> <path> <type> <scale> -> execute
-    ... score <targets> <objective> -> execute
-    ... storage <target> <path> <type> <scale> -> execute
-... summon <entity> -> execute
-... (if|unless) ...
-    ... biome <pos> <biome> -> [execute]
-    ... block <pos> <block> -> [execute]
-    ... blocks <start> <end> <destination> (all|masked) -> [execute]
-    ... data ...
-        ... block <sourcePos> <path> -> [execute]
-        ... entity <source> <path> -> [execute]
-        ... storage <source> <path> -> [execute]
-    ... dimension <dimension> -> [execute]
-    ... entity <entities> -> [execute]
-    ... function <function> -> [execute]
-    ... items ...
-        ... block <sourcePos> <slots> <item_predicate> -> [execute]
-        ... entity <source> <slots> <item_predicate> -> [execute]
-    ... loaded <pos> -> [execute]
-    ... predicate <predicate> -> [execute]
-    ... score <target> <targetObjective> ...
-        ... (<|<=|=|>|>=) <source> <sourceObjective> -> [execute]
-        ... matches <range> -> [execute]
-... run <command>
-where -> execute represents the start of another subcommand that is required; -> [execute] represents the start of another subcommand that is optional.
+```ansi
+[35mexecute
+[34m- align [33m<[0mоси[33m>
+[34m- anchored [33m<[34meyes[33m|[34mfeet[33m>
+[34m- as [33m<[36mселектор[33m>
+[34m- at [33m<[36mселектор[33m>
+[34m- facing [33m([32mпозиция[33m|[34mentity [33m<[36mселектор[33m> <[34meyes[33m|[34mfeet[33m>)
+[34m- in [33m<[0mизмерение[33m>
+[34m- on [33m<[0mотношение[33m>
+[34m- positioned [33m([32mпозиция[33m|[34mas [33m<[36mселектор[33m>|[34mover [33m<[34mworld_surface[33m|[34mmotion_blocking[33m|[34mmotion_blocking_no_leaves[33m|[34mocean_floor[33m>)
+[34m- rotated [33m([32mповорот[33m|[34mas [33m<[36mселектор[33m>)
+[34m- store [33m([34mresult[33m|[34msuccess[33m)
+  [34m- block [33m<[32mпозиция[33m> <[0mнбт[33m> <[0mтип данных[33m> <[32mмножитель[33m>
+  [34m- bossbar [33m<[0mайди[33m> ([34mmax[33m|[34mvalue[33m)
+  [34m- entity [33m<[36mселектор[33m> <[0mнбт[33m> <[0mтип данных[33m> <[32mмножитель[33m>
+  [34m- score [33m<[36mселектор[33m> <[0mскорборд[33m>
+  [34m- storage [33m<[36mселектор[33m> <[0mнбт[33m> <[0mтип данных[33m> <[32mмножитель[33m>
+[34m- summon [33m<[0mсущность[33m>
+[34m- [33m([34mif[33m|[34munless[33m)
+  [34m- biome [33m<[32mпозиция[33m> <[0mбиом[33m>
+  [34m- block [33m<[32mпозиция[33m> <[0mблок[33m>
+  [34m- blocks [33m<[32mот[33m> <[32mдо[33m> <destination[33m> ([34mall[33m|[34mmasked[33m)
+  [34m- data
+    - block [33m<[32mпозиция[33m> <[0mнбт[33m>
+    [34m- entity [33m<[0mсущность[33m> <[0mнбт[33m>
+    [34m- storage [33m<[0mсторадж[33m> <[0mнбт[33m>
+  [34m- dimension [33m<[0mизмерение[33m>
+  [34m- entity [33m<[36mселектор[33m>
+  [34m- function [33m<[0mфункция[33m>
+  [34m- items
+    - block [33m<[32mпозиция[33m> <[32mслоты[33m> <[0mфильтр[33m>
+    [34m- entity [33m<[36mселектор[33m> <[32mслоты[33m> <[0mфильтр[33m>
+  [34m- loaded [33m<[32mпозиция[33m>
+  [34m- predicate [33m<[0mпредикат[33m>
+  [34m- score [33m<[36mселектор[33m> <[0mскорборд[33m>
+    [34m- [33m([34m<[33m|[34m<=[33m|[34m=[33m|[34m>[33m|[34m>=[33m) <[36mселектор[33m> <[0mскорборд[33m>
+    [34m- matches [33m<[0mдиапазон[33m>
+[34m- run [33m<[35mкоманда[33m>```

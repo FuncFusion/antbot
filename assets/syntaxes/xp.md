@@ -1,11 +1,11 @@
-`experience add <[36mселекторs> <amount> [levels|points]`
+```ansi
+[35mxp [34madd [33m<[36mселектор[33m> <[32mamount[33m> [[34mlevels[33m|[34mpoints[33m]
+```
 
-`experience set <[36mселекторs> <amount> [levels|points]`
+```ansi
+[35mxp [34mset [33m<[36mселектор[33m> <[32mколичество[33m> [[34mlevels[33m|[34mpoints[33m]
+```
 
-`experience query <[36mселекторs> (levels|points)`
-
-`xp add <[36mселекторs> <amount> [levels|points]`
-
-`xp set <[36mселекторs> <amount> [levels|points]`
-
-`xp query <[36mселекторs> (levels|points)`
+```ansi
+[35mxp [34mquery [33m<[36mселектор[33m> ([34mlevels[33m|[34mpoints[33m)
+```

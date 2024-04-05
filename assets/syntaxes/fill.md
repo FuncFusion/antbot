@@ -1,5 +1,9 @@
-`fill <from> <to> <block> [destroy|hollow|keep|outline|replace]`
+```ansi
+[35mfill [33m<[32mот[33m> <[32mдо[33m> <[0mблок[33m> [[34mdestroy[33m|[34mhollow[33m|[34mkeep[33m|[34moutline[33m|[34mreplace[33m]
+```
 
-The fill command also has an optional alternate syntax when using the `replace` option:
+Так же `fill` имеет немного другой синтаксис при использовании `replace`:
 
-`fill <from> <to> <block> replace [<filter>]`
+```ansi
+[35mfill [33m<[32mот[33m> <[32mдо[33m> <[0mblock[33m> [34mreplace [33m[[34m<[0mфильтр[34m>[33m]
+```
