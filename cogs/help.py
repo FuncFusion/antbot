@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from settings import HELP_FORUM_ID
+from settings import HELP_FORUM_ID, CREATIONS_FROUM_ID
 from utils.msg_utils import Emojis
 from utils.msg_utils import get_msg_by_id_arg
 from utils.shortcuts import no_ping, no_color
@@ -130,7 +130,7 @@ class HelpListeners(commands.Cog, name="no_help_help"):
 		self.bot = bot
 	
 	@commands.Cog.listener("on_thread_create")
-	async def help_in_chat(self, trd):
+	async def new_help_post(self, trd):
 		if trd.parent_id == HELP_FORUM_ID:
 			# Building embed
 			embed = discord.Embed(title="📌 Ознакомься с правилами", color=no_color, 
@@ -144,13 +144,12 @@ class HelpListeners(commands.Cog, name="no_help_help"):
 	@commands.Cog.listener("on_raw_reaction_add")
 	async def react_to_pin(self, reaction):
 		chnl = self.bot.get_channel(reaction.channel_id)
-		msg = None
-		try:
-			if chnl.parent_id == HELP_FORUM_ID and reaction.emoji.name == "📌":
-				if reaction.member.id == chnl.owner_id:
-					msg = await chnl.fetch_message(reaction.message_id)
-					await msg.pin()
-				else:
-					await chnl.send(f"<@{reaction.member.id}> Ты не автор ветки, чтоб закреплять сообщения")
-		except AttributeError:
-			await chnl.send(f"<@{reaction.member.id}> Это не ветка помощи или творчества, чтоб закреплять сообщения реакцией")
+		if isinstance(chnl, discord.Thread) and chnl.parent_id in [HELP_FORUM_ID, CREATIONS_FROUM_ID] \
+			and reaction.emoji.name == "📌":
+			msg = await chnl.fetch_message(reaction.message_id)
+			if reaction.member.id == chnl.owner_id:
+				await msg.pin()
+			else:
+				reactions_count = [react.count for react in msg.reactions if react.emoji == "📌"][0]
+				if reactions_count < 2:
+					await chnl.send(f"{Emojis.exclamation_mark} <@{reaction.member.id}> Ты не автор ветки, чтоб закреплять сообщения", delete_after=4)
