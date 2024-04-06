@@ -147,7 +147,7 @@ class HelpListeners(commands.Cog, name="no_help_help"):
 		if isinstance(chnl, discord.Thread) and chnl.parent_id in [HELP_FORUM_ID, CREATIONS_FROUM_ID] \
 			and reaction.emoji.name == "📌":
 			msg = await chnl.fetch_message(reaction.message_id)
-			if reaction.member.id == chnl.owner_id:
+			if reaction.member.id == chnl.owner_id or chnl.permissions_for(reaction.member).manage_messages:
 				await msg.pin()
 			else:
 				reactions_count = [react.count for react in msg.reactions if react.emoji == "📌"][0]
