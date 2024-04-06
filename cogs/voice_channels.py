@@ -10,6 +10,18 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@commands.hybrid_command(name="transfer-ownership", aliases=["передать-права", "to", "пп"], \
+		description="Передать права на голосовой канал")
+	@app_commands.default_permissions(manage_channels=True)
+	@app_commands.describe(user="Пользователь")
+	async def transfer_owner(self, ctx: commands.Context, user: discord.Member):
+		if ctx.channel.category_id == VCS_CATEGORY_ID:
+			await ctx.channel.set_permissions(ctx.author, manage_channels=None, mute_members=None, 
+				deafen_members=None, move_members=None)
+			await ctx.channel.set_permissions(user, manage_channels=True, mute_members=True, 
+				deafen_members=True, move_members=True)
+			await ctx.send(f"{Emojis.check} Права переданы {user.mention}", ephemeral=True)
+
 	@commands.Cog.listener("on_voice_state_update")
 	async def create_new_vc(self, member, before, after):
 		if after.channel != None and after.channel.id == CREATE_VC_CHANNEL_ID:

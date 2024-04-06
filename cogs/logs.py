@@ -52,8 +52,7 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 	#dms
 	@commands.Cog.listener(name="on_message")
 	async def dms(self, msg):
-		if isinstance(msg.channel, discord.DMChannel):
-			print(msg.channel, type(msg.channel))
+		if isinstance(msg.channel, discord.DMChannel) and not str(msg.channel) == "Direct Message with Unknown User":
 			if msg.author == self.bot.user:
 				async for dmmsg in msg.channel.history(limit=15):
 					if dmmsg.author != self.bot.user:
