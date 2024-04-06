@@ -111,7 +111,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		# Da kick
 		await user.kick(reason=reason)
 		# Building embed
-		embed = discord.Embed(title="🦵Кик", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.door}Кик", color=no_color)
 		embed.set_thumbnail(url=user.avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Причина", value=reason)
