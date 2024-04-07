@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils.msg_utils import get_msg_by_id_arg
-from utils.msg_utils import Emojis
+from utils.msg_utils import Emojis, get_msg_by_id_arg
 
 from utils.shortcuts import no_ping, no_color
 
@@ -97,12 +96,13 @@ class AdminCommands(commands.Cog, name="Административные"):
 	async def edit_error(self, ctx, error: Exception):
 		error_msg = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping, delete_after=4)
 		elif "403 Forbidden" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Не могу изменять чужие сообщения.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не могу изменять чужие сообщения.", allowed_mentions=no_ping, delete_after=4)
 		elif "'NotFound'" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Не нашёл сообщения с таким айди.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не нашёл сообщения с таким айди.", allowed_mentions=no_ping, delete_after=4)
 		elif "'ValueError'" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Введён неверный айди.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Введён неверный айди.", allowed_mentions=no_ping, delete_after=4)
 		else:
-			await ctx.reply(f"{Emojis.question_mark} Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.question_mark} Шо та произошло но я не понял что. Подробности: `{error}`", \
+				allowed_mentions=no_ping, delete_after=4)

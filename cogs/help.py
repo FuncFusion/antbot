@@ -3,13 +3,13 @@ from discord.ext import commands
 from discord import app_commands
 
 from settings import HELP_FORUM_ID, CREATIONS_FROUM_ID
-from utils.msg_utils import Emojis
-from utils.msg_utils import get_msg_by_id_arg
+from utils.msg_utils import Emojis, get_msg_by_id_arg
 from utils.shortcuts import no_ping, no_color
 
 import re
 import os
 from typing import List
+from Levenshtein import distance
 
 links = {
 	"pinned_help": "https://discord.com/channels/914772142300749854/1021488153909018704"
@@ -61,11 +61,10 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		self.bot = bot
 
 	@commands.hybrid_command(aliases=["solve", "ыщдму", "куыщдму", "решено", "ресолв", "солв"],
-						description="Архивирует ветку помощи при решении проблемы") 
+		description="Архивирует ветку помощи при решении проблемы") 
 	@app_commands.describe(solution="Сообщение которое помогло решить проблему (ссылка)",
-						   helpers="Люди, которые помогли решить проблему")
+		helpers="Люди, которые помогли решить проблему")
 	async def resolve(self, ctx, solution: str=None, *, helpers: str="None"):
-		# Setting up variables
 		heleprs_ids = [int(helepr_id) for helepr_id in re.findall(r"(?<=<@)([0-9]+)(?=>)", helpers)]
 		helpers_mentions = re.findall(r"<@[0-9]+>", helpers)
 		is_moderator = ctx.channel.permissions_for(ctx.author).manage_messages
@@ -95,33 +94,35 @@ class HelpCommands(commands.Cog, name="Помощь"):
 	async def resolve_error(self, ctx, error):
 		error_msg = str(error)
 		if "has no attribute 'parent_id'" in error_msg or "not help forum" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи", \
+				allowed_mentions=no_ping, delete_after=4)
 		elif "not author/op" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", \
+				allowed_mentions=no_ping, delete_after=4)
 		elif "Wrong message" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Неверная ссылка/айди сообщения", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверная ссылка/айди сообщения", allowed_mentions=no_ping, delete_after=4)
 		elif "Missing arg" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, @упомяните людей, которые помогли вам с проблемой", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, @упомяните людей, которые помогли вам с проблемой", \
+				allowed_mentions=no_ping, delete_after=4)
 		
 	@commands.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
-				  		description="Показывает синтакс введеной майнкрафт команды")
+		description="Показывает синтакс введеной майнкрафт команды")
 	@app_commands.describe(command="Команда с майнкрафта")
 	async def syntax(self, ctx, command: str):
 		HelpAdditionals.Syntax.read_syntaxes()
-		#Bulding embed
-		embed = discord.Embed(title=f"🖥 /{command}", color=no_color, 
-			description=HelpAdditionals.Syntax.syntaxes[command])
+		embed = discord.Embed(color=no_color, 
+			description=f"{Emojis.mcf} /{command}\n" + HelpAdditionals.Syntax.syntaxes[command])
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@syntax.error
 	async def syntax_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите команду", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите команду", allowed_mentions=no_ping, delete_after=4)
 	@syntax.autocomplete("command")
 	async def syntax_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		if curr == "":
 			commands = list(HelpAdditionals.Syntax.syntaxes)
 		else:
-			commands = [command for command in HelpAdditionals.Syntax.syntaxes if curr in command]
+			commands = [command for command in HelpAdditionals.Syntax.syntaxes if distance(curr, command) <= len(command)]
 		return [app_commands.Choice(name=command, value=command) for command in commands[:25]]
 		
 

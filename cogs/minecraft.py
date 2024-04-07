@@ -15,7 +15,6 @@ from cogs.mc.highlighter.main import Hl as hl
 from utils.fake_user import fake_send
 from utils.shortcuts import no_ping, no_color
 from utils.msg_utils import unknown_error
-from utils.msg_utils import get_msg_by_id_arg
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
@@ -31,67 +30,67 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			callback=self.highlight_ctxmenu
 		))
 
-
-	@commands.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"],
-		description="Подсвечивает синтаксис для mcfunction")
+	@commands.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"], description="Подсвечивает синтаксис для mcfunction")
 	@app_commands.describe(command="mcfunction функция")
-	async def highlight(self, ctx, *, command:str=None):
-		# Setting up vars
-		message = ""
-		if command == None:
+	async def highlight(self, ctx, *, function:str=None):
+		highlighted = ""
+		if function == None:
 			if (reply:=ctx.message.reference) != None:
 				reply_message = await ctx.channel.fetch_message(reply.message_id)
 				reply_message = reply_message.content
 				if "```" in reply_message:
 					for code_block in re.split(code_block_content_re, reply_message)[1::2]:
-						message += f"```ansi\n{hl.highlight(code_block)}```"
+						highlighted += f"```ansi\n{hl.highlight(code_block)}```"
 				else:
-					message += f"```ansi\n{hl.highlight(reply_message)}```"
+					highlighted += f"```ansi\n{hl.highlight(reply_message)}```"
 			else:
 				raise Exception("Missing arg")
 		else:
-			if "```" in command:
-				for code_block in re.split(code_block_content_re, command)[1::2]:
-					message += f"```ansi\n{hl.highlight(code_block)}```"
+			if "```" in function:
+				for code_block in re.split(code_block_content_re, function)[1::2]:
+					highlighted += f"```ansi\n{hl.highlight(code_block)}```"
 			else:
-				message += f"```ansi\n{hl.highlight(command)}```"
-		# Building embed
-		embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if message.count("```") == 2 else "Подсвеченные функции", color=no_color, description=message)
+				highlighted += f"```ansi\n{hl.highlight(function)}```"
+		embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if highlighted.count("```") == 2 else "Подсвеченные функции", \
+			color=no_color, description=highlighted)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@highlight.error
 	async def hl_error(self, ctx, error):
 		error_msg = str(error)
 		if "Missing arg" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией", \
+				allowed_mentions=no_ping, delete_after=4)
 	
 	async def highlight_ctxmenu(self, interaction: discord.Interaction, message:discord.Message):
-		# Setting up variables
 		code_block_re = r"```[^`]+```"
 		if interaction.user == message.author:
-			mcfed_message = " " + message.content
+			highlighted = " " + message.content
 			if "```" in message.content:
-				for code_block, code_block_content in zip(re.findall(code_block_re, message.content), re.split(code_block_content_re, message.content)[1::2]):
-					mcfed_message = mcfed_message.replace(code_block, f"```ansi\n{hl.highlight(code_block_content)}```")
+				for code_block, code_block_content in zip(re.findall(code_block_re, message.content), \
+					re.split(code_block_content_re, message.content)[1::2]):
+					highlighted = highlighted.replace(code_block, f"```ansi\n{hl.highlight(code_block_content)}```")
 			else:
-				mcfed_message = f"```ansi\n{hl.highlight(message.content)}```"
-			await fake_send(interaction.user, interaction.channel, content=mcfed_message)
+				highlighted = f"```ansi\n{hl.highlight(message.content)}```"
+			await fake_send(interaction.user, interaction.channel, content=highlighted)
 			await interaction.response.send_message(f"{Emojis.sparkles} Сообщение с функцией подсвечено", ephemeral=True)
 			await message.delete()
 		else:
-			mcfed_message = ""
+			highlighted = ""
 			if "```" in message.content:
 				for code_block in re.split(code_block_content_re, message.content)[1::2]:
-					mcfed_message += f"```ansi\n{hl.highlight(code_block)}```"
+					highlighted += f"```ansi\n{hl.highlight(code_block)}```"
 			else:
-				mcfed_message += f"```ansi\n{hl.highlight(message.content)}```"
+				highlighted += f"```ansi\n{hl.highlight(message.content)}```"
 			# Building embed
-			embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if message.content.count("```") == 2 else "Подсвеченные функции", color=no_color, description=mcfed_message)
+			embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if message.content.count("```") == 2 else "Подсвеченные функции", \
+				color=no_color, description=highlighted)
 			await interaction.response.send_message(embed=embed)
 
 	@commands.hybrid_command(aliases=["mcmetaformat","pack-format","pack_format",
-						   "packmcmetaformat","pf","пакформат","пак-формат",
-						   "пак_формат", "мсметаформат", "пакмсметаформат",
-						   "пф", "зфслащкьфе", "за"], description="Выдаёт актуальные числа, которые соответствуют версиям в pack_format")
+		"packmcmetaformat","pf","пакформат","пак-формат",
+		"пак_формат", "мсметаформат", "пакмсметаформат",
+		"пф", "зфслащкьфе", "за"], 
+		description="Выдаёт актуальные числа, которые соответствуют версиям в pack_format")
 	@app_commands.describe(type="Показать числа для ресурспака или датапака", show_all="Показать числа для всех версий и снапшотов")
 	async def packformat(self, ctx, type, *, show_all=""):			
 		dp_types = ["datapack", "dp", "data", "датапак", "дп", "дата"]
@@ -126,9 +125,9 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	async def packformat_error(self, ctx, error: Exception):
 		error_msg = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping, delete_after=4)
 		elif error_msg.find("AttributeError"):
-			await ctx.reply(f"{Emojis.exclamation_mark} Неверно указан тип пакформата", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверно указан тип пакформата", allowed_mentions=no_ping, delete_after=4)
 		else:
 			await unknown_error(self, ctx, error)
 	
@@ -169,9 +168,9 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	async def template_error(self, ctx: commands.Context, error):
 		error_str = str(error)
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов", allowed_mentions=no_ping, delete_after=4)
 		elif isinstance(error, commands.BadArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Неверный аргумент: {error_str}", allowed_mentions=no_ping)
+			await ctx.reply(f"{Emojis.exclamation_mark} Неверный аргумент: {error_str}", allowed_mentions=no_ping, delete_after=4)
 		else:
 			await unknown_error(ctx, error)
 	@template.autocomplete("template")

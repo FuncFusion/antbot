@@ -4,7 +4,6 @@ from discord import app_commands
 
 from settings import VCS_CATEGORY_ID, CREATE_VC_CHANNEL_ID
 from utils.msg_utils import Emojis
-from utils.shortcuts import no_ping, no_color
 
 class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 	def __init__(self, bot):
@@ -12,8 +11,8 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 
 	@commands.hybrid_command(name="transfer-ownership", aliases=["передать-права", "to", "пп"], \
 		description="Передать права на голосовой канал")
-	@app_commands.default_permissions(manage_channels=True)
 	@app_commands.describe(user="Пользователь")
+	@app_commands.default_permissions(manage_channels=True)
 	async def transfer_owner(self, ctx: commands.Context, user: discord.Member):
 		if ctx.channel.category_id == VCS_CATEGORY_ID:
 			await ctx.channel.set_permissions(ctx.author, manage_channels=None, mute_members=None, 

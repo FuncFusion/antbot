@@ -73,7 +73,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		self.bot = bot
 		
 	@commands.hybrid_command(aliases=["ench", "зачаровать", "зачарить", "зачарь", "зачаруй", "утср", "утсрфте"],
-				  description="Переводит сообщение на язык стола зачарования")
+		description="Переводит сообщение на язык стола зачарования")
 	@app_commands.describe(text="Текст, который нужно перевести на язык стола зачарований")
 	async def enchant(self, ctx, *, text: str):
 		enchanted = text
@@ -83,10 +83,10 @@ class FunCommands(commands.Cog, name="Развлечения"):
 	@enchant.error
 	async def enchant_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать")
+			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать", delete_after=4)
 		
 	@commands.hybrid_command(aliases=["unench", "раззачаровать", "разчарить", "разчарь", "разчаруй", "гтутср", "гтутсрфте"],
-				  description="Переводит сообщение с языка стола зачарования")
+		description="Переводит сообщение с языка стола зачарования")
 	@app_commands.describe(text="Текст, который нужно перевести с языка стола зачарований")
 	async def unenchant(self, ctx, *, text: str):
 		unenchanted = text
@@ -96,10 +96,10 @@ class FunCommands(commands.Cog, name="Развлечения"):
 	@unenchant.error
 	async def unenchant_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать")
+			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать", delete_after=4)
 
 	@commands.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
-				  description="Генерирует рандомное число в заданном промежутке")
+		description="Генерирует рандомное число в заданном промежутке")
 	@app_commands.describe(minimum="Минимальное число в промежутке", maximum="Максимальное число в промежутке")
 	async def randomrange(self, ctx, minimum: str='-2147483648', maximum: str='2147483647'):
 		minInt, maxInt = -2147483648, 2147483647
@@ -114,7 +114,8 @@ class FunCommands(commands.Cog, name="Развлечения"):
 	@randomrange.error
 	async def randomrange_error(self, ctx, error):
 		eArg = str(error).split("'")[1].replace("\\\\", "\\")
-		await ctx.reply(f"{Emojis.exclamation_mark} Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", allowed_mentions=no_ping)
+		await ctx.reply(f"{Emojis.exclamation_mark} Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", \
+			allowed_mentions=no_ping, delete_after=4)
 
 	@commands.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 		description="Выдаёт случайный ответ из заданных на вопрос. [text] разделяется символом \"|\" или переносом строки")
@@ -134,10 +135,9 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	
 	@commands.hybrid_command(name="look-for", aliases=["lf", "дщщл-ащк", "да", "ищу-тиммейта"],
-		description="Создаёт пост в 🔍・поиск-тимы")
+		description="Создаёт пост в 🔍・поиск-тимы о поиске тиммейта")
 	@app_commands.describe(game="Игра", details="Описание (айпи сервера/приглашение и тд)")
 	async def look_for(self, ctx, game: str, *, details: str):
-		# Setting up variables
 		games = {
 			"minecraft": {
 				"banners_count": 3,
@@ -168,7 +168,6 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		else:
 			game = "other"
 		look_for_channel = await self.bot.fetch_channel(LOOK_FOR_ID)
-		# Building embed
 		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {games[game]["accusative"]}", color=no_color)
 		embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar.url)
 		embed.add_field(name="Подробности", value=details, inline=False)
@@ -186,9 +185,11 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		print(error)
 		if isinstance(error, commands.MissingRequiredArgument):
 			if "game" in error_msg:
-				await ctx.reply(f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта", allowed_mentions=no_ping)
+				await ctx.reply(f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта", \
+					allowed_mentions=no_ping, delete_after=4)
 			elif "details" in error_msg:
-				await ctx.reply(f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)", allowed_mentions=no_ping)
+				await ctx.reply(f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)",\
+					allowed_mentions=no_ping, delete_after=4)
 
 
 class LookFor(discord.ui.View):
@@ -196,13 +197,11 @@ class LookFor(discord.ui.View):
 		super().__init__(timeout=None)
 	
 	async def response(ctx, action):
-		# Setting up variables
 		embed = ctx.message.embeds[0]
 		joined_users = embed.fields[1].value.split("\n")
 		declined_users = embed.fields[2].value.split("\n")
 		action_users_list = joined_users if action == "join" else declined_users
 		opposite_users_list = declined_users if action == "join" else joined_users
-		# Building embed
 		usr_ping = ctx.user.mention
 		if usr_ping not in action_users_list:
 			action_users_list.append(usr_ping)

@@ -88,7 +88,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 	def cog_unload(self):
 		self.bot.help_command = self._original_help_command
 
-	@commands.hybrid_command(name="server-info", aliases=["info", "server", "si","сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
+	@commands.hybrid_command(name="server-info", aliases=["info", "server", "si", "сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
 		description="Показывает информацию о сервере")
 	async def serverinfo(self, ctx):
 		# setup vars
@@ -101,7 +101,6 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			else:
 				member_count += 1
 		invitation_link = await ctx.channel.create_invite(max_age=86400)
-		# Building embed
 		embed = discord.Embed(title=server.name, color=server.owner.color)
 		embed.set_thumbnail(url=server.icon.url)
 		embed.add_field(name="Владелец", value=f"{Emojis.crown} <@{server.owner_id}>", inline=False)
@@ -127,7 +126,6 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			"dnd": "🔴 Не беспокоить",
 			"invisible": "⚫ Невидимка"
 		}
-		# Build embed
 		embed = discord.Embed(title=user.display_name, color=user.color)
 		embed.set_thumbnail(url=user.avatar.url)
 		embed.add_field(name="Присоединился к серверу", value=f"{Emojis.calendar} <t:{int(user.joined_at.timestamp())}>", inline=False)
@@ -181,6 +179,6 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			"reason": f"{Emojis.exclamation_mark} Укажите напоминание"
 		}
 		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(missing_args[error_msg.split(" ")[0]], allowed_mentions=no_ping)
+			await ctx.reply(missing_args[error_msg.split(" ")[0]], allowed_mentions=no_ping, delete_after=4)
 		elif "IndexError" in error_msg:
-			await ctx.reply(missing_args["time"], allowed_mentions=no_ping)
+			await ctx.reply(missing_args["time"], allowed_mentions=no_ping, delete_after=4)
