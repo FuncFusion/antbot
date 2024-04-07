@@ -111,7 +111,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 	async def syntax(self, ctx, command: str):
 		HelpAdditionals.Syntax.read_syntaxes()
 		embed = discord.Embed(color=no_color, 
-			description=f"{Emojis.mcf} /{command}\n" + HelpAdditionals.Syntax.syntaxes[command])
+			description=f"# {Emojis.mcf_load} /{command}\n" + HelpAdditionals.Syntax.syntaxes[command])
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@syntax.error
 	async def syntax_error(self, ctx, error):
@@ -122,7 +122,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		if curr == "":
 			commands = list(HelpAdditionals.Syntax.syntaxes)
 		else:
-			commands = [command for command in HelpAdditionals.Syntax.syntaxes if distance(curr, command) <= len(command)]
+			commands = [command for command in HelpAdditionals.Syntax.syntaxes if curr in command or distance(curr, command) <= len(command)/2]
 		return [app_commands.Choice(name=command, value=command) for command in commands[:25]]
 		
 
