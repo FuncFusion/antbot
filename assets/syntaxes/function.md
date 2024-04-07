@@ -1,1 +1,3 @@
-`function <name> [<arguments>|with (block <sourcePos>|entity <source>|storage <source>) [<path>]]`
+```ansi
+[35mfunction [33m<[0mимя функции[33m> [33m[[35m<[0mаргументы[35m>[35m|[34mwith [35m([34mblock <[32mпозиция[34m>|entity <[36mселектор[34m>|storage <[0mсторадж[34m>[35m) [[34m<[0mнбт [0mпуть[34m>[35m][33m]
+```

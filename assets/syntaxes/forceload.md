@@ -1,8 +1,16 @@
-`forceload add <from> [<to>]`
-    Forces the chunk at the `<from>` position (through to `<to>` if set) in the dimension of the command's execution to be loaded constantly.
-`forceload remove <from> [<to>]`
-    Unforces the chunk at the `<from>` position (through to `<to>` if set) in the dimension of the command's execution to be loaded constantly.
-`forceload remove all`
-    Unforces all chunks in the dimension of the command's execution to be loaded constantly.
-`forceload query [<pos>]`
-    If chunk coordinates are given, displays the specified chunk in the dimension of the command's execution is force loaded; otherwise, lists which chunks in the dimension of the command's execution are force loaded.
+```ansi
+[35mforceload [34madd [33m<[32mот[33m> [[35m<[32mдо[35m>[33m]
+```
+Загружает чанк на позиции `<от>` (по `<до>`, если указано) в измерении где воспроизводится команда
+```ansi
+[35mforceload [34mremove [33m<[32mот[33m> [[35m<[32mдо[35m>[33m]
+```
+Отгружает чанк на позиции `<от>` (по `<до>`, если указано) в измерении где воспроизводится команда
+```ansi
+[35mforceload [34mremove all
+```
+Отгружает все чанки в измерении где воспроизводится команда
+```ansi
+[35mforceload [34mquery [33m[[35m<[32mпозиция[35m>[33m]
+```
+Если дана позиция чанка, показывает указаный чанк в измерении где воспроизводится команда; иначе показывает список всех загруженных чанков в измерении где воспроизводится команда

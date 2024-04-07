@@ -1,3 +1,7 @@
-`/fillbiome <from> <to> <biome>`
-The fillbiome command also has an optional alternate syntax when using the `replace` option: 
-`/fillbiome <from> <to> <biome> replace <filter>`
+```ansi
+[35mfillbiome [33m<[32mот[33m> <[32mдо[33m> <[0mбиом[33m>
+```
+Команда также имеет немного другой синтакс при использовании `replace`:
+```ansi
+[35mfillbiome [33m<[32mот[33m> <[32mдо[33m> <[0mбиом[33m> [34mreplace [33m<[0mфильтр[33m>
+```
