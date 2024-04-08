@@ -3,6 +3,7 @@
 		"comment": "\u001b[30m",
 		"link-comment": "\u001b[34m",
 		"backslash": "\u001b[30m",
+		"placeholder": "\u001b[30m\u001b[47m",
 
 		"macro": "\u001b[34m",
 		"macro_bf_command": "\u001b[37m",

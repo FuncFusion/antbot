@@ -4,7 +4,7 @@ from string import ascii_letters
 
 class Hl:
 	class Database:
-		with open("cogs/mc/highlighter/database.json", "r", encoding="utf-8") as db:
+		with open("database.json", "r", encoding="utf-8") as db:
 			database_content = loads(db.read())
 		color_codes = database_content["color_codes"]
 		commands = database_content["commands"]
@@ -22,6 +22,8 @@ class Hl:
 			tokens.append(curr_token) if curr_token != "" else None
 			if need_to_append_char:
 				tokens.append(char)
+			if curr_token not in " \\\t\n":
+				clear_tokens.append(curr_token)
 			curr_token = ""
 		def switch_mode(mode):
 			if mode == "back":
@@ -33,6 +35,7 @@ class Hl:
 		# Setting up vars
 		closed_bracktes = {"{":"}", "[":"]"}
 		tokens = []
+		clear_tokens = []
 		curr_token = ""
 		# Magec
 		for idx, char in enumerate(func):
@@ -194,32 +197,40 @@ class Hl:
 				else:
 					switch_mode("back")
 					reset_token(True)
+			elif state["mode"] == "placeholder":
+				curr_token += char
+				if char == ">":
+					switch_mode("back")
+					reset_token()
 			if idx+1 == len(func) and curr_token != "":
 				tokens.append(curr_token)
 				break
-		return tokens
+		return (tokens, clear_tokens)
+
+	def optimize_len(func):
+		optimized = ""
+		ansi_codes_re = r'(\[([0-5];)?[034][0-7]?m){1,2}'
+		splitted = func.split("\u001b")
+		#
+		prev_color = splitted[0].split("m")[0] + "m"
+		for element in splitted[1:]:
+			matches = search(ansi_codes_re, element)
+			optimized += "\u001b"+element if prev_color != matches.group(0) else element.replace(prev_color, "")
+			prev_color = matches.group(0)
+		return optimized
 
 	def highlight(func, theme="default"):
 		# Shotcuts
 		colors = Hl.Database.color_codes if theme == "default" else theme
 		commands = Hl.Database.commands
 		# Setting up vars
-		commands_count = 0
 		possible_subcommands = []
 		bracket_index = 0
 		highlighted = ""
 		# Магія ✨
-		tokens = Hl.lex(func)
-		clear_tokens = tokens[:]
-		# god sorry me for that
-		for i in range(clear_tokens.count(" ")):
-			clear_tokens.remove(" ")
-		for i in range(clear_tokens.count("\\")):
-			clear_tokens.remove("\\")
-		for i in range(clear_tokens.count("\n")):
-			clear_tokens.remove("\n")
-		for i in range(clear_tokens.count("\t")):
-			clear_tokens.remove("\t")
+		lexed = Hl.lex(func)
+		tokens = lexed[0]
+		clear_tokens = lexed[1]
 		clear_tokens.append('')
 		clear_index = 0
 		#
@@ -249,10 +260,8 @@ class Hl:
 			elif token in possible_subcommands and bracket_index <= 0:
 				highlighted += colors["subcommand"] + token
 			elif (raw_command:=token.replace("$", "")) in commands and bracket_index <= 0:
-				if raw_command != "execute":
-					possible_subcommands = []
 				highlighted += (colors["macro_bf_command"]+"$" if "$" in token else "") + colors["command"] + raw_command
-				possible_subcommands += commands[raw_command]["subcommands"]
+				possible_subcommands = commands[raw_command]["subcommands"]
 			elif token[0] in "\"'":
 				# Highlighting macros
 				macros = findall(r"\$\([0-9A-z-_\.]+\)", token)
@@ -288,10 +297,10 @@ class Hl:
 				text_type = "text"
 				if bracket_index > 0:
 					text_type = "key"
-					if prev_clear_tokens[1] in ":=":
+					if prev_clear_tokens[0] in ":=":
 						text_type = "value"
 				highlighted += colors[text_type] + token
-		return highlighted
+		return Hl.optimize_len(highlighted)
 
 	def ansi2html(function):
 		color_classes = Hl.Database.color_classes
@@ -303,15 +312,3 @@ class Hl:
 			converted += f'<span class="ansi_{color_classes[matches.group(2)]}{" "+color_classes[matches.group(4)] if matches.group(4) != None else ""}">{element.replace(matches.group(1), "")}</span>'
 		return f"<pre>{converted}</pre>"
 
-
-# print(Hl.highlight("""# set the .damage to their cDamage tag
-# execute store result score .damage hc.temp run data get entity @s Inventory[{Slot:103b}].tag.cDamage
-
-# # remove one from the .damage score
-# scoreboard players remove .damage hc.temp 1
-
-# # put the score into a data storage so we can copy it to the item
-# execute store result storage hc:damage_store NewDamage int 1 run scoreboard players get .damage hc.temp
-
-# # modify the item
-# item modify entity @s <slot> <namespace>:change_durablilty"""))
