@@ -1,11 +1,12 @@
-`item modify (block <pos>|entity <[36mселекторs>) <slot> <modifier>`
-
-Modifies the items in the specified slot with the specified modifier.
-
-`item replace (block <pos>|entity <[36mселекторs>) <slot> with <item> [<count>]`
-
-Replaces the items in the specified slot with the specified items.
-
-`item replace (block <pos>|entity <[36mселекторs>) <slot> from (block <sourcePos>|entity <source[36mселектор>) <sourceSlot> [<modifier>]`
-
-Copies the source items to the [36mселектор slot and optionally modifies it with the `modifier`.
+```ansi
+[35mitem [34mmodify [33m([34mblock [35m<[32mпозиция[35m>|[34mentity [35m<[36mселектор[35m>[33m) <[32mслот[33m> <[0mмодификатор[33m>
+```
+Модифицирует предметы в указаном слоте с указаным модификатором
+```ansi
+[35mitem [34mreplace [33m([34mblock [35m<[32mпозиция[35m>|[34mentity [35m<[36mселектор[35m>[33m) <[32mслот[33m> [34mwith [33m<[0mпредмет[33m> [[35m<[32mколичество[35m>[33m]
+```
+Заменяет предметы в указаном слоте указанными предметами.
+```ansi
+[35mitem [34mreplace [33m([34mblock [35m<[32mпозиция[35m>|[34mentity [35m<[36mселектор[35m>[33m) <[32mслот[33m> [34mfrom [33m([34mblock [35m<[32mпозиция[35m>|[34mentity [35m<[36mселектор[35m>[33m) <[32mслот[33m> [[35m<[0mмодификатор[35m>[33m]
+```
+Копирует исходные предметы в слот слектора и опционально модифицирует его `модификатором`
