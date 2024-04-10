@@ -63,7 +63,7 @@
 			"subcommands": []
 		},
 		"bossbar": {
-			"subcommands": ["add", "get", "max", "players", "value", "visible", "list", "set", "color", "max", "name", "players", "style", "blue", "green", "pink", "purple", "red", "white", "yellow", "notched_6", "notched_10", "notched_12", "notched_20", "progress"]
+			"subcommands": ["add", "get", "max", "players", "value", "visible", "list", "set", "color", "name", "players", "style", "blue", "green", "pink", "purple", "red", "white", "yellow", "notched_6", "notched_10", "notched_12", "notched_20", "progress"]
 		},
 		"clear": {
 			"subcommands": []
@@ -99,7 +99,7 @@
 			"subcommands": []
 		},
 		"execute": {
-			"subcommands": ["align", "anchored", "as", "at", "facing", "in", "on", "positioned", "rotated", "store", "summon", "if", "unless", "run", "x", "y", "z", "xy", "xz", "xyz", "xzy", "yx", "yz", "yxz", "yzx", "zx", "zy", "zxy", "zyx", "eyes", "feet", "entity", "attacker", "controller", "leasher", "origin", "owner", "passengers", "target", "vehicle", "over", "result", "succes", "biome", "block", "data", "items", "storage", "dimension", "loaded", "predicate", "score", "byte", "double", "float", "int", "long", "short", "matches", "<", "<=", "=", ">=", ">"]
+			"subcommands": ["align", "anchored", "as", "at", "facing", "in", "on", "positioned", "rotated", "store", "summon", "if", "unless", "run", "x", "y", "z", "xy", "xz", "xyz", "xzy", "yx", "yz", "yxz", "yzx", "zx", "zy", "zxy", "zyx", "eyes", "feet", "entity", "attacker", "controller", "leasher", "origin", "owner", "passengers", "target", "vehicle", "over", "result", "succes", "biome", "block", "bossbar", "blocks", "data", "items", "storage", "dimension", "loaded", "predicate", "score", "byte", "double", "float", "int", "long", "short", "matches", "<", "<=", "=", ">=", ">"]
 		},
 		"experience": {
 			"subcommands": ["add", "set", "query", "levels", "points"]

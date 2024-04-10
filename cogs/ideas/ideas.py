@@ -17,30 +17,25 @@ db = MongoClient(MONGO_URI, server_api=ServerApi('1')).antbot.ideas
 class IdeaView(discord.ui.View):
 	def __init__(self, votes=["0", "0"]):
 		super().__init__(timeout=None)
-		# Setting up variables
 		self.upvote.label = votes[0]
 		self.downvote.label = votes[1]
 
 	@discord.ui.button(label="0", emoji=Emojis.check, style=discord.ButtonStyle.grey, custom_id="ideas:upvote")
 	async def upvote(self, ctx: discord.Interaction, button: discord.ui.Button):
-		# Setting up variables
 		idea_num = ctx.message.embeds[0].fields[0].name.split(" ")[-1]
 		Ideas.vote(idea_num, ctx.user.id, "up")
 		idea = Ideas.get(idea_num)
 		upvoters = str(len(idea["upvoters"]))
 		downvoters = str(len(idea["downvoters"]))
-		# Chnaging votes
 		await ctx.response.edit_message(view=IdeaView(votes=[upvoters, downvoters]))
 	
 	@discord.ui.button(label="0", emoji=Emojis.cross, style=discord.ButtonStyle.grey, custom_id="ideas:downvote")
 	async def downvote(self, ctx: discord.Interaction, button: discord.ui.Button):
-		# Setting up variables
 		idea_num = ctx.message.embeds[0].fields[0].name.split(" ")[-1]
 		Ideas.vote(idea_num, ctx.user.id, "down")
 		idea = Ideas.get(idea_num)
 		upvoters = str(len(idea["upvoters"]))
 		downvoters = str(len(idea["downvoters"]))
-		# Chnaging votes
 		await ctx.response.edit_message(view=IdeaView(votes=[upvoters, downvoters]))
 
 
@@ -96,7 +91,6 @@ class IdeaCommand(commands.Cog):
 	@app_commands.describe(suggestion="Идея")
 	async def idea(self, ctx, *, suggestion: str):
 		ideas_count = str(db.count_documents({}))
-		# Building embed
 		embed = discord.Embed(color=no_color)
 		embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
 		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
@@ -115,12 +109,10 @@ class IdeaCommand(commands.Cog):
 		if ctx.channel.id != IDEAS_CHANNEL_ID:
 			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
 		else:
-			# Setting up vars
 			idea_num = message.embeds[0].fields[0].name.split(" ")[-1]
 			idea = Ideas.get(idea_num)
 			upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
 			downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
-			# Building embed
 			embed = discord.Embed(title=f"{Emojis.users} Голоса", color=no_color)
 			embed.add_field(name="За", value=upvoters)
 			embed.add_field(name="Против", value=downvoters)
@@ -154,7 +146,6 @@ class Ideas:
 			})
 	
 	def vote(idea_num, voter, vote_type):
-		# Setting up variables
 		opposite_types = {
 			"up": "down",
 			"down": "up"
@@ -162,7 +153,6 @@ class Ideas:
 		idea = Ideas.get(idea_num)
 		voters_list = idea[f"{vote_type}voters"]
 		opposite_voters_list = idea[f"{opposite_types[vote_type]}voters"]
-		# Da voting megik
 		if voter in voters_list:
 			db.update_one({"_id":idea_num}, {"$pull": {f"{vote_type}voters": voter}})
 		else:
