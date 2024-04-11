@@ -1,7 +1,8 @@
-`list`
-
-Shows the names of all currently-connected players.
-
-`list uuids`
-
-Player UUIDs are shown alongside names.
+```ansi
+[35mlist
+```
+Показывает список всех подключённых игроков
+```ansi
+[35mlist [34muuids
+```
+UUID игроков показаны вместе с никнеймами

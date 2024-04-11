@@ -1,7 +1,8 @@
-`jfr start`
-
-Start JFR profiling.
-
-`jfr stop`
-
-Stop JFR profiling.
+```ansi
+[35mjfr [34mstart
+```
+Начинает JFR профилирование
+```ansi
+[35mjfr [34mstop
+```
+Останааливает JFR профилирование
