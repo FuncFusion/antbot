@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from typing import List
+from math import ceil
 import re
 import requests
 from Levenshtein import distance
@@ -33,6 +34,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	@commands.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"], description="Подсвечивает синтаксис для mcfunction")
 	@app_commands.describe(function="mcfunction функция")
 	async def highlight(self, ctx, *, function:str=None):
+		print("function")
 		highlighted = ""
 		if function == None:
 			if (reply:=ctx.message.reference) != None:
@@ -57,6 +59,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	@highlight.error
 	async def hl_error(self, ctx, error):
 		error_msg = str(error)
+		print(error_msg)
 		if "Missing arg" in error_msg:
 			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией", \
 				allowed_mentions=no_ping, delete_after=4)
@@ -65,15 +68,28 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		code_block_re = r"```[^`]+```"
 		if interaction.user == message.author:
 			highlighted = " " + message.content
+			await interaction.response.send_message(f"{Emojis.sparkles} Сообщение с функцией подсвечено", ephemeral=True)
+			await message.delete()
 			if "```" in message.content:
 				for code_block, code_block_content in zip(re.findall(code_block_re, message.content), \
 					re.split(code_block_content_re, message.content)[1::2]):
 					highlighted = highlighted.replace(code_block, f"```ansi\n{hl.highlight(code_block_content)}```")
 			else:
 				highlighted = f"```ansi\n{hl.highlight(message.content)}```"
+			if (hl_len:=len(highlighted)) > 2000:
+				hl_splitted = [highlighted[:1988]+("```" if highlighted[:1988].count("```")%2==1 else "")]
+				prev_part = highlighted[:1988]
+				for i in range(1, ceil(hl_len/2000)+1):
+					curr_part = ""
+					if prev_part.count("```") % 2 == 1:
+						curr_part += "```ansi\n"
+					curr_part += highlighted[i*1988:(i+1)*1988]
+					prev_part = curr_part[:]
+					if curr_part.count("```") % 2 == 1:
+						curr_part += "```"
+					hl_splitted.append(curr_part)
+				highlighted = hl_splitted
 			await fake_send(interaction.user, interaction.channel, content=highlighted)
-			await interaction.response.send_message(f"{Emojis.sparkles} Сообщение с функцией подсвечено", ephemeral=True)
-			await message.delete()
 		else:
 			highlighted = ""
 			if "```" in message.content:

@@ -1,6 +1,5 @@
 from re import match, findall, sub, search, MULTILINE
 from json import loads
-from string import ascii_letters
 
 class Hl:
 	class Database:
@@ -35,7 +34,7 @@ class Hl:
 				state["mode"] = mode
 				state["history"].append(mode)
 		def global_check():
-			nonlocal tokens, curr_token, need_to_reset, char
+			nonlocal tokens, curr_token, need_to_reset, need_to_append_char, char
 			if char == "$":
 				need_to_reset = False
 				if next_char == "(":
@@ -50,14 +49,14 @@ class Hl:
 			elif char == ".":
 				if curr_token == char:
 					curr_token += char
+					need_to_append_char = False
 				else:
 					if next_char == char:
 						reset_token()
 						curr_token = char
-						need_to_reset = False
 					else:
 						curr_token += char
-						need_to_reset = False
+					need_to_reset = False
 		# Setting up vars
 		closed_bracktes = {"{":"}", "[":"]"}
 		tokens = []
@@ -68,9 +67,8 @@ class Hl:
 			next_char = func[idx+1:idx+2]
 			prev_char = func[idx-1]
 			prev_tokens = tokens[::-1]
-			next_chars = func[idx+1:]
 			if state["mode"] == "normal":
-				if char not in " \\\n\t#[]{}.\"'$":
+				if char not in " \\\n\t#[]{}.\"'/$":
 					curr_token += char
 				else:
 					need_to_append_char = True
@@ -83,11 +81,15 @@ class Hl:
 							switch_mode("component")
 					elif char == "{":
 						switch_mode("nbt")
-						opened_brackets = 1
 						state["nbt_type"] = char
+						opened_brackets = 1
 						need_to_append_char = True
+					elif char == "/" and ":" in curr_token:
+						curr_token += char
+						need_to_reset = False
 					elif char == "#":
-						is_comment = [True] if prev_tokens == [] or "\n" not in prev_tokens else [True if i == '\n' else False for i in prev_tokens if i not in " \t"]
+						next_chars = func[idx+1:]
+						is_comment = [True] if prev_tokens == [] else [True if i == '\n' else False for i in prev_tokens if i not in " \t"]
 						next_word = next_chars.split(" ")[0]
 						if is_comment[0] and not any([True for command in ["define", "declare", "alias"] if command == next_word]):
 							switch_mode("comment")
@@ -108,8 +110,9 @@ class Hl:
 						switch_mode("back")
 					elif char == "{":
 						if tokens[-2] == "nbt":
-							opened_brackets = 1
 							switch_mode("nbt")
+							state["nbt_type"] = char
+							opened_brackets = 1
 					if need_to_reset:
 						reset_token(need_to_append_char)
 			elif state["mode"] == "macro":
@@ -126,8 +129,8 @@ class Hl:
 					global_check()
 					if char in "{[":
 						switch_mode("nbt")
-						opened_brackets = 1
 						state["nbt_type"] = char
+						opened_brackets = 1
 					if need_to_reset:
 						reset_token(need_to_append_char)
 				# Exiting component stte if it closed
@@ -199,8 +202,8 @@ class Hl:
 		#
 		for index, token in enumerate(tokens):
 			prev_tokens = tokens[index::-1]
+			fut_tokens = tokens[index+1:]
 			clear_index += 1 if token not in " \\\n\t" else 0
-			# next_clear_tokens = clear_tokens[clear_index:]
 			prev_clear_tokens = clear_tokens[clear_index-2::-1]
 			if token[0] == "\u200b":
 				token = token[1:]
@@ -241,6 +244,8 @@ class Hl:
 				highlighted += colors["selector"] + token
 			elif token in ":;=,":
 				highlighted += colors["separator"] + token
+			elif token == "/" and fut_tokens[0] in commands:
+				highlighted += colors["macro_bf_command"] + token
 			elif token in "[{(":
 				highlighted += colors[f"bracket{bracket_index%3}"] + token
 				bracket_index += 1
@@ -274,4 +279,6 @@ class Hl:
 			converted += f'<span class="ansi_{color_classes[matches.group(2)]}{" "+color_classes[matches.group(4)] if matches.group(4) != None else ""}">{element.replace(matches.group(1), "")}</span>'
 		return f"<pre>{converted}</pre>"
 
-# print(Hl.highlight("""give @a diamond[mc:ench=[{id:sharpness, lvl:5}]]"""))
+# print(Hl.highlight("""execute at @a[nbt={SelectedItem:{id:"minecraft:bow",tag:{CustomModelData:1}}}] run tag @e[type=arrow, distance=3] add slowness_arrow
+
+# execute at @e[tag=slowness_arrow,nbt={}] run effect give @e slowness 10 2 true"""))

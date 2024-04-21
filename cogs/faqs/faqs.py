@@ -23,7 +23,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
         self.bot = bot
 
     @commands.hybrid_command(aliases=["факьюшки","вопросы-и-ответы","вопросыиответы", "вопросыответы","афйы"],
-                        description = "Показывает список всех факьюшек/алиасов к определённой факьюшке")
+        description = "Показывает список всех факьюшек/алиасов к определённой факьюшке")
     @app_commands.describe(name = "Название факьюшки, алиасы которого вы хотите посмотреть")
     async def faqs(self, ctx, *, name=None):
         embed = discord.Embed(color=no_color)
