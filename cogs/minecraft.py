@@ -53,13 +53,10 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 					highlighted += f"```ansi\n{hl.highlight(code_block)}```"
 			else:
 				highlighted += f"```ansi\n{hl.highlight(function)}```"
-		embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if highlighted.count("```") == 2 else "Подсвеченные функции", \
-			color=no_color, description=highlighted)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(content=highlighted, allowed_mentions=no_ping)
 	@highlight.error
 	async def hl_error(self, ctx, error):
 		error_msg = str(error)
-		print(error_msg)
 		if "Missing arg" in error_msg:
 			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией", \
 				allowed_mentions=no_ping, delete_after=4)
@@ -77,18 +74,8 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			else:
 				highlighted = f"```ansi\n{hl.highlight(message.content)}```"
 			if (hl_len:=len(highlighted)) > 2000:
-				hl_splitted = [highlighted[:1988]+("```" if highlighted[:1988].count("```")%2==1 else "")]
-				prev_part = highlighted[:1988]
-				for i in range(1, ceil(hl_len/2000)+1):
-					curr_part = ""
-					if prev_part.count("```") % 2 == 1:
-						curr_part += "```ansi\n"
-					curr_part += highlighted[i*1988:(i+1)*1988]
-					prev_part = curr_part[:]
-					if curr_part.count("```") % 2 == 1:
-						curr_part += "```"
-					hl_splitted.append(curr_part)
-				highlighted = hl_splitted
+				highlighted = hl.split_msg(highlighted)
+				print(highlighted)
 			await fake_send(interaction.user, interaction.channel, content=highlighted)
 		else:
 			highlighted = ""
@@ -98,9 +85,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			else:
 				highlighted += f"```ansi\n{hl.highlight(message.content)}```"
 			# Building embed
-			embed = discord.Embed(title=f"{Emojis.sparkles} Подсвеченная функция" if message.content.count("```") == 2 else "Подсвеченные функции", \
-				color=no_color, description=highlighted)
-			await interaction.response.send_message(embed=embed)
+			await interaction.response.send_message(content=highlighted)
 
 	@commands.hybrid_command(aliases=["mcmetaformat","pack-format","pack_format",
 		"packmcmetaformat","pf","пакформат","пак-формат",
