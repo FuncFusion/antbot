@@ -51,7 +51,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		# Ban
 		await user.ban(reason=reason)
 		# Building embed
-		embed = discord.Embed(title="🔨Бан", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.ban} Бан", color=no_color)
 		embed.set_thumbnail(url=user.avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Причина", value=reason)
@@ -80,7 +80,7 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		# Da mute
 		await user.timeout(timedelta(seconds=term), reason=reason)
 		# Building embed
-		embed = discord.Embed(title="🔇Мут", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
 		embed.set_thumbnail(url=user.avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Причина", value=reason)
