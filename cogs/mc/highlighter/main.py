@@ -222,7 +222,7 @@ class Hl:
 					edited_content = edited_content.replace(i, colors["subcommand"] + i + colors[comment_type])
 				#
 				highlighted += colors["comment"] + token.replace(comment_content, "") + (colors[comment_type] if comment_type == "link-comment" else "") + edited_content
-			elif token in possible_subcommands and bracket_index <= 0:
+			elif token in possible_subcommands and bracket_index <= 0 and prev_clear_tokens[0] != "run":
 				highlighted += colors["subcommand"] + token
 			elif (raw_command:=token.replace("$", "")) in commands and bracket_index <= 0:
 				highlighted += (colors["macro_bf_command"]+"$" if "$" in token else "") + colors["command"] + raw_command
