@@ -179,6 +179,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 			embed.set_image(url="attachment://say_gex.png")
 		lf_msg = await look_for_channel.send(embed=embed, view=LookFor(), file=game_banner)
 		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
+		await ctx.reply(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", allowed_mentions=no_ping)
 	@look_for.error
 	async def lf_error(self, ctx, error):
 		error_msg = str(error)
