@@ -1,12 +1,14 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+
 from random import randint, choice
 import re
+import requests
 
 from Levenshtein import distance
 
-from settings import LOOK_FOR_ID
+from settings import LOOK_FOR_ID, RAWGIO_KEY
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
@@ -138,48 +140,30 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		description="Создаёт пост в 🔍・поиск-тимы о поиске тиммейта")
 	@app_commands.describe(game="Игра", details="Описание (айпи сервера/приглашение и тд)")
 	async def look_for(self, ctx, game: str, *, details: str):
-		games = {
-			"minecraft": {
-				"banners_count": 3,
-				"ru_name": "майнкрафт",
-				"accusative": "майнкрафта"
-			},
-			"terraria": {
-				"banners_count": 0,
-				"ru_name": "террария",
-				"accusative": "террарии"
-			},
-			"gartic": {
-				"banners_count": 0,
-				"ru_name": "гартик",
-				"accusative": "гартика"
-			},
-			"other": {
-				"banners_count": 0,
-				"ru_name": game,
-				"accusative": game
-			}
-		}
-		for game_name in games:
-			if distance(game, game_name) <= len(game_name)/2 \
-				or distance(game, games[game_name]["ru_name"]) <= len(games[game_name]["ru_name"])/2:
-				game = game_name
-				break
+		# Getting game
+		file = None
+		response = requests.get(f"https://rawg.io/api/games?key={RAWGIO_KEY}&search={game}")
+		if response.status_code == 200 and (results:=response.json()["results"]) != []:
+			banner = results[0]["background_image"]
+			game = results[0]["name"]
 		else:
-			game = "other"
+			file = discord.File("asstes/default_game_banner.png", filename="say_gex.png")
+			banner = "attachment://say_gex.png"
+  		#
 		look_for_channel = await self.bot.fetch_channel(LOOK_FOR_ID)
-		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {games[game]["accusative"]}", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {game}", color=no_color)
 		embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar.url)
 		embed.add_field(name="Подробности", value=details, inline=False)
 		embed.add_field(name=f"{Emojis.check} Присоединились", value="")
 		embed.add_field(name=f"{Emojis.cross} Отклонили", value="")
 		embed.set_footer(text=str(ctx.author.id))
-		if game in games:
-			game_banner = discord.File(f"assets/game_banners/{game}{randint(0, games[game]["banners_count"])}.png", filename="say_gex.png")
-			embed.set_image(url="attachment://say_gex.png")
-		lf_msg = await look_for_channel.send(embed=embed, view=LookFor(), file=game_banner)
-		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
+		embed.set_image(url=banner)
+		if file == None:
+			lf_msg = await look_for_channel.send(embed=embed, view=LookFor())
+		else:
+			lf_msg = await look_for_channel.send(file=file, embed=embed, view=LookFor())
 		await ctx.reply(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", allowed_mentions=no_ping)
+		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
 	@look_for.error
 	async def lf_error(self, ctx, error):
 		error_msg = str(error)
@@ -191,7 +175,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 			elif "details" in error_msg:
 				await ctx.reply(f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)",\
 					allowed_mentions=no_ping, delete_after=4)
-
+	
 
 class LookFor(discord.ui.View):
 	def __init__(self):
