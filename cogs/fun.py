@@ -147,7 +147,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 			banner = results[0]["background_image"]
 			game = results[0]["name"]
 		else:
-			file = discord.File("assets/default_game_banner.png", filename="say_gex.png")
+			file = discord.File("asstes/default_game_banner.png", filename="say_gex.png")
 			banner = "attachment://say_gex.png"
   		#
 		look_for_channel = await self.bot.fetch_channel(LOOK_FOR_ID)
