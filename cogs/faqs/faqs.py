@@ -64,10 +64,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
             await msg.channel.send(f"{Emojis.chat_type_open} Чтобы предотвратить флуд, я не буду отправлять больше трёх ответов за раз.", reference = msg, allowed_mentions = no_ping)
         for faq in faq_names:
             if faq_names.index(faq) < 3:
-                file_names = db[faq]["files"]
-                files = []
-                for file_name in file_names:
-                    files.append(discord.File(f'assets/faqs/{faq}/{file_name}'))
+                files = [discord.File(f'assets/faqs/{faq}/{file_name}') for file_name in db[faq].get("files", [])]
                 with open(f'assets/faqs/{faq}/{faq}.md', 'r', encoding="utf-8") as file: content = file.read()
                 emoji_instance = Emojis()
                 for attr in dir(emoji_instance):

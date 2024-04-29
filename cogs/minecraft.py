@@ -117,7 +117,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 						desc += f"`{num}` — `{version}`\n"
 					else:
 						if release != "–":
-							desc += f"`{num}` — `{release}`\n"
+							desc += f"`{num}` — `{release[:-1]}`\n"
 		embed = discord.Embed(title=title, color=no_color)
 		embed.add_field(name="Число — Версии", value=desc)
 		embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
