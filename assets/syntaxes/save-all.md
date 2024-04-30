@@ -1,4 +1,9 @@
-`save-all`
-    Normal mode.
-`save-all flush`
-    All the chunks are saved to the data storage device immediately, freezing the server for a short time.
+```ansi
+[35msave-all
+```
+Обычный режим
+
+```ansi
+[35msave-all [34mflush
+```
+Сохраняет все чанки мгновенно, замораживает сервер на короткое время

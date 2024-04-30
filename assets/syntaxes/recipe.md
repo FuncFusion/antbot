@@ -1,4 +1,9 @@
-`recipe (give|take) <[36mселекторs> *`
-    Gives or takes all recipes from the player.
-`recipe (give|take) <[36mселекторs> <recipe>`
-    Gives or takes a specified recipe from the player.
+```asni
+[35mrecipe [33m([34mgive[35m|[34mtake[33m) <[36mселектор[33m> [0m*
+```
+Выдает/убирает все рецепты игроку
+
+```ansi
+[35mrecipe [33m([34mgive[35m|[34mtake[33m) <[36mселектор[33m> <[0mрецепт[33m>
+```
+Выдает/убирает указанный рецепт игроку

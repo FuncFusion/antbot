@@ -1,3 +1,9 @@
-`/return <value>`  
-Terminate the function to which it belongs and `/function` set the return value of the command to an arbitrary integer value. `/return run <command>`‌\[_upcoming: [JE 1.20.2](/w/Java_Edition_1.20.2 "Java Edition 1.20.2")_\]  
-Executes the command specified in , terminates the function `/function` to which it belongs, and uses the return value of that command as the return value of the command that executed that function. If the executed command fails, the return value will be 0.
+```ansi
+[35mreturn [33m<[0mзначение[33m>
+``` 
+Прекращает исполнение функции в которой была вызвана
+
+```ansi
+[35mreturn [34mrun [33m<[0mcommand[33m>
+```
+Исполняет команду, используя её `return` значение что бы прекратить функцию в которой была вызвана с таким же значением. Если команда проваливается, возвращает 0

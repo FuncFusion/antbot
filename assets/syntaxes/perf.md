@@ -1,7 +1,9 @@
-`perf start`
+```ansi
+[35mperf [34mstart
+```
+Начинает запись на 10 секнуд профилирования произодительности как длина тиков и другия подробная статистика
 
-Starts a recording for 10 seconds performance profiling such as tick durations, used heap sizes and other more detailed stats.
-
-`perf stop`
-
-Ends the recording early before the 10-second limit.
+```ansi
+[35mperf [34mstop
+```
+Заканччивает запись до 10-ти секундного лимита

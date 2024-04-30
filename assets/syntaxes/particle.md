@@ -1,2 +1,6 @@
-`particle <name> [<pos>]`
-`particle <name> <pos> <delta> <speed> <count> [force|normal] [<viewers>]`
+```ansi
+[35mparticle [33m<[0mимя[33m> [[35m<[32mпозиция[35m>[33m]
+```
+```ansi
+[35mparticle [33m<[0mимя[33m> <[32mпозиция[33m> <[32mдельта[33m> <[32mскорость[33m> <[32mколичество[33m> [[34mforce[35m|[34mnormal[33m] [[35m<[36mселектор[35m>[33m]
+```

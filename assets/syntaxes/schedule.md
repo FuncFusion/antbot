@@ -1,4 +1,9 @@
-`schedule function <function> <time> [append|replace]`
-    Adds a schedule.
-`schedule clear <function>`
-    Removes a schedule.
+```ansi
+[35mschedule [34mfunction [33m<[0mфункция[33m> <[0mвремя[33m> [[34mappend[35m|[34mreplace[33m]
+```
+Исполняет функцию по прошествию указнанного времени
+
+```ansi
+[35mschedule [34mclear [33m<[0mфункция[33m>
+```
+Убирает отложенную функцию

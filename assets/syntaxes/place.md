@@ -1,15 +1,19 @@
-`/place feature <feature> [<pos>]`
+```ansi
+[35mplace [34mfeature [33m<[0mструктура[33m> [[35m<[32mпозиция[35m>[33m]
+```
+Разместить неполноценную структуру
 
-Place the configured feature.
+```ansi
+[35mplace [34mjigsaw [33m<[0mпул[33m> <[0mпуть[33m> <[32mмаксимальная глубина[33m> [[35m<[32mпозиция[35m>[33m]
+```
+Разместить пазл
 
-`/place jigsaw <pool> <[36mселектор> <max_depth> [<position>]`
+```ansi
+[35mplace [34mstructure [33m<[0mструктура[33m> [[35m<[32mпозиция[35m>[33m]
+```
+Разместить структуру
 
-Place the jigsaw.
-
-`/place structure <structure> [<pos>]`
-
-Place the configured structure feature.
-
-`/place template <template> [<pos>] [<rotation>] [<mirror>] [<integrity>] [<seed>]`
-
-Place the structure template. (Works like using the load button in the UI for a structure block)
+```asni
+[35mplace [34mtemplate [33m<[0mшаблон[33m> [[35m<[32mпозиция[35m>[33m] [[35m<[32mповорот[35m>[33m] [[35m<[0mотзеркаливание[35m>[33m] [[35m<[32mцелостность[35m>[33m] [[35m<[32mсид[35m>[33m]
+```
+Разместить шаблон структуры

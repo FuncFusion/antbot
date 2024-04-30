@@ -1,1 +1,3 @@
-`setworldspawn [<pos>] [<angle>]`
+```ansi
+[35msetworldspawn [33m[[35m<[32mпозиция[35m>[33m] [[35m<[32mугол[35m>[33m]
+```

@@ -1,1 +1,3 @@
-`seed`
+```ansi
+[35mseed
+```

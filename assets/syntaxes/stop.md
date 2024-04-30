@@ -1,1 +1,3 @@
-`stop`
+```ansi
+[35mstop
+```
