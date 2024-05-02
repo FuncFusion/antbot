@@ -1,27 +1,34 @@
-`team list [<team>]`
+```ansi
+[35mteam [34mlist [33m[[35m<[0mкоманда[35m>[33m]
+```
+Показывает все команды с их оторажаемыми именами и количество сущностей в них. Опциональный аргумент `команда` используется что бы указать одну команду
 
-Lists all teams, with their display names and the amount of entities in them. The optional `<team>` can be used to specify a particular team.
+```ansi
+[35mteam [34madd [33m<[0mкоманда[33m> [[35m<[0mотображаемое имя[35m>[33m]
+```
+Создаёт команду с указанным именем в `команда`, опционально с отображаемым именем.
 
-`team add <team> [<displayName>]`
+```ansi
+[35mteam [34mremove [33m<[0mкоманда[33m>
+```
+Удаляет указанную команду
 
-Creates a team with the given name and optional display name. `<displayName>` defaults to `<team>` when unspecified.
+```ansi
+[35mteam [34mempty [33m<[0mкоманда[33m>
+```
+Убирает всех участников с указанной команды
 
-`team remove <team>`
+```ansi
+[35mteam [34mjoin [33m<[0mкоманда[33m> [[35m<[36mселектор[35m>[33m]
+```
+Добавляет в команду всех сущностей с `селектор`
 
-Deletes the specified team.
+```ansi
+[35mteam [34mleave [33m<[36mселектор[33m>
+```
+Убирвает указанных сущностей с их команд
 
-`team empty <team>`
-
-Removes all members from the named team.
-
-`team join <team> [<members>]`
-
-Assigns the specified entities to the specified team. If no entities is specified, makes the executor join the team.
-
-`team leave <members>`
-
-Makes the specified entities leave their teams.
-
-`team modify <team> <_option_> <_value_>`
-
-Modifies the options of the specified team.
+```ansi
+team modify <команда> <настройка> <значение>
+```
+Модифицирует настройки указанной команды

@@ -1,13 +1,17 @@
-`time add <time>`
+```ansi
+[35mtime [34madd [33m<[32mколичество[33m>
+```
+Добавляет указанное количество тиков к времени
 
-Adds `<time>` to the in-game daytime.
+```ansi
+[35mtime [34mquery [33m([34mdaytime[35m|[34mgametime[35m|[34mday[33m)
+```
+Запрашивает текущее время
 
-`time query (daytime|gametime|day)`
-
-Queries current time.
-
-`time set (day|night|noon|midnight)`
-
-`time set <time>`
-
-Sets the internal daytime.
+```ansi
+[35mtime [34mset [33m([34mday[35m|[34mnight[35m|[34mnoon[35m|[34mmidnight[33m)
+```
+```ansi
+[35mtime [34mset [33m<[32mколичество[33m>
+```
+Устанавливает время

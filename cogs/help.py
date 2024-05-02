@@ -111,7 +111,7 @@ class HelpCommands(commands.Cog, name="Помощь"):
 	async def syntax(self, ctx, command: str):
 		HelpAdditionals.Syntax.read_syntaxes()
 		embed = discord.Embed(color=no_color, 
-			description=f"# {Emojis.mcf_load} /{command}\n" + HelpAdditionals.Syntax.syntaxes[command])
+			description=f"# {Emojis.mcf_load} /[{command}](<https://minecraft.wiki/w/Commands/{command}>)\n" + HelpAdditionals.Syntax.syntaxes[command])
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@syntax.error
 	async def syntax_error(self, ctx, error):

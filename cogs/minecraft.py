@@ -34,7 +34,6 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	@commands.hybrid_command(aliases=["hl", "рд","хайлайт", "хл"], description="Подсвечивает синтаксис для mcfunction")
 	@app_commands.describe(function="mcfunction функция")
 	async def highlight(self, ctx, *, function:str=None):
-		print("function")
 		highlighted = ""
 		if function == None:
 			if (reply:=ctx.message.reference) != None:

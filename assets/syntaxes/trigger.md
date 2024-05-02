@@ -1,6 +1,14 @@
-`trigger <objective>`
-    Adds `1` to the current value of `<objective>`.
-`trigger <objective> add <value>`
-    Adds `<value>` to the current value of `<objective>`.
-`trigger <objective> set <value>`
-    Sets the value of `<objective>` to `<value>`.
+```ansi
+[35mtrigger [33m<[0mтриггер[33m>
+```
+Добавляет 1 очко к значении триггера
+
+```ansi
+[35mtrigger [33m<[0mтриггер[33m> [34madd [33m<[32mзначение[33m>
+```
+Добавляет значение к текущему значению триггера
+
+```ansi
+trigger <триггер> set <значение>
+```
+Устанваливает значение триггера `значение`

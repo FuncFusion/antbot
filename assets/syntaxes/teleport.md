@@ -1,21 +1,24 @@
-`teleport <destination>`
+```ansi
+[35mteleport [33m<[32mпозиция[35m|[36mселектор[33m>
+```
 
-`teleport <[36mселекторs> <destination>`
+```ansi
+[35mteleport [33m<[36mселектор[33m> <[32mпозиция[35m|[36mселектор[33m>
+```
+Телепортирует `селектора` на `позицию` | к `селектору`, делает поворот телепортируемой сущности такой же, как поворот сущности к которой она телепортируется
 
-Teleports the executor or the specified entity(s) to the position of an entity, and makes its rotation the same as the specified entity's.
+```ansi
+[35mteleport [33m<[32mпозиция[35m|[36mселектор[33m>
+```
+Телепортирует исполнителя команды на `позицию` | к `селектору`, делает поворот телепортируемой сущности такой же, как поворот исполняемой команды
 
-`teleport <location>`
-
-Teleports the executor to a certain position (and changes its rotation to the command's execution rotation).
-
-`teleport <[36mселекторs> <location>`
-
-Teleports the entity(s) to a certain position (without changing their rotation).
-
-`teleport <[36mселекторs> <location> <rotation>`
-
-`teleport <[36mселекторs> <location> facing <facingLocation>`
-
-`teleport <[36mселекторs> <location> facing entity <facingEntity> [<facingAnchor>]`
-
-Teleports the entity(s) to a certain position and changes their rotation to the specified rotation.
+```ansi
+[35mteleport [33m<[36mселектор[33m> <[32mпозиция[35m|[36mселектор[33m> <[32mповорот[33m>
+```
+```ansi
+[35mteleport [33m<[36mселектор[33m> <[32mпозиция[35m|[36mселектор[33m> [0mfacing [33m<[32mпозиция[33m>
+```
+```ansi
+[35mteleport [33m<[36mселектор[33m> <[32mпозиция[35m|[36mселектор[33m> [0mfacing entity [33m<[36mселектор[33m> [[35m<[0mякорь[35m>[33m]
+```
+Телепортирует сущность на на `позицию` | к `селектору`, и меняет её поворот
