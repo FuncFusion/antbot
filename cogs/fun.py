@@ -9,6 +9,7 @@ from Levenshtein import distance
 from settings import LOOK_FOR_ID
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
+from utils.general import handle_errors
 
 normal2sga_table = {
 	"a": "ᔑ",
@@ -82,8 +83,12 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(enchanted, allowed_mentions=no_ping)
 	@enchant.error
 	async def enchant_error(self, ctx, error):
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать", delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"error_message": f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать"
+			}
+		])
 		
 	@commands.hybrid_command(aliases=["unench", "раззачаровать", "разчарить", "разчарь", "разчаруй", "гтутср", "гтутсрфте"],
 		description="Переводит сообщение с языка стола зачарования")
@@ -95,8 +100,12 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(unenchanted, allowed_mentions=no_ping)
 	@unenchant.error
 	async def unenchant_error(self, ctx, error):
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать", delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"error_message": f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать"
+			}
+		])
 
 	@commands.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
 		description="Генерирует рандомное число в заданном промежутке")
@@ -113,9 +122,12 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@randomrange.error
 	async def randomrange_error(self, ctx, error):
-		eArg = str(error).split("'")[1].replace("\\\\", "\\")
-		await ctx.reply(f"{Emojis.exclamation_mark} Неверно введённый аргумент - `{eArg}`. Допускаются только целочисленные значения", \
-			allowed_mentions=no_ping, delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"contains": "ValueError",
+				"error_message": f"{Emojis.exclamation_mark} Допускаются только целочисленные занчения"
+			}
+		])
 
 	@commands.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 		description="Выдаёт случайный ответ из заданных на вопрос. [text] разделяется символом \"|\" или переносом строки")
@@ -182,15 +194,16 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await ctx.reply(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", allowed_mentions=no_ping)
 	@look_for.error
 	async def lf_error(self, ctx, error):
-		error_msg = str(error)
-		print(error)
-		if isinstance(error, commands.MissingRequiredArgument):
-			if "game" in error_msg:
-				await ctx.reply(f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта", \
-					allowed_mentions=no_ping, delete_after=4)
-			elif "details" in error_msg:
-				await ctx.reply(f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)",\
-					allowed_mentions=no_ping, delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"contains": "game",
+				"error_message": f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта"
+			},
+			{
+				"contains": "details",
+				"error_message": f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
+			}
+		])
 
 
 class LookFor(discord.ui.View):
