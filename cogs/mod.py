@@ -7,9 +7,9 @@ from random import choice
 from asyncio import sleep
 from datetime import timedelta
 
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
-from utils.general import handle_errors
 
 time_multipliers = {
 	"y": 31556952,
@@ -61,11 +61,11 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"error_message":f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
+				"msg":f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
 			},
 			{
 				"contains": "Forbidden",
-				"error_message":"Кудааа, не туда воюешь"
+				"msg":"Кудааа, не туда воюешь"
 			}
 		])
 		
@@ -90,27 +90,27 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "user",
-				"error_message": f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
 			},
 			{
 				"contains": "term",
-				"error_message": f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
 			},
 			{
 				"exception": commands.MemberNotFound,
-				"error_message": f"{Emojis.exclamation_mark} Пользователь не найден"
+				"msg": f"{Emojis.exclamation_mark} Пользователь не найден"
 			},
 			{
 				"contains": "IndexError",
-				"error_message": f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
 			},
 			{
 				"contains": "KeyError",
-				"error_message": f"{Emojis.exclamation_mark} Неверная мера измерения времени"
+				"msg": f"{Emojis.exclamation_mark} Неверная мера измерения времени"
 			},
 			{
 				"contains": "Forbidden",
-				"error_message": "Кудааа, не туда воюешь"
+				"msg": "Кудааа, не туда воюешь"
 			}
 		])
 		
@@ -131,15 +131,15 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"error_message": f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
 			},
 			{
 				"exception": commands.MemberNotFound,
-				"error_message": f"{Emojis.exclamation_mark} Пользователь не найден"
+				"msg": f"{Emojis.exclamation_mark} Пользователь не найден"
 			},
 			{
 				"contains": "Forbidden",
-				"error_message": "Э, не туда воюешь"
+				"msg": "Э, не туда воюешь"
 			}
 		])
 		
@@ -158,6 +158,6 @@ class ModerationCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"error_message": f"{Emojis.exclamation_mark} Пожалуйста, укажите количество сообщений которое будет удалено"
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите количество сообщений которое будет удалено"
 			}
 		])

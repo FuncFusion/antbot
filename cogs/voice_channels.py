@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from settings import VCS_CATEGORY_ID, CREATE_VC_CHANNEL_ID
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
 
 class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
@@ -20,6 +21,9 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 			await ctx.channel.set_permissions(user, manage_channels=True, mute_members=True, 
 				deafen_members=True, move_members=True)
 			await ctx.send(f"{Emojis.check} Права переданы {user.mention}", ephemeral=True)
+	@transfer_owner.error
+	async def to_error(self, ctx, error):
+		await handle_errors(ctx, error, [])
 
 	@commands.Cog.listener("on_voice_state_update")
 	async def create_new_vc(self, member, before, after):

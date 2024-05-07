@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from settings import HELP_FORUM_ID, CREATIONS_FROUM_ID
+from utils.general import handle_errors
 from utils.msg_utils import Emojis, get_msg_by_id_arg
 from utils.shortcuts import no_ping, no_color
 
@@ -51,9 +52,7 @@ class HelpAdditionals:
 						HelpAdditionals.Syntax.syntaxes[filename.replace(".md", "")] = file.read()
 		
 
-
 HelpAdditionals.Syntax.read_syntaxes()
-#
 
 
 class HelpCommands(commands.Cog, name="Помощь"):
@@ -92,18 +91,28 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		await ctx.channel.edit(archived=True)
 	@resolve.error
 	async def resolve_error(self, ctx, error):
-		error_msg = str(error)
-		if "has no attribute 'parent_id'" in error_msg or "not help forum" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи", \
-				allowed_mentions=no_ping, delete_after=4)
-		elif "not author/op" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", \
-				allowed_mentions=no_ping, delete_after=4)
-		elif "Wrong message" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Неверная ссылка/айди сообщения", allowed_mentions=no_ping, delete_after=4)
-		elif "Missing arg" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, @упомяните людей, которые помогли вам с проблемой", \
-				allowed_mentions=no_ping, delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"contains": "has no attribute 'parent_id'",
+				"msg": f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи"
+			},
+			{
+				"contains": "not help forum",
+				"msg": f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи"
+			},
+			{
+				"contains": "not author/op",
+				"msg": f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором"
+			},
+			{
+				"contains": "Wrong message",
+				"msg": f"{Emojis.exclamation_mark} Неверная ссылка/айди сообщения"
+			},
+			{
+				"contains": "Missing arg",
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, @упомяните людей, которые помогли вам с проблемой"
+			}
+		])
 		
 	@commands.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
 		description="Показывает синтакс введеной майнкрафт команды")
@@ -115,8 +124,12 @@ class HelpCommands(commands.Cog, name="Помощь"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@syntax.error
 	async def syntax_error(self, ctx, error):
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите команду", allowed_mentions=no_ping, delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите команду"
+			}
+		])
 	@syntax.autocomplete("command")
 	async def syntax_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		if curr == "":

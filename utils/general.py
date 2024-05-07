@@ -16,7 +16,7 @@ async def handle_errors(ctx, error, errors):
 			curr_score += 1
 		#
 		if curr_score == case_cost:
-			await ctx.reply(case["error_message"], allowed_mentions=no_ping, delete_after=(None if ctx.channel.id == \
+			await ctx.reply(case["msg"], allowed_mentions=no_ping, delete_after=(None if ctx.channel.id == \
 				BOT_COMMANDS_CHANNEL_ID else 5))
 			break
 	else:

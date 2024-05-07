@@ -10,16 +10,17 @@ from Levenshtein import distance
 from bs4 import BeautifulSoup
 
 from cogs.mc.pack_generator import PGenerator, Modals
+from cogs.mc.highlighter.main import Hl as hl
+
+from utils.general import handle_errors
 from utils.validator import validate
 from utils.msg_utils import Emojis
-from cogs.mc.highlighter.main import Hl as hl
-from utils.fake_user import fake_send
 from utils.shortcuts import no_ping, no_color
+from utils.fake_user import fake_send
 from utils.msg_utils import unknown_error
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
-## Getting pack formats
 pf_req = requests.get("https://minecraft.wiki/w/Pack_format",timeout=10)
 pf_content = BeautifulSoup(pf_req.content, "html.parser")
 
@@ -55,10 +56,12 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		await ctx.reply(content=highlighted, allowed_mentions=no_ping)
 	@highlight.error
 	async def hl_error(self, ctx, error):
-		error_msg = str(error)
-		if "Missing arg" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией", \
-				allowed_mentions=no_ping, delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"contains": "Missing arg",
+				"msg": "{Emojis.exclamation_mark} Не хватает функции/ответа на сообщение с функцией"
+			}
+		])
 	
 	async def highlight_ctxmenu(self, interaction: discord.Interaction, message:discord.Message):
 		code_block_re = r"```[^`]+```"
@@ -91,7 +94,8 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		"пак_формат", "мсметаформат", "пакмсметаформат",
 		"пф", "зфслащкьфе", "за"], 
 		description="Выдаёт актуальные числа, которые соответствуют версиям в pack_format")
-	@app_commands.describe(type="Показать числа для ресурспака или датапака", show_all="Показать числа для всех версий и снапшотов")
+	@app_commands.describe(type="Показать числа для ресурспака или датапака", 
+		show_all="Показать числа для всех версий и снапшотов")
 	async def packformat(self, ctx, type, *, show_all=""):			
 		dp_types = ["datapack", "dp", "data", "датапак", "дп", "дата"]
 		rp_types = ["resourcepack", "rp", "resource", "ресурспак", "рп", "ресурс"]
@@ -123,13 +127,16 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@packformat.error
 	async def packformat_error(self, ctx, error: Exception):
-		error_msg = str(error)
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping, delete_after=4)
-		elif error_msg.find("AttributeError"):
-			await ctx.reply(f"{Emojis.exclamation_mark} Неверно указан тип пакформата", allowed_mentions=no_ping, delete_after=4)
-		else:
-			await unknown_error(self, ctx, error)
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+			},
+			{
+				"contains": "AttributeError",
+				"msg": f"{Emojis.exclamation_mark} Неверно указан тип пакформата"
+			}
+		])
 	
 	@commands.hybrid_command(aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"],
 		description="Создаёт шаблон датапака/ресурспака")
@@ -166,13 +173,16 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 				file=discord.File(pack, filename=f"Basic_{template}_(UNZIP).zip"))
 	@template.error
 	async def template_error(self, ctx: commands.Context, error):
-		error_str = str(error)
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов", allowed_mentions=no_ping, delete_after=4)
-		elif isinstance(error, commands.BadArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Неверный аргумент: {error_str}", allowed_mentions=no_ping, delete_after=4)
-		else:
-			await unknown_error(ctx, error)
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+			},
+			{
+				"exception": commands.BadArgument,
+				"msg": f"{Emojis.exclamation_mark} Неверный аргумент"
+			}
+		])
 	@template.autocomplete("template")
 	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		return [app_commands.Choice(name="Датапак", value="datapack"), app_commands.Choice(name="Ресурспак", value="resourcepack")]

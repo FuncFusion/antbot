@@ -7,9 +7,9 @@ import re
 from Levenshtein import distance
 
 from settings import LOOK_FOR_ID
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
-from utils.general import handle_errors
 
 normal2sga_table = {
 	"a": "ᔑ",
@@ -86,7 +86,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"error_message": f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать"
+				"msg": f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать"
 			}
 		])
 		
@@ -103,7 +103,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"error_message": f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать"
+				"msg": f"{Emojis.exclamation_mark} Введите текст который хотите раззачаровать"
 			}
 		])
 
@@ -125,7 +125,7 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "ValueError",
-				"error_message": f"{Emojis.exclamation_mark} Допускаются только целочисленные занчения"
+				"msg": f"{Emojis.exclamation_mark} Допускаются только целочисленные занчения"
 			}
 		])
 
@@ -197,11 +197,11 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "game",
-				"error_message": f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта"
+				"msg": f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта"
 			},
 			{
 				"contains": "details",
-				"error_message": f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
+				"msg": f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
 			}
 		])
 

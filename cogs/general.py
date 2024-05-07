@@ -6,8 +6,8 @@ from datetime import timedelta
 from re import findall
 from Levenshtein import distance
 
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
-
 from utils.shortcuts import no_ping, no_color
 
 time_multipliers = {
@@ -111,6 +111,9 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		embed.add_field(name="Приглашение (иссякает через сутки)", value=f"{Emojis.link} {invitation_link}")
 		embed.set_footer(text=f"🆔 {server.id}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	@serverinfo.error
+	async def si_error(self, ctx, error):
+		await handle_errors(ctx, error, [])
 		
 	@commands.hybrid_command(aliases=["usr", "u", "юзер", "пользователь", "усер", "гыук", "гык", "г"],
 		description="Показывает информацию о пользователе")
@@ -126,7 +129,7 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			"dnd": "🔴 Не беспокоить",
 			"invisible": "⚫ Невидимка"
 		}
-		embed = discord.Embed(title=user.display_name, color=user.color)
+		embed = discord.Embed(title=user.display_name, color=no_color)
 		embed.set_thumbnail(url=user.avatar.url)
 		embed.add_field(name="Присоединился к серверу", value=f"{Emojis.calendar} <t:{int(user.joined_at.timestamp())}>", inline=False)
 		embed.add_field(name="Зарегистрировался(ась)", value=f"{Emojis.calendar} <t:{int(user.created_at.timestamp())}>", inline=False)
@@ -134,6 +137,9 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		embed.add_field(name="Статус", value=statuses[str(user.status)], inline=False)
 		embed.set_footer(text=f"🆔 {user.id}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	@user.error
+	async def user_error(self, ctx, error):
+		await handle_errors(ctx, error, [])
 	
 	@commands.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
 		description="Отправляет сообщение от имени бота")
@@ -146,8 +152,12 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		await ctx.message.delete()
 	@say.error
 	async def say_error(self, ctx, error):
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Введите текст который хотите сказать от моего имени")
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Введите текст который хотите сказать от моего имени"
+			}
+		])
 
 	@commands.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
 		description="Напоминает о чём-то через определённое время с помощью пинга.")
@@ -173,12 +183,19 @@ class GeneralCommands(commands.Cog, name="Общие"):
 			await ctx.reply(f"{Emojis.exclamation_mark} Вы указали слишком большой промежуток времени.", allowed_mentions=no_ping)
 	@remind.error
 	async def remind_error(self, ctx, error):
-		error_msg = str(error)
-		missing_args = {
-			"time": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>",
-			"reason": f"{Emojis.exclamation_mark} Укажите напоминание"
-		}
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(missing_args[error_msg.split(" ")[0]], allowed_mentions=no_ping, delete_after=4)
-		elif "IndexError" in error_msg:
-			await ctx.reply(missing_args["time"], allowed_mentions=no_ping, delete_after=4)
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"contains": "time",
+				"msg": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
+			},
+			{
+				"exception": commands.MissingRequiredArgument,
+				"contains": "reason",
+				"msg": f"{Emojis.exclamation_mark} Укажите напоминание"
+			},
+			{
+				"contains": "IndexError",
+				"msg": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
+			}
+		])
