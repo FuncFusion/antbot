@@ -89,6 +89,8 @@ def generate_tree(folders: str):
     file_ext = ""
     for idx, item in enumerate(folders):
         name = item.lstrip()
+        if idx == len(folders)-1:
+            break
         if "." in item:
             file_ext = item.split(".")[-1]
             if file_ext in icons["files"]:

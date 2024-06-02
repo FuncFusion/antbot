@@ -1,7 +1,5 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
 from utils.shortcuts import no_ping
+from re import split, DOTALL
 
 async def get_msg_by_id_arg(self, ctx, bot, arg:str):
 	try:
@@ -19,6 +17,37 @@ async def unknown_error(self, ctx, error):
 	await ctx.reply(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
 		<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`".replace("\t", ""), allowed_mentions=no_ping)
 	print(type(error), error)
+
+# Thx bing/copilot 😘
+def split_msg(s):
+	MAX_LENGTH = 2000
+	blocks = split(r'(```.*?```)', s, flags=DOTALL)
+	parts = []
+	current_part = ''
+	for block in blocks:
+		if block.startswith('```'):  # This is a block of code
+			lines = block.split('\n')
+			for line in lines:
+				if len(current_part) + len(line) + 1 > MAX_LENGTH:  # Adding this line would exceed the limit
+					# Close the current part and start a new one
+					current_part += '```\n'
+					parts.append(current_part)
+					current_part = '```ansi\n' + line
+				else:
+					current_part += line + '\n'
+		else:  # This is normal text
+			words = block.split(' ')
+			for word in words:
+				if len(current_part) + len(word) + 1 > MAX_LENGTH:  # Adding this word would exceed the limit
+					# Start a new part
+					parts.append(current_part)
+					current_part = word + ' '
+				else:
+					current_part += word + ' '
+	if current_part:
+		parts.append(current_part)
+
+	return parts
 
 
 class Emojis:

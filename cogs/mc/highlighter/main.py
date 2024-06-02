@@ -279,37 +279,6 @@ class Hl:
 			converted += f'<span class="ansi_{color_classes[matches.group(2)]}{" "+color_classes[matches.group(4)] if matches.group(4) != None else ""}">{element.replace(matches.group(1), "")}</span>'
 		return f"<pre>{converted}</pre>"
 
-	# Thx bing/copilot 😘
-	def split_msg(s):
-		MAX_LENGTH = 2000
-		blocks = split(r'(```.*?```)', s, flags=DOTALL)
-		parts = []
-		current_part = ''
-		for block in blocks:
-			if block.startswith('```'):  # This is a block of code
-				lines = block.split('\n')
-				for line in lines:
-					if len(current_part) + len(line) + 1 > MAX_LENGTH:  # Adding this line would exceed the limit
-						# Close the current part and start a new one
-						current_part += '```\n'
-						parts.append(current_part)
-						current_part = '```ansi\n' + line
-					else:
-						current_part += line + '\n'
-			else:  # This is normal text
-				words = block.split(' ')
-				for word in words:
-					if len(current_part) + len(word) + 1 > MAX_LENGTH:  # Adding this word would exceed the limit
-						# Start a new part
-						parts.append(current_part)
-						current_part = word + ' '
-					else:
-						current_part += word + ' '
-		if current_part:
-			parts.append(current_part)
-
-		return parts
-
 # print(Hl.highlight("""execute at @a[nbt={SelectedItem:{id:"minecraft:bow",tag:{CustomModelData:1}}}] run tag @e[type=arrow, distance=3] add slowness_arrow
 
 # execute at @e[tag=slowness_arrow,nbt={}] run effect give @e slowness 10 2 true"""))

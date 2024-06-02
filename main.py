@@ -6,7 +6,7 @@ from discord import app_commands
 from cogs.general import GeneralCommands
 from cogs.fun import FunCommands, LookFor
 from cogs.admin import AdminCommands
-from cogs.minecraft import MinecraftCommands
+from cogs.minecraft import MinecraftCommands, MessageFormatter
 from cogs.mod import ModerationCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.faqs.faqs import FAQs
@@ -26,13 +26,14 @@ class AntBot(commands.Bot):
 		self.add_view(LookFor())
 		await self.add_cog(AdminCommands(self))
 		await self.add_cog(MinecraftCommands(self))
+		await self.add_cog(MessageFormatter(self))
 		await self.add_cog(ModerationCommands(self))
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))
 		await self.add_cog(FAQs(self))
 		# await self.add_cog(IdeaCommand(self))
 		# self.add_view(IdeaView())
-		await self.add_cog(LogListeners(self))
+		# await self.add_cog(LogListeners(self))
 		await self.add_cog(CustomVoiceChannels(self))
 		await self.tree.sync()
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")

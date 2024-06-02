@@ -14,7 +14,7 @@ from cogs.mc.highlighter.main import Hl as hl
 
 from utils.general import handle_errors
 from utils.validator import validate
-from utils.msg_utils import Emojis
+from utils.msg_utils import Emojis, split_msg
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
 from utils.msg_utils import unknown_error
@@ -77,7 +77,7 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 			else:
 				highlighted = f"```ansi\n{hl.highlight(message.content)}```"
 			if (hl_len:=len(highlighted)) > 2000:
-				highlighted = hl.split_msg(highlighted)
+				highlighted = split_msg(highlighted)
 				print(highlighted)
 			await fake_send(interaction.user, interaction.channel, content=highlighted)
 		else:
@@ -191,4 +191,19 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		return [app_commands.Choice(name="Базовый", value="basic"), app_commands.Choice(name="Расширенный", value="extended"),
 		  app_commands.Choice(name="Настраиваемый", value="custom")]
+
+
+class MessageFormatter(commands.Cog):
+	@commands.Cog.listener("on_message")
+	async def formatter(self, msg):
+		if "```mcf" in msg.content or "```tree" in msg.content:
+			formatted = msg.content
+			code_blocks = re.findall(r"(```(tree|mcf)\n([^`]+)```)", msg.content)
+			for block in code_blocks:
+				if block[1] == "tree":
+					formatted = formatted.replace(block[0], generate_tree(block[2]))
+				else:
+					formatted = formatted.replace(block[0], f"```ansi\n{hl.highlight(block[2])}\n```")
+			await msg.delete()
+			await fake_send(msg.author, msg.channel, split_msg(formatted), msg.attachments)
 	
