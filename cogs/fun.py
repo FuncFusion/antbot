@@ -206,6 +206,15 @@ class FunCommands(commands.Cog, name="Развлечения"):
 		])
 
 
+class Giveaway(discord.ui.View):
+	def __init__(self):
+		super().__init__(timeout=None)
+	
+	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="giveaway:take-part")
+	async def take_part(self, ctx, button):
+		pass
+
+
 class LookFor(discord.ui.View):
 	def __init__(self):
 		super().__init__(timeout=None)
@@ -228,7 +237,7 @@ class LookFor(discord.ui.View):
 		await ctx.response.edit_message(embed=embed, attachments=[])
 	
 	@discord.ui.button(label="Присоединится", emoji=Emojis.check, custom_id="look-for:join")
-	async def join(self, ctx: discord.Interaction, button: discord.ui.Button):
+	async def join(self, ctx, button):
 		await LookFor.response(ctx, "join")
 	
 	@discord.ui.button(label="Отказатся", emoji=Emojis.cross, custom_id="look-for:decline")

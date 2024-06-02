@@ -10,7 +10,7 @@ from cogs.minecraft import MinecraftCommands
 from cogs.mod import ModerationCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.faqs.faqs import FAQs
-from cogs.ideas.ideas import IdeaCommand, IdeaView
+# from cogs.ideas.ideas import IdeaCommand, IdeaView
 from cogs.logs import LogListeners
 from cogs.voice_channels import CustomVoiceChannels
 
@@ -30,8 +30,8 @@ class AntBot(commands.Bot):
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))
 		await self.add_cog(FAQs(self))
-		await self.add_cog(IdeaCommand(self))
-		self.add_view(IdeaView())
+		# await self.add_cog(IdeaCommand(self))
+		# self.add_view(IdeaView())
 		await self.add_cog(LogListeners(self))
 		await self.add_cog(CustomVoiceChannels(self))
 		await self.tree.sync()
@@ -45,9 +45,18 @@ class AntBot(commands.Bot):
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
 
+from utils.tree_gen import generate_tree
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
-	await Interaction.response.send_message("gex")
+	await Interaction.response.send_message(generate_tree("""data
+ namespace
+  recipe
+   recipe.json
+  function
+   load.mcf
+   tick.tmcf
+pack.mcmeta
+pack.png"""))
 
 	
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)
