@@ -16,11 +16,13 @@ icons = {
         "vsh": "<:vsh:1142347174223552543>",
         "fsh": "<:fsh:1142347278812725258>",
         "glsl": "<:glsl:1142347436740849745>",
-        "ogg": "<:ogg:1142918898157629620>"
+        "ogg": "<:ogg:1142918898157629620>",
+        "bbmodel": "<:bbmodel:1186764426376904714>"
     },
     "names": {
         "tick.json": "<:tickjson:1188838117940133930>",
-        "load.json": "<:loadjson:1188838120712577174>"
+        "load.json": "<:loadjson:1188838120712577174>",
+        "sounds.json": "<:sounds_json:1142347091759353866>"
     },
     "open_folders": {
         "data": "<:data_open:1142345183367802971>",
@@ -43,7 +45,18 @@ icons = {
         "trim_material": "<:trim_material:1142893110616150116>",
         "trim_pattern": "<:trim_pattern:1142893113594093660>",
         "worlgen": "<:worldgen:1142345441523019796>",
-        "wolf_variant": "<:wolf_variant:1246817007161180232>"
+        "wolf_variant": "<:wolf_variant:1246817007161180232>",
+
+        "assets": "<:assets_open:1142346941599064086>",
+        "atlases": "<:atlases:1142347325436612619>",
+        "blockstates": "<:blockstates:1142346756953231451>",
+        "font": "<:font:1142346540392927262>",
+        "lang": "<:lang:1142346828206047325>",
+        "models": "<:models:1142346673469800479>",
+        "particles": "<:particles:1142346351879925862>",
+        "textures": "<:textures:1142347361893494876>",
+        "shaders": "<:shaders:1142346604028899429>",
+        "sounds": "<:sounds:1142347049568837742>"
     },
     "jsons": {
         "banner_pattern": "<:banner_pattern:1246812899192737862>",
@@ -60,11 +73,14 @@ icons = {
         "predicate": "<:predicate:1188838122633576488>",
         "trim_pattern": "<:trim_pattern_file:1188838127272464394>",
         "trim_material": "<:trim_material_file:1188838129495449671>",
-        "wolf_variant": "<:wolf:1246816990669312011>"
+        "wolf_variant": "<:wolf:1246816990669312011>",
+
+        "models": "<:bbmodel:1186764426376904714>"
     }
 }
 registries = ["banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", "enchantment", "enchantment_provider", 
-              "jukebox_song", "painting_variant", "item_modififer", "recipe",  "trim_materal", "trim_pattern", "wolf_variant", "worldgen"]
+              "jukebox_song", "painting_variant", "item_modififer", "recipe",  "trim_materal", "trim_pattern", "wolf_variant",
+              "worldgen", "models"]
 
 def generate_tree(folders: str):
     folders = folders.split("\n")

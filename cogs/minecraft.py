@@ -192,7 +192,3 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 		return [app_commands.Choice(name="Базовый", value="basic"), app_commands.Choice(name="Расширенный", value="extended"),
 		  app_commands.Choice(name="Настраиваемый", value="custom")]
 	
-	@commands.hybrid_command(name="tree")
-	async def tree(self, ctx, *, folders: str):
-		await ctx.send(generate_tree(folders))
-
