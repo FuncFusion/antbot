@@ -24,3 +24,33 @@ async def handle_errors(ctx, error, errors):
 			<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`".replace("\t", ""),
 			allowed_mentions=no_ping)
 		print(error_msg)
+
+class _MissingSentinel:
+	__slots__ = ()
+
+	def __eq__(self, other) -> bool:
+		return False
+
+	def __bool__(self) -> bool:
+		return False
+
+	def __hash__(self) -> int:
+		return 0
+
+	def __repr__(self):
+		return '...'
+	
+	def __len__(self):
+		return 0
+	
+	def __to_dict__(self):
+		return {}
+	
+	def __iter__(self):
+		return {}
+	
+	def __next__(self):
+		raise StopIteration
+
+
+MISSING: any = _MissingSentinel()
