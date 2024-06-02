@@ -45,18 +45,9 @@ class AntBot(commands.Bot):
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
 
-from utils.tree_gen import generate_tree
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
-	await Interaction.response.send_message(generate_tree("""data
- namespace
-  recipe
-   recipe.json
-  function
-   load.mcf
-   tick.tmcf
-pack.mcmeta
-pack.png"""))
+	await Interaction.response.send_message("say gex")
 
 	
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)

@@ -62,7 +62,7 @@ class Emojis:
 	md = "<:readme_md:1142345432387817534>"
 	txt = "<:txt:1142918900166688798>"
 	misc = "<:misc:1142345412938834022>"
-	license = "<:license:1142893226982916186>"
+	license = "<:license:1246813468108001392>"
 	copyright = "<:copyright_txt:1142893165574107146>"
 	assets = "<:assets:1142346878030184518>"
 	assets_open = "<:assets_open:1142346941599064086>"

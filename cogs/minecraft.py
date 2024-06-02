@@ -18,6 +18,7 @@ from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
 from utils.msg_utils import unknown_error
+from utils.tree_gen import generate_tree
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
 
@@ -190,4 +191,8 @@ class MinecraftCommands(commands.Cog, name="Майнкрафт"):
 	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		return [app_commands.Choice(name="Базовый", value="basic"), app_commands.Choice(name="Расширенный", value="extended"),
 		  app_commands.Choice(name="Настраиваемый", value="custom")]
+	
+	@commands.hybrid_command(name="tree")
+	async def tree(self, ctx, *, folders: str):
+		await ctx.send(generate_tree(folders))
 
