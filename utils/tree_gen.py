@@ -27,26 +27,33 @@ icons = {
     "open_folders": {
         "data": "<:data_open:1142345183367802971>",
         "advancement": "<:advancements:1142345174580740096>",
+        "advancements": "<:advancements:1142345174580740096>",
         "chat_type": "<:chat_type:1142345176921145435>",
         "damage_type": "<:damage_type:1142345178766659614>",
+        "datapacks": "<:datapacks:1186764442277527713>",
         "dimension": "<:dimension:1142928197168668752>",
         "dimension_type": "<:dimension_type:1143112349214068796>",
         "enchantment": "<:enchantment:1246812751938977915>",
         "enchantment_provider": "<:enchantment:1246812751938977915>",
         "function": "<:functions:1142345196642775090>",
+        "functions": "<:functions:1142345196642775090>",
         "jukebox_song": "<:jukebox_song:1246812914221060178>",
         "loot_table": "<:loot_tables:1142345293170491472>",
-        "item_modififer": "<:item_modifiers:1142345199700414564>",
+        "loot_tables": "<:loot_tables:1142345293170491472>",
+        "item_modifier": "<:item_modifiers:1142345199700414564>",
+        "item_modifiers": "<:item_modifiers:1142345199700414564>",
         "painting_variant": "<:painting_variant:1246812947083432026>",
         "predicate": "<:predicates:1142345430139666524>",
+        "predicates": "<:predicates:1142345430139666524>",
         "recipe": "<:recipes:1188841592715489361>",
+        "recipes": "<:recipes:1188841592715489361>",
         "structure": "<:structures:1142345436942827550>",
+        "structures": "<:structures:1142345436942827550>",
         "tags": "<:tags:1142345438654124033>",
         "trim_material": "<:trim_material:1142893110616150116>",
         "trim_pattern": "<:trim_pattern:1142893113594093660>",
-        "worlgen": "<:worldgen:1142345441523019796>",
+        "worldgen": "<:worldgen:1142345441523019796>",
         "wolf_variant": "<:wolf_variant:1246817007161180232>",
-
         "assets": "<:assets_open:1142346941599064086>",
         "atlases": "<:atlases:1142347325436612619>",
         "blockstates": "<:blockstates:1142346756953231451>",
@@ -79,7 +86,7 @@ icons = {
     }
 }
 registries = ["banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", "enchantment", "enchantment_provider", 
-              "jukebox_song", "painting_variant", "item_modififer", "recipe",  "trim_materal", "trim_pattern", "wolf_variant",
+              "jukebox_song", "painting_variant", "item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant",
               "worldgen", "models"]
 
 def generate_tree(folders: str):
