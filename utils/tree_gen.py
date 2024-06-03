@@ -111,7 +111,7 @@ def generate_tree(folders: str):
                     curr_icon = icons["open_folder"]
             else:
                 if curr_folder in ["data", "assets"]:
-                    curr_icon = icons["namesapce"]
+                    curr_icon = icons["namespace"]
                 else:
                     curr_icon = icons["folder"]
             curr_folder = name
