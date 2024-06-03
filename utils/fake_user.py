@@ -6,12 +6,15 @@ from utils.general import MISSING
 async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING):
 	files = []
 	thread = None
+	attachments = files = attachments if attachments != None else MISSING
 	if attachments != MISSING:
 		for attachment in attachments:
 			files.append(await attachment.to_file())
 	if isinstance(channel, discord.Thread):
 		thread = channel
 		channel = channel.parent
+	else:
+		thread = MISSING
 	user_copy_webhook = await channel.create_webhook(name=".")
 	if isinstance(content, list):
 		for text in content:
