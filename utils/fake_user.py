@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.utils import MISSING
+
 async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING):
 	files = MISSING
 	thread = MISSING
-	attachments = files = attachments if attachments != None else MISSING
 	if attachments != MISSING:
 		files = []
 		for attachment in attachments:
