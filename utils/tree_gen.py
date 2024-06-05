@@ -8,7 +8,7 @@ def generate_tree(folders: str):
             break
         name = item.lstrip()
         indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
-        if "." in item:
+        if "." in item or name in icons["names"]:
             file_ext = item.split(".")[-1]
             if name in icons["names"]:
                 curr_icon = icons["names"][name]
