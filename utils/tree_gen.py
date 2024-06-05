@@ -1,3 +1,47 @@
+def generate_tree(folders: str):
+    folders = folders.split("\n")
+    tree = ""
+    file_ext = ""
+    folder_history = [""]
+    for idx, item in enumerate(folders):
+        if idx == len(folders)-1:
+            break
+        name = item.lstrip()
+        indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
+        if "." in item:
+            file_ext = item.split(".")[-1]
+            if name in icons["names"]:
+                curr_icon = icons["names"][name]
+            elif file_ext == "json" and (last_register:=[folder for folder in folder_history if folder in registries]):
+                curr_icon = icons["jsons"][last_register[0]]
+            elif file_ext in icons["files"]:
+                curr_icon = icons["files"][file_ext]
+            else:
+                curr_icon = icons["misc"]
+        else:
+            if indent_difference > 0:
+                if name in icons["open_folders"]:
+                    curr_icon = icons["open_folders"][name]
+                elif folder_history[-1] in ["data", "assets"]:
+                    curr_icon = icons["open_namespace"]
+                else:
+                    curr_icon = icons["open_folder"]
+                folder_history.append(name)
+            else:
+                if folder_history[-1] in ["data", "assets"]:
+                    curr_icon = icons["namespace"]
+                else:
+                    curr_icon = icons["folder"]
+        if indent_difference < 0:
+            for i in range(indent_difference * -1):
+                folder_history.pop(-1)
+        if file_ext in ["mcf", "tmcf", "lmcf"]:
+            formatted_name = name.replace(file_ext, "mcfunction")
+        else:
+            formatted_name = name
+        tree += f"{'\u3000' * len(item.replace(name, ""))}\u23bf{curr_icon}`{formatted_name}`\n"
+    return tree
+
 icons = {
     "folder": "<:folder:1142345186949734482>",
     "open_folder": "<:folder_open:1142345194805669918>",
@@ -22,7 +66,10 @@ icons = {
     "names": {
         "tick.json": "<:tickjson:1188838117940133930>",
         "load.json": "<:loadjson:1188838120712577174>",
-        "sounds.json": "<:sounds_json:1142347091759353866>"
+        "sounds.json": "<:sounds_json:1142347091759353866>",
+        "LICENSE": "<:license:1246813468108001392>",
+        "LICENSE.md": "<:license:1246813468108001392>",
+        "LICENSE.txt": "<:license:1246813468108001392>",
     },
     "open_folders": {
         "data": "<:data_open:1142345183367802971>",
@@ -88,43 +135,3 @@ icons = {
 registries = ["banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", "enchantment", "enchantment_provider", 
               "jukebox_song", "painting_variant", "item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant",
               "worldgen", "models"]
-
-def generate_tree(folders: str):
-    folders = folders.split("\n")
-    tree = ""
-    curr_folder = ""
-    file_ext = ""
-    for idx, item in enumerate(folders):
-        name = item.lstrip()
-        if idx == len(folders)-1:
-            break
-        if "." in item:
-            file_ext = item.split(".")[-1]
-            if file_ext in icons["files"]:
-                curr_icon = icons["files"][file_ext]
-            else:
-                curr_icon = icons["misc"]
-            if file_ext == "json" and curr_folder in registries:
-                curr_icon = icons["jsons"][curr_folder]
-            if name in icons["names"]:
-                curr_icon = icons["names"][name]
-        else:
-            if (len(next_line:=folders[idx+1]) - len(next_line.lstrip())) > (len(item) - len(item.lstrip())):
-                if name in icons["open_folders"]:
-                    curr_icon = icons["open_folders"][name]
-                elif curr_folder in ["data", "assets"]:
-                    curr_icon = icons["open_namespace"]
-                else:
-                    curr_icon = icons["open_folder"]
-            else:
-                if curr_folder in ["data", "assets"]:
-                    curr_icon = icons["namespace"]
-                else:
-                    curr_icon = icons["folder"]
-            curr_folder = name
-        if file_ext in ["mcf", "tmcf", "lmcf"]:
-            formatted_name = name.replace(file_ext, "mcfunction")
-        else:
-            formatted_name = name
-        tree += f"{'\u3000' * len(item.replace(name, ""))}⎿{curr_icon}`{formatted_name}`\n"
-    return tree
