@@ -141,7 +141,7 @@ icons = {
 }
 registries = ["advancement", "banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", 
 	"enchantment", "enchantment_provider", "jukebox_song", "painting_variant", "predicate", 
-	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "worldgen", "models",
+	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "models",
 	
 	"advancements", "predicates", "item_modifiers", "recipes"
 	]
