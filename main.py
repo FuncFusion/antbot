@@ -10,7 +10,7 @@ from cogs.minecraft import MinecraftCommands, MessageFormatter, snapshot_scraper
 from cogs.mod import ModerationCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.faqs.faqs import FAQs
-# from cogs.ideas.ideas import IdeaCommand, IdeaView
+from cogs.ideas import IdeaCommand, IdeaView
 from cogs.logs import LogListeners
 from cogs.voice_channels import CustomVoiceChannels
 
@@ -31,8 +31,8 @@ class AntBot(commands.Bot):
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))
 		await self.add_cog(FAQs(self))
-		# await self.add_cog(IdeaCommand(self))
-		# self.add_view(IdeaView())
+		await self.add_cog(IdeaCommand(self))
+		self.add_view(IdeaView())
 		await self.add_cog(LogListeners(self))
 		await self.add_cog(CustomVoiceChannels(self))
 		await self.tree.sync()
