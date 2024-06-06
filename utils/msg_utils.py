@@ -36,17 +36,20 @@ def split_msg(s):
 				else:
 					current_part += line + '\n'
 		else:  # This is normal text
-			words = block.split(' ')
+			separator = "\n" if s.count(" ") < s.count("\n") else " "
+			words = block.split(separator)
 			for word in words:
 				if len(current_part) + len(word) + 1 > MAX_LENGTH:  # Adding this word would exceed the limit
 					# Start a new part
 					parts.append(current_part)
-					current_part = word + ' '
+					current_part = word + separator
 				else:
-					current_part += word + ' '
-	if current_part:
+					current_part += word + separator
+	if current_part != '':
 		parts.append(current_part)
 
+	for i in range(parts.count('')):
+		parts.remove('')
 	return parts
 
 
