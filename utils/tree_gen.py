@@ -13,7 +13,7 @@ def generate_tree(folders: str):
 			if name in icons["names"]:
 				curr_icon = icons["names"][name]
 			elif file_ext == "json" and (last_register:=[folder for folder in folder_history if folder in registries]):
-				curr_icon = icons["jsons"][last_register[0]]
+				curr_icon = icons["jsons"][last_register[-1]]
 			elif file_ext in icons["files"]:
 				curr_icon = icons["files"][file_ext]
 			else:
@@ -22,24 +22,26 @@ def generate_tree(folders: str):
 			if indent_difference > 0:
 				if name in icons["open_folders"]:
 					curr_icon = icons["open_folders"][name]
-				elif folder_history[-1] in ["data", "assets"]:
+				elif folder_history != [] and folder_history[-1] in ["data", "assets"]:
 					curr_icon = icons["open_namespace"]
 				else:
 					curr_icon = icons["open_folder"]
 				folder_history.append(name)
 			else:
-				if folder_history[-1] in ["data", "assets"]:
+				if folder_history != [] and folder_history[-1] in ["data", "assets"]:
 					curr_icon = icons["namespace"]
 				else:
 					curr_icon = icons["folder"]
 		if indent_difference < 0:
 			for i in range(indent_difference * -1):
-				folder_history.pop(-1)
+				try:
+					folder_history.pop(-1)
+				except:pass
 		if file_ext in ["mcf", "tmcf", "lmcf"]:
 			formatted_name = name.replace(file_ext, "mcfunction")
 		else:
 			formatted_name = name
-		tree += f"{'\u3000' * len(item.replace(name, ""))}\u23bf{curr_icon}`{formatted_name}`\n"
+		tree += f"{'\u3000' * abs(len(item.replace(name, ""))-1)}{'\u23bf' if name != item else ""}{curr_icon}`{formatted_name}`\n"
 	return tree
 
 icons = {
@@ -70,6 +72,7 @@ icons = {
 		"LICENSE": "<:license:1246813468108001392>",
 		"LICENSE.md": "<:license:1246813468108001392>",
 		"LICENSE.txt": "<:license:1246813468108001392>",
+		"say.gex": "<:be_style_bth123:1096442989389291610>"
 	},
 	"open_folders": {
 		"data": "<:data_open:1142345183367802971>",
@@ -116,6 +119,7 @@ icons = {
 		"sounds": "<:sounds:1142347049568837742>"
 	},
 	"jsons": {
+		"advancement": "<:advancement:1248200508318154813>",
 		"banner_pattern": "<:banner_pattern:1246812899192737862>",
 		"chat_type": "<:chat_type_file:1188838139700195348>",
 		"damage_type": "<:damage_type_file:1188838136957112420>",
@@ -137,7 +141,7 @@ icons = {
 }
 registries = ["advancement", "banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", 
 	"enchantment", "enchantment_provider", "jukebox_song", "painting_variant", "predicate", 
-	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "worldgen", "models"
+	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "worldgen", "models",
 	
 	"advancements", "predicates", "item_modifiers", "recipes"
 	]
