@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
-
-import asyncio
+from discord.utils import MISSING
 
 from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID
 from utils.msg_utils import Emojis
@@ -35,9 +33,12 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 	async def deleted(self, msg):
 		if msg.author.id != self.bot.user.id and not isinstance(msg.channel, discord.DMChannel):
 			# Getting files from message
-			files = []
-			for attachment in msg.attachments:
-				files.append(await attachment.to_file())
+			if msg.attachments != None:
+				files = []
+				for attachment in msg.attachments:
+					files.append(await attachment.to_file())
+			else:
+				files = MISSING
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.deleted_msg} Сообщение удалено", color=no_color)
 			embed.set_author(icon_url=msg.author.avatar.url, name=msg.author.name)
@@ -46,8 +47,7 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 			embed.add_field(name="Содержимое", value=msg.content[:1021] + ("..." if len(msg.content) >= 1024 else ""), inline=False)
 			#
 			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(embed=embed)
-			await log_channel.send(files=files)
+			await log_channel.send(embed=embed, files=files)
 	
 	#dms
 	@commands.Cog.listener(name="on_message")

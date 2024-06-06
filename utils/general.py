@@ -1,7 +1,3 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
-
 from settings import BOT_COMMANDS_CHANNEL_ID
 from utils.shortcuts import no_ping
 
