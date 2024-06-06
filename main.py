@@ -6,7 +6,7 @@ from discord import app_commands
 from cogs.general import GeneralCommands
 from cogs.fun import FunCommands, LookFor
 from cogs.admin import AdminCommands
-from cogs.minecraft import MinecraftCommands, MessageFormatter
+from cogs.minecraft import MinecraftCommands, MessageFormatter, snapshot_scraper
 from cogs.mod import ModerationCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.faqs.faqs import FAQs
@@ -45,6 +45,12 @@ class AntBot(commands.Bot):
 
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+	# snapshot scraper
+	snapshot_channel = await bot.fetch_channel(settings.SNAPSHOTS_CHANNEL_ID)
+	await snapshot_scraper(snapshot_channel)
 
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):

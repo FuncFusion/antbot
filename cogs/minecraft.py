@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+from asyncio import sleep
 from typing import List
-from math import ceil
 import re
 import requests
 from Levenshtein import distance
@@ -17,7 +17,6 @@ from utils.validator import validate
 from utils.msg_utils import Emojis, split_msg
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
-from utils.msg_utils import unknown_error
 from utils.tree_gen import generate_tree
 
 code_block_content_re = r"```[a-zA-Z+]+\n|```\n?"
@@ -206,4 +205,20 @@ class MessageFormatter(commands.Cog):
 					formatted = formatted.replace(block[0], f"```ansi\n{hl.highlight(block[2])}\n```")
 			await msg.delete()
 			await fake_send(msg.author, msg.channel, split_msg(formatted), msg.attachments)
+
+
+async def snapshot_scraper(snapshot_channel):
+	last_known_version = ""
+	async def check_for_update():
+		response = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json")
+		data = response.json()
+		latest_version = data["versions"][0]["id"].replace(".", "-").replace("pre", "pre-release-")
+		if latest_version != last_known_version:
+			await snapshot_channel.send(f"<@&1245322215428329503>\nhttps://www.minecraft.net\
+				/en-us/article/minecraft-{'snapshot-' if not 'pre' in latest_version else ''}\
+				{latest_version}".replace("\t", ""))
+		else:
+			await sleep(900)
+			await check_for_update()
+	await check_for_update()
 	
