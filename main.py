@@ -1,31 +1,33 @@
 import settings
 import discord
 from discord.ext import commands
-from discord import app_commands
 
-from cogs.general import GeneralCommands
-from cogs.fun import FunCommands, LookFor
-from cogs.admin import AdminCommands
-from cogs.minecraft import Minecraft, snapshot_scraper
-from cogs.mod import ModerationCommands
-from cogs.help import HelpCommands, HelpListeners
+from cogs.admin import EditCommand, PingCommand, StatusCommands
 from cogs.faqs.faqs import FAQs
+from cogs.fun import FunCommands, LookFor
+from cogs.general import GeneralCommands
+from cogs.help import HelpCommands, HelpListeners
 from cogs.ideas import IdeaCommand, IdeaView
 from cogs.logs import LogListeners
+from cogs.mod import ModerationCommands
+from cogs.minecraft import MessageFormatter, PackformatCommand, snapshot_scraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 
 logger = settings.logging.getLogger("bot")
+
+cogs = [EditCommand, PingCommand, StatusCommands,
+	    MessageFormatter, PackformatCommand, TemplateCommand]
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
 		super().__init__(intents=intents, command_prefix=command_prefix)
 
 	async def setup_hook(self):
+		for cog in cogs:
+			await self.add_cog(cog(self))
 		await self.add_cog(GeneralCommands(self))
 		await self.add_cog(FunCommands(self))
 		self.add_view(LookFor())
-		await self.add_cog(AdminCommands(self))
-		await self.add_cog(Minecraft(self))
 		await self.add_cog(ModerationCommands(self))
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))

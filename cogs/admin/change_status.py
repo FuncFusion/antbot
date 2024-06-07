@@ -2,13 +2,14 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from utils.msg_utils import Emojis, get_msg_by_id_arg
-from utils.shortcuts import no_ping, no_color
+from utils.msg_utils import Emojis
+from utils.shortcuts import no_ping
 
 async def pfp_ratelimit_msg(self, ctx, error):
 	await ctx.reply(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", allowed_mentions=no_ping)
-	
-class AdminCommands(commands.Cog, name="Административные"):
+
+
+class StatusCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		
@@ -73,36 +74,3 @@ class AdminCommands(commands.Cog, name="Административные"):
 		else:
 			await ctx.reply("У меня и так статус `Невидимка`.")
 	invisible.error(pfp_ratelimit_msg)
-
-	@commands.hybrid_command(aliases=["p", "latency", "пинг", "п", "з", "зштп", "дфеутсн"],
-		description="Показывает пинг бота.")
-	async def ping(self, ctx):
-		embed = discord.Embed(title="🏓 Понг!", color=no_color)
-		embed.add_field(name=f'Мой пинг: {round(self.bot.latency*1000)}ms', value="", inline=True)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
-
-	@commands.hybrid_command(aliases=["изменить", "эдит", "увше"],
-		description="Изменяет заданное сообщение.")
-	@app_commands.describe(message="Сообщение, которое будет изменяться.", text="Текст, на который изменится сообщение.")
-	@app_commands.default_permissions(manage_messages=True)
-	async def edit(self, ctx, message:str, *, text:str):
-		if ctx.message.reference == None:
-			msg = await get_msg_by_id_arg(self, ctx, self.bot, message)
-			await discord.Message.edit(self=msg,content=text)
-		else:
-			msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-			await discord.Message.edit(self=msg, content=message+" "+text)
-	@edit.error
-	async def edit_error(self, ctx, error: Exception):
-		error_msg = str(error)
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Не хватает аргументов.", allowed_mentions=no_ping, delete_after=4)
-		elif "403 Forbidden" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Не могу изменять чужие сообщения.", allowed_mentions=no_ping, delete_after=4)
-		elif "'NotFound'" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Не нашёл сообщения с таким айди.", allowed_mentions=no_ping, delete_after=4)
-		elif "'ValueError'" in error_msg:
-			await ctx.reply(f"{Emojis.exclamation_mark} Введён неверный айди.", allowed_mentions=no_ping, delete_after=4)
-		else:
-			await ctx.reply(f"{Emojis.question_mark} Шо та произошло но я не понял что. Подробности: `{error}`", \
-				allowed_mentions=no_ping, delete_after=4)
