@@ -4,7 +4,7 @@ from discord.ext import commands
 
 from cogs.admin import EditCommand, PingCommand, StatusCommands
 from cogs.faqs.faqs import FAQs
-from cogs.fun import FunCommands, LookFor
+from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import GeneralCommands
 from cogs.help import HelpCommands, HelpListeners
 from cogs.ideas import IdeaCommand, IdeaView
@@ -16,7 +16,9 @@ from cogs.voice_channels import CustomVoiceChannels
 logger = settings.logging.getLogger("bot")
 
 cogs = [EditCommand, PingCommand, StatusCommands,
+		EnchantCommands, LookForCommand, RandomCommands,	
 	    MessageFormatter, PackformatCommand, TemplateCommand]
+views = [LookForView]
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
@@ -25,9 +27,9 @@ class AntBot(commands.Bot):
 	async def setup_hook(self):
 		for cog in cogs:
 			await self.add_cog(cog(self))
+		for view in views:
+			self.add_view(view())
 		await self.add_cog(GeneralCommands(self))
-		await self.add_cog(FunCommands(self))
-		self.add_view(LookFor())
 		await self.add_cog(ModerationCommands(self))
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))

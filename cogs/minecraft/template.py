@@ -4,7 +4,7 @@ from discord import app_commands
 
 from typing import List
 
-from utils.validator import validate
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.validator import validate
 
