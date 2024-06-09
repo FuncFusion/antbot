@@ -5,6 +5,8 @@ from asyncio import sleep
 from datetime import timedelta
 from re import findall
 from Levenshtein import distance
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
@@ -199,3 +201,19 @@ class GeneralCommands(commands.Cog, name="Общие"):
 				"msg": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
 			}
 		])
+	
+	@commands.hybrid_command(aliases=["bn"])
+	async def banner(self, ctx):
+		# Pasting avatar
+		greeting_banner = Image.open("assets/greeting_banner.png")
+		avatar = await ctx.author.avatar.read()
+		avatar = Image.open(io.BytesIO(avatar)).resize((312, 312))
+		avatar = avatar.crop((0, 0, 312, 289))
+		greeting_banner.paste(avatar,  (190, 54), avatar)
+		# Name
+		#
+		file_greeting = io.BytesIO()
+		greeting_banner.save(file_greeting, format="PNG")
+		file_greeting.seek(0)
+		greeting_image = discord.File(file_greeting, filename="saygex.png")
+		await ctx.send(file=greeting_image)
