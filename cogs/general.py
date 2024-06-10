@@ -204,6 +204,18 @@ class GeneralCommands(commands.Cog, name="Общие"):
 	
 	@commands.hybrid_command(aliases=["bn"])
 	async def banner(self, ctx):
+		def calculate_size(name, type):
+			nl = len(name)
+			if type == "display":
+				if nl <= 10:
+					return 100
+				else:
+					return 100 - (3.1 * (nl - 10))
+			else:
+				if nl <= 15:
+					return 40
+				else:
+					return 40 - (2 * (nl - 15))
 		# Pasting avatar
 		greeting_banner = Image.open("assets/greeting_banner.png")
 		avatar = await ctx.author.avatar.read()
@@ -211,6 +223,16 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		avatar = avatar.crop((0, 0, 312, 289))
 		greeting_banner.paste(avatar,  (190, 54), avatar)
 		# Name
+		banner_draw = ImageDraw.Draw(greeting_banner)
+		font_size = 100
+		m10_font = ImageFont.truetype("assets/fonts/m10.ttf", font_size)
+		while \
+		(hitbox:=banner_draw.textbbox((0,0), ctx.author.display_name, font=m10_font))[2] - hitbox[0] >= 768:
+			font_size -= 2
+			m10_font = ImageFont.truetype("assets/fonts/m10.ttf", font_size)
+		m5_font = ImageFont.truetype("assets/fonts/m5.otf", calculate_size(ctx.author.name, "user"))
+		banner_draw.text((921, 240), ctx.author.display_name, font=m10_font, fill="white", anchor="mm")
+		banner_draw.text((921, 340), ctx.author.name, font=m5_font, fill="white", anchor="mm")
 		#
 		file_greeting = io.BytesIO()
 		greeting_banner.save(file_greeting, format="PNG")
