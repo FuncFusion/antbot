@@ -204,18 +204,14 @@ class GeneralCommands(commands.Cog, name="Общие"):
 	
 	@commands.hybrid_command(aliases=["bn"])
 	async def banner(self, ctx):
-		def calculate_size(name, type):
-			nl = len(name)
-			if type == "display":
-				if nl <= 10:
-					return 100
-				else:
-					return 100 - (3.1 * (nl - 10))
-			else:
-				if nl <= 15:
-					return 40
-				else:
-					return 40 - (2 * (nl - 15))
+		def fit_size(base, limit, font_path, text):
+			font_size = base
+			font = ImageFont.truetype(font_path, base)
+			while \
+			(hitbox:=banner_draw.textbbox((0,0), text, font=font))[2] - hitbox[0] >= limit:
+				font_size -= 2
+				font = ImageFont.truetype(font_path, font_size)
+			return font
 		# Pasting avatar
 		greeting_banner = Image.open("assets/greeting_banner.png")
 		avatar = await ctx.author.avatar.read()
@@ -224,13 +220,8 @@ class GeneralCommands(commands.Cog, name="Общие"):
 		greeting_banner.paste(avatar,  (190, 54), avatar)
 		# Name
 		banner_draw = ImageDraw.Draw(greeting_banner)
-		font_size = 100
-		m10_font = ImageFont.truetype("assets/fonts/m10.ttf", font_size)
-		while \
-		(hitbox:=banner_draw.textbbox((0,0), ctx.author.display_name, font=m10_font))[2] - hitbox[0] >= 768:
-			font_size -= 2
-			m10_font = ImageFont.truetype("assets/fonts/m10.ttf", font_size)
-		m5_font = ImageFont.truetype("assets/fonts/m5.otf", calculate_size(ctx.author.name, "user"))
+		m10_font = fit_size(100, 768, "assets/fonts/m10.ttf", ctx.author.display_name)
+		m5_font = fit_size(40, 512, "assets/fonts/m5.otf", ctx.author.name)
 		banner_draw.text((921, 240), ctx.author.display_name, font=m10_font, fill="white", anchor="mm")
 		banner_draw.text((921, 340), ctx.author.name, font=m5_font, fill="white", anchor="mm")
 		#
