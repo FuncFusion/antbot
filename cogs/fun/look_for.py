@@ -5,7 +5,8 @@ from discord import app_commands
 from Levenshtein import distance
 from random import randint
 
-from utils.channels import LOOK_FOR_CHANNEL
+from settings import LOOK_FOR_CHANNEL_ID
+
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
@@ -14,6 +15,7 @@ from utils.shortcuts import no_color, no_ping
 class LookForCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.LOOK_FOR_CHANNEL = bot.get_channel(LOOK_FOR_CHANNEL_ID)
 
 	@commands.hybrid_command(name="look-for", aliases=["lf", "дщщл-ащк", "да", "ищу-тиммейта"],
 		description="Создаёт пост в 🔍・поиск-тимы о поиске тиммейта")
@@ -57,7 +59,7 @@ class LookForCommand(commands.Cog):
 		if game in games:
 			game_banner = discord.File(f"assets/game_banners/{game}{randint(0, games[game]["banners_count"])}.png", filename="say_gex.png")
 			embed.set_image(url="attachment://say_gex.png")
-		lf_msg = await LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
+		lf_msg = await self.LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
 		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
 		await ctx.reply(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", allowed_mentions=no_ping)
 
