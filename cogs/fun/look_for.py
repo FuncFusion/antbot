@@ -2,11 +2,10 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from settings import LOOK_FOR_ID
-
 from Levenshtein import distance
 from random import randint
 
+from utils.channels import LOOK_FOR_CHANNEL
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
@@ -50,7 +49,6 @@ class LookForCommand(commands.Cog):
 				break
 		else:
 			game = "other"
-		look_for_channel = await self.bot.fetch_channel(LOOK_FOR_ID)
 		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {games[game]["accusative"]}", color=no_color)
 		embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar.url)
 		embed.add_field(name="Подробности", value=details, inline=False)
@@ -59,7 +57,7 @@ class LookForCommand(commands.Cog):
 		if game in games:
 			game_banner = discord.File(f"assets/game_banners/{game}{randint(0, games[game]["banners_count"])}.png", filename="say_gex.png")
 			embed.set_image(url="attachment://say_gex.png")
-		lf_msg = await look_for_channel.send(embed=embed, view=LookForView(), file=game_banner)
+		lf_msg = await LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
 		await lf_msg.create_thread(name="Обсуждение", reason="Auto-thread for look for teammate")
 		await ctx.reply(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", allowed_mentions=no_ping)
 

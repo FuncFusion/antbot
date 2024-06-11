@@ -5,7 +5,7 @@ from discord.ext import commands
 from cogs.admin import EditCommand, PingCommand, StatusCommands
 from cogs.faqs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
-from cogs.general import GeneralCommands
+from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
 from cogs.help import HelpCommands, HelpListeners
 from cogs.ideas import IdeaCommand, IdeaView
 from cogs.logs import LogListeners
@@ -17,6 +17,7 @@ logger = settings.logging.getLogger("bot")
 
 cogs = [EditCommand, PingCommand, StatusCommands,
 		EnchantCommands, LookForCommand, RandomCommands,	
+		JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand,
 	    MessageFormatter, PackformatCommand, TemplateCommand]
 views = [LookForView]
 
@@ -29,7 +30,6 @@ class AntBot(commands.Bot):
 			await self.add_cog(cog(self))
 		for view in views:
 			self.add_view(view())
-		await self.add_cog(GeneralCommands(self))
 		await self.add_cog(ModerationCommands(self))
 		await self.add_cog(HelpCommands(self))
 		await self.add_cog(HelpListeners(self))
