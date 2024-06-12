@@ -6,7 +6,7 @@ from cogs.admin import EditCommand, PingCommand, StatusCommands
 from cogs.faqs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
-from cogs.help import HelpCommands, HelpListeners
+from cogs.help import Pin, ResolveCommand, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommand, IdeaView
 from cogs.logs import LogListeners
 from cogs.mod import ModerationCommands
@@ -17,6 +17,7 @@ logger = settings.logging.getLogger("bot")
 
 cogs = [EditCommand, PingCommand, StatusCommands,
 		EnchantCommands, LookForCommand, RandomCommands,	
+		Pin, ResolveCommand, StartMessage, SyntaxCommand,
 		JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand,
 	    MessageFormatter, PackformatCommand, TemplateCommand]
 views = [LookForView]
@@ -31,8 +32,6 @@ class AntBot(commands.Bot):
 		for view in views:
 			self.add_view(view())
 		await self.add_cog(ModerationCommands(self))
-		await self.add_cog(HelpCommands(self))
-		await self.add_cog(HelpListeners(self))
 		await self.add_cog(FAQs(self))
 		await self.add_cog(IdeaCommand(self))
 		self.add_view(IdeaView())
@@ -57,6 +56,7 @@ async def on_ready():
 
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
+	await Interaction.channel.edit(archived=True)
 	await Interaction.response.send_message("say gex")
 
 	
