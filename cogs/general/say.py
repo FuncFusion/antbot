@@ -12,9 +12,8 @@ class SayCommand(commands.Cog):
 	@app_commands.default_permissions(manage_messages=True)
 
 	async def say(self, ctx, *, text: str):
-		temp = await ctx.send("_ _", ephemeral=True)
+		await ctx.send("_ _", ephemeral=True, delete_after=0)
 		await ctx.channel.send(text)
-		await temp.delete()
 		await ctx.message.delete()
 
 	@say.error

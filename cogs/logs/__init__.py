@@ -8,7 +8,7 @@ from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
 from utils.users_db import DB
 
-class LogListeners(commands.Cog, name="no_help_logs"):
+class Logs(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
 		self.bot = bot
 	
@@ -52,7 +52,8 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 	#dms
 	@commands.Cog.listener(name="on_message")
 	async def dms(self, msg):
-		if isinstance(msg.channel, discord.DMChannel) and not str(msg.channel) == "Direct Message with Unknown User":
+		true_channel = await self.bot.fetch_channel(msg.channel.id) # It also triggers by ephemeral msgs so
+		if isinstance(true_channel, discord.DMChannel):
 			if msg.author == self.bot.user:
 				async for dmmsg in msg.channel.history(limit=15):
 					if dmmsg.author != self.bot.user:
@@ -61,13 +62,12 @@ class LogListeners(commands.Cog, name="no_help_logs"):
 				dm_log_channel = await DB.DMs.get_channel(dm_author_id, self.bot)
 			else:
 				dm_log_channel = await DB.DMs.get_channel(msg.author.id, self.bot)
-			print(msg.attachments)
 			await fake_send(msg.author, dm_log_channel, msg.content, msg.attachments, msg.embeds)
 	
 	@commands.Cog.listener(name="on_message")
 	async def send2dms(self, msg):
 		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID and not msg.author.bot:
-			target_user = self.bot.get_user(int(msg.channel.topic))
+			target_user = await self.bot.fetch_user(int(msg.channel.topic))
 			await target_user.send(msg.content)
 
 

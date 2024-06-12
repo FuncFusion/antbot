@@ -8,8 +8,8 @@ from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForVie
 from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
 from cogs.help import Pin, ResolveCommand, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
-from cogs.logs import LogListeners
-from cogs.mod import ModerationCommands
+from cogs.logs import Logs
+from cogs.mod import ClearCommand, PunishmentCommands
 from cogs.minecraft import MessageFormatter, PackformatCommand, snapshot_scraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 
@@ -21,6 +21,8 @@ cogs = [EditCommand, PingCommand, StatusCommands,
 		Pin, ResolveCommand, StartMessage, SyntaxCommand,
 		IdeaCommands,
 		JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand,
+		Logs,
+		ClearCommand, PunishmentCommands,
 	    MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, IdeaView]
@@ -34,9 +36,8 @@ class AntBot(commands.Bot):
 			await self.add_cog(cog(self))
 		for view in views:
 			self.add_view(view())
-		await self.add_cog(ModerationCommands(self))
-		await self.add_cog(LogListeners(self))
 		await self.tree.sync()
+		
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 		try:
 			with open("assets/pfps/online.png", "rb") as file:

@@ -1,39 +1,35 @@
-import discord
-from discord.ext import commands
-from discord import app_commands
+from settings import DMS_LOGS_GUILD_ID, MONGO_URI
 
-from settings import DMS_LOGS_GUILD_ID
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
-from json import load, dump
+users_collection = MongoClient(MONGO_URI).antbot.users
+
 
 class DB:
 	class DMs:
 		async def get_channel(user_id, bot):
 			user_id = str(user_id)
-			db = DB.get()
-			if user_id not in db:
+			user_doc = users_collection.find_one({"_id": user_id})
+			if not user_doc:
 				await DB.add_user(user_id, bot)
-			db = DB.get()
-			return bot.get_channel(db[user_id]["dms_channel_id"])
-	
-	def get():
-		with open("users.json", "r", encoding="utf-8") as db_f:
-			return load(db_f)
+				user_doc = users_collection.find_one({"_id": user_id})
+			return await bot.fetch_channel(user_doc["dms_channel_id"])
 
 	async def add_user(id, bot):
 		id = str(id)
-		db = DB.get()
+		# Check if user already exists in the database
+		if users_collection.find_one({"_id": id}):
+			return
+
 		# Creating dms channel
 		user = await bot.fetch_user(int(id))
 		dms_log_guild = await bot.fetch_guild(DMS_LOGS_GUILD_ID)
 		dms_log_channel = await dms_log_guild.create_text_channel(user.name, topic=id)
-		# Adding user intо db
-		db[id] = {
-			"economy": {
-				"antoins": 0,
-				"auto-workers": []
-			},
+
+		# Adding user into db
+		user_doc = {
+			"_id": id,
 			"dms_channel_id": dms_log_channel.id
 		}
-		with open("users.json", "w", encoding="utf-8") as db_f:
-			dump(db, db_f, ensure_ascii=False, indent="\t")
+		users_collection.insert_one(user_doc)
