@@ -8,7 +8,7 @@ from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.validator import validate
 
-from cogs.mc.pack_generator import Modals
+from utils.pack_generator import Modals
 
 
 class TemplateCommand(commands.Cog):

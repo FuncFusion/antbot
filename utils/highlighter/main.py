@@ -3,7 +3,7 @@ from json import loads
 
 class Hl:
 	class Database:
-		with open("cogs/mc/highlighter/database.json", "r", encoding="utf-8") as db:
+		with open("utils/highlighter/database.json", "r", encoding="utf-8") as db:
 			database_content = loads(db.read())
 		color_codes = database_content["color_codes"]
 		commands = database_content["commands"]

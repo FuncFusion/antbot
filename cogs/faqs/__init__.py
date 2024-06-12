@@ -4,19 +4,20 @@ from discord import app_commands
 
 from settings import DMS_LOGS_GUILD_ID
 
+from Levenshtein import distance
 import re
 import json
 
-from Levenshtein import distance
-
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
+
 
 with open("cogs/faqs/faqs.json", 'r', encoding="utf-8") as file: db = json.load(file)
 faq_names = sorted(list(db.keys()))
 faq_list = list(db.keys())
 for value in db.values():
     faq_list.extend(value.get('aliases', []))
+
 
 class FAQs(commands.Cog, name="FAQ команды"):
     def __init__(self, bot):
