@@ -39,10 +39,9 @@ async def generate_banner(user):
 
 class JoinAndLeaveMessage(commands.Cog):
 	def __init__(self, bot):
-		self.LEAVES_CHANNEL = bot.get_channel(LEAVES_CHANNEL_ID)
-		self.JOINS_CHANNEL = bot.get_channel(JOINS_CHANNEL_ID)
+		self.bot = bot
 
-	@commands.Cog.listener
+	@commands.Cog.listener("on_member_join")
 	async def on_member_join(self, user):
 		greeting_msg = choice([
 			"Добро пожаловать, {0}. Мы надеемся что ты принёс пиццу",
@@ -54,13 +53,16 @@ class JoinAndLeaveMessage(commands.Cog):
 			"Дикий {0} присоединился"
 		])
 		greeting_image = await generate_banner(user)
-		await self.JOINS_CHANNEL.send(greeting_msg.format(user.mention), file=greeting_image)
+		JOINS_CHANNEL = await self.bot.fetch_channel(JOINS_CHANNEL_ID)
+		await JOINS_CHANNEL.send(greeting_msg.format(user.mention), file=greeting_image)
 	
-	@commands.Cog.listener
-	async def on_member_remove(self, user):
+	@commands.Cog.listener("on_raw_member_remove")
+	async def on_raw_member_remove(self, payload):
+		user = payload.user
 		leaving_msg = choice([
 			"{0} куда",
 			"{0} ливнул"
 		])
 		leaving_image = await generate_banner(user)
-		await self.LEAVES_CHANNEL.send(leaving_msg.format(user.mention), file=leaving_msg)
+		LEAVES_CHANNEL = await self.bot.fetch_channel(LEAVES_CHANNEL_ID)
+		await LEAVES_CHANNEL.send(leaving_msg.format(user.mention), file=leaving_image)
