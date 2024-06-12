@@ -19,11 +19,11 @@ cogs = [EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
 		Pin, ResolveCommand, StartMessage, SyntaxCommand,
-		IdeaCommands, IdeaView,
+		IdeaCommands,
 		JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand,
 	    MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView]
+views = [LookForView, IdeaView]
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
@@ -36,7 +36,6 @@ class AntBot(commands.Bot):
 			self.add_view(view())
 		await self.add_cog(ModerationCommands(self))
 		await self.add_cog(LogListeners(self))
-		await self.add_cog(CustomVoiceChannels(self))
 		await self.tree.sync()
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 		try:
