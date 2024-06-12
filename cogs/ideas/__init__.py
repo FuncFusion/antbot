@@ -10,9 +10,9 @@ from settings import MONGO_URI
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
-from json import load, dump
 
 db = MongoClient(MONGO_URI, server_api=ServerApi('1')).antbot.ideas
+
 
 class IdeaView(discord.ui.View):
 	def __init__(self, votes=["0", "0"]):
@@ -70,7 +70,7 @@ class IdeaVerdict(discord.ui.Modal):
 		await interaction.response.send_message(f"Идея {self.idea_num} {action_to_word[self.action]}", ephemeral=True)
 
 
-class IdeaCommand(commands.Cog):
+class IdeaCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		bot.tree.add_command(app_commands.ContextMenu(

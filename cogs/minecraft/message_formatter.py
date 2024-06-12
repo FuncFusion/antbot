@@ -2,7 +2,7 @@ from discord.ext import commands
 
 import re
 
-from cogs.mc.highlighter.main import Hl as hl
+from utils.highlighter.main import Hl as hl
 
 from utils.fake_user import fake_send
 from utils.tree_gen import generate_tree

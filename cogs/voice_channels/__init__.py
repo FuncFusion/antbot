@@ -14,8 +14,8 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 		description="Передать права на голосовой канал")
 	@app_commands.describe(user="Пользователь")
 	@app_commands.default_permissions(manage_channels=True)
-	async def transfer_owner(self, ctx: commands.Context, user: discord.Member):
-		if ctx.channel.category_id == VCS_CATEGORY_ID:
+	async def transfer_owner(self, ctx, user: discord.Member):	
+		if ctx.channel.category_id == VCS_CATEGORY_ID and ctx.channel.permissions_for(ctx.author).manage_channels:
 			await ctx.channel.set_permissions(ctx.author, manage_channels=None, mute_members=None, 
 				deafen_members=None, move_members=None)
 			await ctx.channel.set_permissions(user, manage_channels=True, mute_members=True, 

@@ -3,11 +3,11 @@ import discord
 from discord.ext import commands
 
 from cogs.admin import EditCommand, PingCommand, StatusCommands
-from cogs.faqs.faqs import FAQs
+from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
 from cogs.help import Pin, ResolveCommand, StartMessage, SyntaxCommand
-from cogs.ideas import IdeaCommand, IdeaView
+from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import LogListeners
 from cogs.mod import ModerationCommands
 from cogs.minecraft import MessageFormatter, PackformatCommand, snapshot_scraper, TemplateCommand
@@ -16,10 +16,13 @@ from cogs.voice_channels import CustomVoiceChannels
 logger = settings.logging.getLogger("bot")
 
 cogs = [EditCommand, PingCommand, StatusCommands,
+		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
 		Pin, ResolveCommand, StartMessage, SyntaxCommand,
+		IdeaCommands, IdeaView,
 		JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand,
-	    MessageFormatter, PackformatCommand, TemplateCommand]
+	    MessageFormatter, PackformatCommand, TemplateCommand,
+		CustomVoiceChannels,]
 views = [LookForView]
 
 class AntBot(commands.Bot):
@@ -32,9 +35,6 @@ class AntBot(commands.Bot):
 		for view in views:
 			self.add_view(view())
 		await self.add_cog(ModerationCommands(self))
-		await self.add_cog(FAQs(self))
-		await self.add_cog(IdeaCommand(self))
-		self.add_view(IdeaView())
 		await self.add_cog(LogListeners(self))
 		await self.add_cog(CustomVoiceChannels(self))
 		await self.tree.sync()
