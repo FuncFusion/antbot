@@ -1,7 +1,7 @@
 import discord
 
 from utils.msg_utils import Emojis
-from utils.minecraft import get_mcmeta_ver
+from utils.packmcmeta import get_mcmeta_ver
 from utils.validator import validate
 
 import io
@@ -225,4 +225,3 @@ class Modals:
 				self.version.value if self.version.value != "" else 32
 				)
 			await Interaction.response.send_message(f"{Emojis.resource_rack} Кастомный шаблон ресурспака", file=discord.File(rp, filename="Custom resourcepack UNZIP.zip"))
-

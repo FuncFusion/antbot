@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from typing import List
+from typing import List, Literal
 
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
@@ -16,7 +16,8 @@ class TemplateCommand(commands.Cog):
 		description="Создаёт шаблон датапака/ресурспака")
 	@app_commands.describe(template="Датапак/ресусрпак", type="Тип пака")
 
-	async def template(self, ctx, template: str="datapack", type: str="basic"):
+	async def template(self, ctx, template:Literal["Датапак", "Ресурспак"]="datapack", 
+		type:Literal["Базовый", "Расширенный", "Настраиваемый"]="basic"):
 		pack_ctx = {
 			"datapack": {"emoji": Emojis.deta_rack, "accusative": "датапака", "modal": Modals.DP},
 			"resourcepack": {"emoji": Emojis.resource_rack, "accusative": "ресурспака", "modal": Modals.RP}
@@ -59,11 +60,4 @@ class TemplateCommand(commands.Cog):
 				"msg": f"{Emojis.exclamation_mark} Неверный аргумент"
 			}
 		])
-	@template.autocomplete("template")
-	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
-		return [app_commands.Choice(name="Датапак", value="datapack"), app_commands.Choice(name="Ресурспак", value="resourcepack")]
-	@template.autocomplete("type")
-	async def template_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
-		return [app_commands.Choice(name="Базовый", value="basic"), app_commands.Choice(name="Расширенный", value="extended"),
-		  app_commands.Choice(name="Настраиваемый", value="custom")]
 
