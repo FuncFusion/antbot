@@ -48,7 +48,7 @@ class RemindCommand(commands.Cog):
 		for key, values in time_names.items():
 			if measure[0] in values: time_name = key
 		user = ctx.author
-		embed = discord.Embed(title="🔔 Напоминание", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.bell} Напоминание", color=no_color)
 		embed_reason = ""
 		if reason != "":
 			embed_reason = f"по причине \"{reason}\""
