@@ -18,9 +18,10 @@ async def snapshot_scraper(snapshot_channel):
 		.replace("rc", "release-candidate-")
 		if latest_version_id != last_known_version:
 			db.update_one({"_id": "latest_known_snapshot"}, {"$set": {"_": latest_version_id}})
-			await snapshot_channel.send(f"<@&1245322215428329503>\nhttps://www.minecraft.net\
+			snapshot_msg = await snapshot_channel.send(f"<@&1245322215428329503>\nhttps://www.minecraft.net\
 				/en-us/article/minecraft-{'snapshot-' if latest_version == latest_version_id else ''}\
 				{'java-edition-' if data['versions'][0]['type'] == 'release' else ''}{latest_version}".replace("\t", ""))
+			await snapshot_msg.pin()
 		else:
 			await sleep(900)
 			await check_for_update()
