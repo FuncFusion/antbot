@@ -5,16 +5,17 @@ from discord.utils import MISSING
 
 from pymongo.mongo_client import MongoClient
 
-from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID
+from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL_ID
 
-from  utils.shortcuts import no_color
+from utils.shortcuts import no_color
+from utils.msg_utils import Emojis
 
 db = MongoClient(MONGO_URI).antbot.giveaways
 
 
 class GiveawayCommand(commands.Cog):
-	def __init__(self):
-		pass
+	def __init__(self, bot):
+		self.bot = bot
 
 	@commands.hybrid_command(name="giveaway", aliases=[ "гивевей", "гивэвей", "гивэвэй", "розыгрышь", "розыграть"],
 		description="Создаёт пост о розыграше в #🎉・розыгрыши")
@@ -35,7 +36,7 @@ class GAInfo(discord.ui.Modal):
 		max_length=123
 	)
 	condition = discord.ui.TextInput(
-		label="Приз",
+		label="Условие",
 		style=discord.TextStyle.long,
 		placeholder="",
 		max_length=1999
@@ -43,14 +44,31 @@ class GAInfo(discord.ui.Modal):
 
 	async def on_submit(self, ctx: discord.Interaction):
 		embed = discord.Embed(description=f"# {self.title}\n{self.condition}", color=no_color)
-		ga_chnl = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
+		embed.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
 		if self.image != None:
 			image = await self.image.to_file()
 		else:
 			image = MISSING
-		ga_msg = await ga_chnl.send(embed=embed)
+		image_file = discord.File(image, filename="giveaway.png")
+		embed.set_image(url="attachment://giveaway.png")
+		ga_chnl = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
+		ga_msg = await ga_chnl.send(embed=embed, file=image_file)
 		db.insert_one({
 			"_id": ga_msg.id,
 			"participants": []
 		})
 		await ctx.response.send_message( ephemeral=True)
+
+	
+class JudgeGA(discord.ui.View):
+	def __init__(self):
+		super().__init__(timeout=None)
+	
+	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
+	async def take_part(self, ctx, button):
+		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
+		await ga_channel.send()
+
+	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
+	async def ping_all(self, ctx: discord.Interaction, button: discord.ui.Button):
+		pass
