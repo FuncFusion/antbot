@@ -65,10 +65,20 @@ class JudgeGA(discord.ui.View):
 		super().__init__(timeout=None)
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
-	async def take_part(self, ctx, button):
+	async def approve(self, ctx, button):
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
-		await ga_channel.send()
+		posted_ga = await ga_channel.send(embed=ctx.message.embed)
+		db.update_one({"_id":str(ctx.message.id)}, {"$set": {"_id": str(posted_ga.id)}})
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
-	async def ping_all(self, ctx: discord.Interaction, button: discord.ui.Button):
+	async def disapprove(self, ctx, button):
 		pass
+
+class TakePart(discord.ui.View):
+	def __init__(self):
+		super().__init__(timeout=None)
+	
+	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="ga:take-part")
+	async def take_part(self, ctx, button):
+		await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
+
