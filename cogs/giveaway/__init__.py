@@ -80,5 +80,7 @@ class TakePart(discord.ui.View):
 	
 	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
+		db.update_one({"_id":str(ctx.message.id)}, {"$push": {"participants": ctx.author.id}})
 		await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
+
 
