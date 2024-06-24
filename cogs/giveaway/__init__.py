@@ -10,6 +10,7 @@ from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL
 from utils.shortcuts import no_color
 from utils.msg_utils import Emojis
 
+users_db = MongoClient(MONGO_URI).antbot.users
 db = MongoClient(MONGO_URI).antbot.giveaways
 
 
@@ -72,7 +73,8 @@ class JudgeGA(discord.ui.View):
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
-		pass
+		user_id = ctx.message.embeds[0].author.icon_url.split("/")[4]
+		users_db.update_one({"_id": str(user_id)}, {"$inc": {"disapproved_ga": 1}})
 
 class TakePart(discord.ui.View):
 	def __init__(self):
