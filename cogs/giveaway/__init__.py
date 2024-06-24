@@ -9,6 +9,7 @@ from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL
 
 from utils.shortcuts import no_color
 from utils.msg_utils import Emojis
+from utils.users_db import DB as UDBUtils
 
 users_db = MongoClient(MONGO_URI).antbot.users
 db = MongoClient(MONGO_URI).antbot.giveaways
@@ -52,8 +53,8 @@ class GAInfo(discord.ui.Modal):
 			image = MISSING
 		image_file = discord.File(image, filename="giveaway.png")
 		embed.set_image(url="attachment://giveaway.png")
-		ga_chnl = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
-		ga_msg = await ga_chnl.send(embed=embed, file=image_file)
+		ga_judge_channel = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
+		ga_msg = await ga_judge_channel.send(embed=embed, file=image_file, view=JudgeGA(self.bot))
 		db.insert_one({
 			"_id": ga_msg.id,
 			"participants": []
@@ -62,19 +63,24 @@ class GAInfo(discord.ui.Modal):
 
 	
 class JudgeGA(discord.ui.View):
-	def __init__(self):
+	def __init__(self, bot):
 		super().__init__(timeout=None)
+		self.bot = bot
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embed)
 		db.update_one({"_id":str(ctx.message.id)}, {"$set": {"_id": str(posted_ga.id)}})
+		await ctx.response.send_message(f"{Emojis.check} Розыгрыш одобрен")
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
 		user_id = ctx.message.embeds[0].author.icon_url.split("/")[4]
+		if not db.find_one({"_id": user_id}):
+			await UDBUtils.add_user(self.bot, user_id)
 		users_db.update_one({"_id": str(user_id)}, {"$inc": {"disapproved_ga": 1}})
+		await ctx.response.send_message(f"{Emojis.check} Розыгрыш отклонён")
 
 class TakePart(discord.ui.View):
 	def __init__(self):

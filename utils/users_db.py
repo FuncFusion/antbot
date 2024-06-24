@@ -1,7 +1,6 @@
 from settings import DMS_LOGS_GUILD_ID, MONGO_URI
 
 from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
 users_collection = MongoClient(MONGO_URI).antbot.users
 
@@ -30,6 +29,7 @@ class DB:
 		# Adding user into db
 		user_doc = {
 			"_id": id,
-			"dms_channel_id": dms_log_channel.id
+			"dms_channel_id": dms_log_channel.id,
+			"disapproved_ga": 0
 		}
 		users_collection.insert_one(user_doc)
