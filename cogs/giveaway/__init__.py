@@ -69,16 +69,19 @@ class GAInfo(discord.ui.Modal):
 
 	
 class JudgeGA(discord.ui.View):
-	def __init__(self, bot):
+	def __init__(self, bot, disable=False):
 		super().__init__(timeout=None)
 		self.bot = bot
+		if disable:
+			self.approve.disabled = True
+			self.disapprove.disabled = True
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0])
 		db.update_one({"_id":str(ctx.message.id)}, {"$set": {"_id": str(posted_ga.id)}})
-		await ctx.response.send_message(f"{Emojis.check} Розыгрыш одобрен")
+		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
 		await ctx.user.send(f"{Emojis.check} Ваш розыгрыш одобрен")
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
@@ -86,7 +89,7 @@ class JudgeGA(discord.ui.View):
 		user_id = ctx.message.embeds[0].author.icon_url.split("/")[4]
 		users_db.update_one({"_id": str(user_id)}, {"$inc": {"disapproved_ga": 1}})
 		users_db.update_one({"_id": str(user_id)}, {"$set": {"last_disapproved_ga": int(time())}})
-		await ctx.response.send_message(f"{Emojis.check} Розыгрыш отклонён")
+		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
 		await ctx.user.send(f"{Emojis.cross} Ваш розыгрыш отклонён")
 
 class TakePart(discord.ui.View):
