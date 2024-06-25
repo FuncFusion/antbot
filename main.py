@@ -6,6 +6,7 @@ from cogs.admin import EditCommand, PingCommand, StatusCommands
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
+from cogs.giveaway import GiveawayCommand, JudgeGA
 from cogs.help import Pin, ResolveCommand, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
@@ -21,6 +22,7 @@ cogs = [EditCommand, PingCommand, StatusCommands,
 		Pin, ResolveCommand, StartMessage, SyntaxCommand,
 		IdeaCommands,
 		JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand,
+		GiveawayCommand,
 		Logs,
 		ClearCommand, PunishmentCommands,
 	    MessageFormatter, PackformatCommand, TemplateCommand,
@@ -36,6 +38,7 @@ class AntBot(commands.Bot):
 			await self.add_cog(cog(self))
 		for view in views:
 			self.add_view(view())
+		self.add_view(JudgeGA(self))
 		await self.tree.sync()
 		
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")

@@ -30,6 +30,7 @@ class DB:
 		user_doc = {
 			"_id": id,
 			"dms_channel_id": dms_log_channel.id,
-			"disapproved_ga": 0
+			"disapproved_ga": 0,
+			"last_disapproved_ga": 0
 		}
 		users_collection.insert_one(user_doc)
