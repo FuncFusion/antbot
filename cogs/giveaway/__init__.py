@@ -4,6 +4,7 @@ from discord import app_commands
 from discord.utils import MISSING
 
 from time import time
+from typing import Literal
 from pymongo.mongo_client import MongoClient
 
 from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL_ID
@@ -23,15 +24,15 @@ class GiveawayCommand(commands.Cog):
 		self.bot = bot
 
 	@app_commands.command(name="giveaway", description="Создаёт пост о розыграше в #🎉・розыгрыши")
-	async def ga(self, ctx, image: discord.Attachment=None):
+	async def ga(self, ctx, end_date: str=None, whitelist:any=None, image: discord.Attachment=None):
 		user_id = str(ctx.user.id)
 		if users_db.find_one({"_id": user_id}) == None:
 			await UDBUtils.add_user(user_id, self.bot)
 		user_doc = users_db.find_one({"_id": user_id})
-		if user_doc["disapproved_ga"] <= 3 or user_doc["last_disapproved_ga"] - int(time()) > FOUR_WEEKS:
+		if user_doc["disapproved_ga"] <= 3 or int(time()) - user_doc["last_disapproved_ga"] > FOUR_WEEKS:
 			await ctx.response.send_modal(GAInfo(self.bot, image))
 		else:
-			await ctx.response.send_message(f"{Emojis.cross} Динаху")
+			await ctx.response.send_message(f"{Emojis.cross} Слишком много отклонённых розыграшей за последнее время")
 	
 
 class GAInfo(discord.ui.Modal):
