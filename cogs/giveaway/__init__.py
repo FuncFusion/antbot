@@ -24,7 +24,7 @@ class GiveawayCommand(commands.Cog):
 		self.bot = bot
 
 	@app_commands.command(name="giveaway", description="Создаёт пост о розыграше в #🎉・розыгрыши")
-	async def ga(self, ctx, end_date: str=None, whitelist:any=None, image: discord.Attachment=None):
+	async def ga(self, ctx, end_date: str=None, whitelist:str=None, image: discord.Attachment=None):
 		user_id = str(ctx.user.id)
 		if users_db.find_one({"_id": user_id}) == None:
 			await UDBUtils.add_user(user_id, self.bot)
@@ -43,30 +43,47 @@ class GAInfo(discord.ui.Modal):
 		self.image = image
 
 	prize = discord.ui.TextInput(
-		label="Приз (Заголовок)",
-		max_length=123
+		label="Приз(ы)",
+		style=discord.TextStyle.long,
+		placeholder="Лицензция майнкрафт\nили\n1. 500р на стим\n2. 200р на стим\n2. 50р на стим",
+		max_length=1999
 	)
 	condition = discord.ui.TextInput(
-		label="Условие",
+		label="Условия",
 		style=discord.TextStyle.long,
 		max_length=1999
 	)
+	end_date = discord.ui.TextInput(
+		label="Закончится через...",
+		placeholder="10 минут/2 дня/15ч"
+	)
+	whitelist_only = discord.ui.TextInput(
+		label="Доступ по вайтлисту",
+		placeholder="1/Да/True/T/эщкере",
+		required=False
+	)
 
 	async def on_submit(self, ctx: discord.Interaction):
-		embed = discord.Embed(description=f"# {self.prize}\n{self.condition}", color=no_color)
+		embed = discord.Embed(title=f"{Emojis.party_popper} Розыгрыш", color=no_color)
+		embed.add_field(name="Приз(ы)", value=self.prize.value)
+		embed.add_field(name="Условия", value=self.condition.value)
+		if self.end_date.value != "":
+			embed.add_field(name="Дата окончания")
 		embed.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
+		#img
 		if self.image != None:
 			image_attachment = await self.image.to_file(filename="giveaway.png")
 		else:
 			image_attachment = MISSING
 		embed.set_image(url="attachment://giveaway.png")
+		#
 		ga_judge_channel = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		db.insert_one({
 			"_id": ga_msg.id,
 			"participants": []
 		})
-		await ctx.response.send_message( ephemeral=True)
+		await ctx.response.send_message(f"{Emojis.check} Розыгрыш отправлен на проверку", ephemeral=True)
 
 	
 class JudgeGA(discord.ui.View):

@@ -200,3 +200,4 @@ class Emojis:
 	mute = "<:mute:1232042437178949754>"
 	ban = "<:ban:1232045190739525652>"
 	bell = "<:bell:1250909629165342842>"
+	party_popper = "<:party_popper:1255829653965242449>"
