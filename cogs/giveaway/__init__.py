@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 from discord.utils import MISSING
 
+from asyncio import sleep
 from time import time
 from typing import Literal
 from pymongo.mongo_client import MongoClient
@@ -123,10 +124,12 @@ class TakePart(discord.ui.View):
 	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
 		ga = db.find_one({"_id":ctx.message.id})
-		if "whitelist" not in ga or "whitelist" in ga and ctx.user.id in ga["whitelist"]:
+		if ctx.user.id not in ga["blacklist"] and ("whitelist" not in ga or "whitelist" in ga and ctx.user.id in ga["whitelist"]):
 			db.update_one({"_id":ctx.message.id}, {"$push": {"participants": ctx.author.id}})
 			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
 		else:
 			await ctx.response.send_message(f"{Emojis.cross} Вы не в вайтлисте", ephemeral=True)
 
-
+async def end_ga(msg: discord.Message):
+	end_date = msg.embeds[0].fields[2].value[3:-2]
+	await sleep(end_date - int(time()))
