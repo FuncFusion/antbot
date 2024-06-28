@@ -9,6 +9,7 @@ from pymongo.mongo_client import MongoClient
 
 from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL_ID
 
+from utils.time import get_secs
 from utils.shortcuts import no_color
 from utils.msg_utils import Emojis
 from utils.users_db import DB as UDBUtils
@@ -23,8 +24,12 @@ class GiveawayCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@commands.hybrid_command(name="test")
+	async def t(self, ctx, *, time: str):
+		await ctx.send(str(get_secs(time)))
+
 	@app_commands.command(name="giveaway", description="Создаёт пост о розыграше в #🎉・розыгрыши")
-	async def ga(self, ctx, end_date: str=None, whitelist:str=None, image: discord.Attachment=None):
+	async def ga(self, ctx, image: discord.Attachment=None):
 		user_id = str(ctx.user.id)
 		if users_db.find_one({"_id": user_id}) == None:
 			await UDBUtils.add_user(user_id, self.bot)
@@ -45,17 +50,16 @@ class GAInfo(discord.ui.Modal):
 	prize = discord.ui.TextInput(
 		label="Приз(ы)",
 		style=discord.TextStyle.long,
-		placeholder="Лицензция майнкрафт\nили\n1. 500р на стим\n2. 200р на стим\n2. 50р на стим",
 		max_length=1999
 	)
-	condition = discord.ui.TextInput(
-		label="Условия",
+	description = discord.ui.TextInput(
+		label="Описание",
 		style=discord.TextStyle.long,
 		max_length=1999
 	)
 	end_date = discord.ui.TextInput(
 		label="Закончится через...",
-		placeholder="10 минут/2 дня/15ч"
+		placeholder="10 минут 15 секнуд/2 дня/15ч 18 мин"
 	)
 	whitelist_only = discord.ui.TextInput(
 		label="Доступ по вайтлисту",
@@ -66,9 +70,8 @@ class GAInfo(discord.ui.Modal):
 	async def on_submit(self, ctx: discord.Interaction):
 		embed = discord.Embed(title=f"{Emojis.party_popper} Розыгрыш", color=no_color)
 		embed.add_field(name="Приз(ы)", value=self.prize.value)
-		embed.add_field(name="Условия", value=self.condition.value)
-		if self.end_date.value != "":
-			embed.add_field(name="Дата окончания")
+		embed.add_field(name="Описание", value=self.description.value, inline=False)
+		embed.add_field(name="Дата окончания", value=f"<t:{int(time()) + get_secs(self.end_date.value)}>", inline=False)
 		embed.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
 		#img
 		if self.image != None:
@@ -116,7 +119,11 @@ class TakePart(discord.ui.View):
 	
 	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
-		db.update_one({"_id":str(ctx.message.id)}, {"$push": {"participants": ctx.author.id}})
-		await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
+		ga = db.find_one({"_id":str(ctx.message.id)})
+		if "whitelist" not in ga or "whitelist" in ga and ctx.user.id in ga["whitelist"]:
+			db.update_one({"_id":str(ctx.message.id)}, {"$push": {"participants": ctx.author.id}})
+			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
+		else:
+			await ctx.response.send_message(f"{Emojis.cross} Вы не в вайтлисте", ephemeral=True)
 
 
