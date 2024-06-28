@@ -19,18 +19,17 @@ db = MongoClient(MONGO_URI).antbot.giveaways
 
 FOUR_WEEKS = 4 * 7 * 24 * 60 * 60
 
+def from_embed(message):
+	return int(message.embeds[0].author.icon_url.split("/")[4])
+
 
 class GiveawayCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(name="test")
-	async def t(self, ctx, *, time: str):
-		await ctx.send(str(get_secs(time)))
-
 	@app_commands.command(name="giveaway", description="Создаёт пост о розыграше в #🎉・розыгрыши")
 	async def ga(self, ctx, image: discord.Attachment=None):
-		user_id = str(ctx.user.id)
+		user_id = ctx.user.id
 		if users_db.find_one({"_id": user_id}) == None:
 			await UDBUtils.add_user(user_id, self.bot)
 		user_doc = users_db.find_one({"_id": user_id})
@@ -84,7 +83,8 @@ class GAInfo(discord.ui.Modal):
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		db.insert_one({
 			"_id": ga_msg.id,
-			"participants": []
+			"participants": [],
+			"blacklist": []
 		})
 		await ctx.response.send_message(f"{Emojis.check} Розыгрыш отправлен на проверку", ephemeral=True)
 
@@ -101,17 +101,20 @@ class JudgeGA(discord.ui.View):
 	async def approve(self, ctx, button):
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0])
-		db.update_one({"_id":str(ctx.message.id)}, {"$set": {"_id": str(posted_ga.id)}})
+		db.update_one({"_id":ctx.message.id}, {"$set": {"_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
-		await ctx.user.send(f"{Emojis.check} Ваш розыгрыш одобрен")
+		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
+		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен")
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
-		user_id = ctx.message.embeds[0].author.icon_url.split("/")[4]
-		users_db.update_one({"_id": str(user_id)}, {"$inc": {"disapproved_ga": 1}})
-		users_db.update_one({"_id": str(user_id)}, {"$set": {"last_disapproved_ga": int(time())}})
+		user_id = from_embed(ctx.message)
+		users_db.update_one({"_id": user_id}, {"$inc": {"disapproved_ga": 1}})
+		users_db.update_one({"_id": user_id}, {"$set": {"last_disapproved_ga": int(time())}})
+		db.delete_one({"_id": ctx.message.id})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
-		await ctx.user.send(f"{Emojis.cross} Ваш розыгрыш отклонён")
+		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
+		await ga_author.send(f"{Emojis.cross} Ваш розыгрыш отклонён")
 
 class TakePart(discord.ui.View):
 	def __init__(self):
@@ -119,9 +122,9 @@ class TakePart(discord.ui.View):
 	
 	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
-		ga = db.find_one({"_id":str(ctx.message.id)})
+		ga = db.find_one({"_id":ctx.message.id})
 		if "whitelist" not in ga or "whitelist" in ga and ctx.user.id in ga["whitelist"]:
-			db.update_one({"_id":str(ctx.message.id)}, {"$push": {"participants": ctx.author.id}})
+			db.update_one({"_id":ctx.message.id}, {"$push": {"participants": ctx.author.id}})
 			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
 		else:
 			await ctx.response.send_message(f"{Emojis.cross} Вы не в вайтлисте", ephemeral=True)
