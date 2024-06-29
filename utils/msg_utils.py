@@ -201,3 +201,4 @@ class Emojis:
 	ban = "<:ban:1232045190739525652>"
 	bell = "<:bell:1250909629165342842>"
 	party_popper = "<:party_popper:1255829653965242449>"
+	trophy = "<:trophy:1256705711249948726>"

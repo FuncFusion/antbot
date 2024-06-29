@@ -4,6 +4,7 @@ from discord import app_commands
 from discord.utils import MISSING
 
 from asyncio import sleep
+from random import sample
 from time import time
 from typing import Literal
 from pymongo.mongo_client import MongoClient
@@ -61,6 +62,10 @@ class GAInfo(discord.ui.Modal):
 		label="Закончится через...",
 		placeholder="10 минут 15 секнуд/2 дня/15ч 18 мин"
 	)
+	winners_count = discord.ui.TextInput(
+		label="Количество победителей",
+		default="1"
+	)
 	whitelist_only = discord.ui.TextInput(
 		label="Доступ по вайтлисту",
 		placeholder="1/Да/True/T/эщкере",
@@ -84,6 +89,7 @@ class GAInfo(discord.ui.Modal):
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		db.insert_one({
 			"_id": ga_msg.id,
+			"winners_count": self.winners_count.value,
 			"participants": [],
 			"blacklist": []
 		})
@@ -101,9 +107,11 @@ class JudgeGA(discord.ui.View):
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
-		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0])
+		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0], view=TakePart())
+		await posted_ga.create_thread(name="Обсуждение")
 		db.update_one({"_id":ctx.message.id}, {"$set": {"_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
+		await end_ga(ctx.message)
 		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
 		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен")
 
@@ -121,7 +129,7 @@ class TakePart(discord.ui.View):
 	def __init__(self):
 		super().__init__(timeout=None)
 	
-	@discord.ui.button(label="Принять участие", emoji=Emojis.check, custom_id="ga:take-part")
+	@discord.ui.button(label="Принять участие", emoji=Emojis.party_popper, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
 		ga = db.find_one({"_id":ctx.message.id})
 		if ctx.user.id not in ga["blacklist"] and ("whitelist" not in ga or "whitelist" in ga and ctx.user.id in ga["whitelist"]):
@@ -133,3 +141,14 @@ class TakePart(discord.ui.View):
 async def end_ga(msg: discord.Message):
 	end_date = msg.embeds[0].fields[2].value[3:-2]
 	await sleep(end_date - int(time()))
+	#
+	ga = db.find_one({"_id": msg.id})
+	winners = "\n".join([sample(ga["participants"], ga["winners_count"])])
+	if len(winners) == 1:
+		edited_embed = msg.embeds[0].add_field(name=f"{Emojis.trophy} Победитель",
+		value=f"<@{winners[0]}>")
+	else:
+		edited_embed = msg.embeds[0].add_field(name=f"{Emojis.trophy} Победители",
+		value="\n".join([f"{i}. <@{winners[i-1]}>" for i in range(len(winners))]))
+	await msg.edit(embed=edited_embed)
+	await msg.thread.send(f"# {edited_embed.fields[3].name}\n{edited_embed.fields[3].value}")
