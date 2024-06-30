@@ -89,7 +89,7 @@ class GAInfo(discord.ui.Modal):
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		db.insert_one({
 			"_id": ga_msg.id,
-			"winners_count": self.winners_count.value,
+			"winners_count": int(self.winners_count.value),
 			"participants": [],
 			"blacklist": []
 		})
@@ -109,9 +109,9 @@ class JudgeGA(discord.ui.View):
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0], view=TakePart())
 		await posted_ga.create_thread(name="Обсуждение")
-		db.update_one({"_id":ctx.message.id}, {"$set": {"_id": posted_ga.id}})
+		db.update_one({"_id":ctx.message.id}, {"$set": {"message_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
-		await end_ga(ctx.message)
+		await end_ga(posted_ga)
 		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
 		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен")
 
@@ -131,19 +131,24 @@ class TakePart(discord.ui.View):
 	
 	@discord.ui.button(label="Принять участие", emoji=Emojis.party_popper, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
-		ga = db.find_one({"_id":ctx.message.id})
-		if ctx.user.id not in ga["blacklist"] and ("whitelist" not in ga or "whitelist" in ga and ctx.user.id in ga["whitelist"]):
-			db.update_one({"_id":ctx.message.id}, {"$push": {"participants": ctx.author.id}})
-			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список уасвствующих", ephemeral=True)
+		ga = db.find_one({"message_id":ctx.message.id})
+		if ctx.user.id in ga["participants"]:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы уже учавствуете в конкурсе", ephemeral=True)
+		elif ctx.user.id in ga["blacklist"]:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы в блэклисте", ephemeral=True)
+		elif "whitelist" in ga and ctx.user.id not in ga["whitelist"]:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не в вайтлисте", ephemeral=True)
 		else:
-			await ctx.response.send_message(f"{Emojis.cross} Вы не в вайтлисте", ephemeral=True)
+			db.update_one({"message_id":ctx.message.id}, {"$push": {"participants": ctx.user.id}})
+			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список учасвствующих", ephemeral=True)
 
 async def end_ga(msg: discord.Message):
-	end_date = msg.embeds[0].fields[2].value[3:-2]
-	await sleep(end_date - int(time()))
+	end_date = msg.embeds[0].fields[2].value[3:-1]
+	await sleep(int(end_date) - int(time()))
 	#
-	ga = db.find_one({"_id": msg.id})
-	winners = "\n".join([sample(ga["participants"], ga["winners_count"])])
+	ga = db.find_one({"message_id": msg.id})
+	winners_count = ga["winners_count"] if ga["winners_count"] <= len(ga["participants"]) else len(ga["participants"])
+	winners = sample(ga["participants"], winners_count)
 	if len(winners) == 1:
 		edited_embed = msg.embeds[0].add_field(name=f"{Emojis.trophy} Победитель",
 		value=f"<@{winners[0]}>")
