@@ -154,6 +154,6 @@ async def end_ga(msg: discord.Message):
 		value=f"<@{winners[0]}>")
 	else:
 		edited_embed = msg.embeds[0].add_field(name=f"{Emojis.trophy} Победители",
-		value="\n".join([f"{i}. <@{winners[i-1]}>" for i in range(len(winners))]))
+		value="\n".join([f"{i}. <@{winners[i]}>" for i in range(len(winners))]))
 	await msg.edit(embed=edited_embed)
 	await msg.thread.send(f"# {edited_embed.fields[3].name}\n{edited_embed.fields[3].value}")
