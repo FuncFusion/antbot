@@ -5,6 +5,7 @@ from discord.utils import MISSING
 
 from asyncio import sleep
 from random import sample
+from re import findall
 from time import time
 from typing import Literal
 from pymongo.mongo_client import MongoClient
@@ -166,5 +167,14 @@ async def end_ga(msg: discord.Message):
 class GAModerationCommands(commands.Cog):
 
 	@commands.hybrid_command(name="blacklist", aliases=["бл", "чс"])
-	async def bl(self, ctx, operation:str, users: discord.User):
-		await ctx.send("Hello, basement!")
+	async def bl(self, ctx, operation: Literal["add", "remove"], users: str):
+		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)"))
+		ga_filter = {"message_id": ctx.channel.id}
+		ga = db.find_one(ga_filter)
+		if operation == "add":
+			for id in user_ids:
+				db.update_one(ga_filter, {"$push": {"balcklist": id}})
+				db.update_one(ga_filter, {"$pull": {"participants": id}})
+		elif operation == "remove":
+			for id in user_ids:
+				db.update_one(ga_filter, {"$pull": {"blacklist": id}})
