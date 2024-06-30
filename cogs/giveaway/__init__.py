@@ -73,10 +73,10 @@ class GAInfo(discord.ui.Modal):
 	)
 
 	async def on_submit(self, ctx: discord.Interaction):
-		embed = discord.Embed(title=f"{Emojis.party_popper} Розыгрыш", color=no_color)
-		embed.add_field(name="Приз(ы)", value=self.prize.value)
+		embed = discord.Embed(color=no_color)
+		embed.add_field(name=f"{Emojis.party_popper} Приз(ы)", value=self.prize.value)
 		embed.add_field(name="Описание", value=self.description.value, inline=False)
-		embed.add_field(name="Дата окончания", value=f"<t:{int(time()) + get_secs(self.end_date.value)}>", inline=False)
+		embed.add_field(name="Конкурс закончится", value=f"<t:{int(time()) + get_secs(self.end_date.value)}:R>", inline=False)
 		embed.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
 		#img
 		if self.image != None:
@@ -106,14 +106,14 @@ class JudgeGA(discord.ui.View):
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
+		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0], view=TakePart())
-		await posted_ga.create_thread(name="Обсуждение")
+		await posted_ga.create_thread(name=f"Розыгрыш {ga_author.name}")
 		db.update_one({"_id":ctx.message.id}, {"$set": {"message_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, True))
-		await end_ga(posted_ga)
-		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
 		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен")
+		await end_ga(posted_ga)
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
@@ -126,10 +126,13 @@ class JudgeGA(discord.ui.View):
 		await ga_author.send(f"{Emojis.cross} Ваш розыгрыш отклонён")
 
 class TakePart(discord.ui.View):
-	def __init__(self):
+	def __init__(self, particicpants_count="0", disable=False):
 		super().__init__(timeout=None)
+		self.take_part.label = particicpants_count
+		if disable:
+			self.take_part.disabled = True
 	
-	@discord.ui.button(label="Принять участие", emoji=Emojis.party_popper, custom_id="ga:take-part")
+	@discord.ui.button(emoji=Emojis.party_popper, custom_id="ga:take-part")
 	async def take_part(self, ctx, button):
 		ga = db.find_one({"message_id":ctx.message.id})
 		if ctx.user.id in ga["participants"]:
@@ -139,21 +142,29 @@ class TakePart(discord.ui.View):
 		elif "whitelist" in ga and ctx.user.id not in ga["whitelist"]:
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не в вайтлисте", ephemeral=True)
 		else:
-			db.update_one({"message_id":ctx.message.id}, {"$push": {"participants": ctx.user.id}})
+			db.update_one({"message_id": ctx.message.id}, {"$push": {"participants": ctx.user.id}})
+			await ctx.message.edit(view=TakePart(str(int(self.take_part.label)+1)))
 			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список учасвствующих", ephemeral=True)
 
 async def end_ga(msg: discord.Message):
-	end_date = msg.embeds[0].fields[2].value[3:-1]
+	end_date = msg.embeds[0].fields[2].value[3:-3]
 	await sleep(int(end_date) - int(time()))
 	#
 	ga = db.find_one({"message_id": msg.id})
-	winners_count = ga["winners_count"] if ga["winners_count"] <= len(ga["participants"]) else len(ga["participants"])
+	participants_count = len(ga["participants"])
+	winners_count = ga["winners_count"] if ga["winners_count"] <= participants_count else participants_count
 	winners = sample(ga["participants"], winners_count)
 	if len(winners) == 1:
-		edited_embed = msg.embeds[0].add_field(name=f"{Emojis.trophy} Победитель",
+		edited_embed = msg.embeds[0].insert_field_at(1, name=f"{Emojis.trophy} Победитель",
 		value=f"<@{winners[0]}>")
 	else:
-		edited_embed = msg.embeds[0].add_field(name=f"{Emojis.trophy} Победители",
+		edited_embed = msg.embeds[0].insert_field_at(1, name=f"{Emojis.trophy} Победители",
 		value="\n".join([f"{i}. <@{winners[i]}>" for i in range(len(winners))]))
-	await msg.edit(embed=edited_embed)
-	await msg.thread.send(f"# {edited_embed.fields[3].name}\n{edited_embed.fields[3].value}")
+	await msg.edit(embed=edited_embed, view=TakePart(participants_count, True))
+	await msg.thread.send(f"# {edited_embed.fields[1].name}\n{edited_embed.fields[1].value}")
+
+class GAModerationCommands(commands.Cog):
+
+	@commands.hybrid_command(name="blacklist", aliases=["бл", "чс"])
+	async def bl(self, ctx, operation:str, users: discord.User):
+		await ctx.send("Hello, basement!")
