@@ -173,7 +173,7 @@ class GAModerationCommands(commands.Cog):
 		ga = db.find_one(ga_filter)
 		if operation == "add":
 			for id in user_ids:
-				db.update_one(ga_filter, {"$push": {"balcklist": id}})
+				db.update_one(ga_filter, {"$push": {"blacklist": id}})
 				db.update_one(ga_filter, {"$pull": {"participants": id}})
 			ga = db.find_one(ga_filter)
 			await ctx.channel.starter_message.edit(view=TakePart(str(len(ga["participants"]))))
