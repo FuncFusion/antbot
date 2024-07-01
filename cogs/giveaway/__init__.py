@@ -168,13 +168,30 @@ class GAModerationCommands(commands.Cog):
 
 	@commands.hybrid_command(name="blacklist", aliases=["бл", "чс"])
 	async def bl(self, ctx, operation: Literal["add", "remove"], users: str):
-		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)"))
+		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)", users))
 		ga_filter = {"message_id": ctx.channel.id}
 		ga = db.find_one(ga_filter)
 		if operation == "add":
 			for id in user_ids:
 				db.update_one(ga_filter, {"$push": {"balcklist": id}})
 				db.update_one(ga_filter, {"$pull": {"participants": id}})
+			ga = db.find_one(ga_filter)
+			await ctx.channel.starter_message.edit(view=TakePart(str(len(ga["participants"]))))
 		elif operation == "remove":
 			for id in user_ids:
 				db.update_one(ga_filter, {"$pull": {"blacklist": id}})
+
+	@commands.hybrid_command(name="whitelist", aliases=["вл", "бс"])
+	async def wl(self, ctx, operation: Literal["add", "remove"], users: str):
+		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)", users))
+		ga_filter = {"message_id": ctx.channel.id}
+		ga = db.find_one(ga_filter)
+		if operation == "add":
+			for id in user_ids:
+				db.update_one(ga_filter, {"$push": {"whitelist": id}})
+		elif operation == "remove":
+			for id in user_ids:
+				db.update_one(ga_filter, {"$pull": {"whitelist": id}})
+				db.update_one(ga_filter, {"$pull": {"participants": id}})
+			ga = db.find_one(ga_filter)
+			await ctx.channel.starter_message.edit(view=TakePart(str(len(ga["participants"]))))
