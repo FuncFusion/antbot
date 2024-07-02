@@ -54,14 +54,8 @@ class Logs(commands.Cog, name="no_help_logs"):
 	async def dms(self, msg):
 		true_channel = await self.bot.fetch_channel(msg.channel.id) # It also triggers by ephemeral msgs so
 		if isinstance(true_channel, discord.DMChannel):
-			if msg.author == self.bot.user:
-				async for dmmsg in msg.channel.history(limit=15):
-					if dmmsg.author != self.bot.user:
-						dm_author_id = dmmsg.author.id
-						break
-				dm_log_channel = await DB.DMs.get_channel(dm_author_id, self.bot)
-			else:
-				dm_log_channel = await DB.DMs.get_channel(msg.author.id, self.bot)
+			dm_author_id = true_channel.recipient.id
+			dm_log_channel = await DB.DMs.get_channel(dm_author_id, self.bot)
 			await fake_send(msg.author, dm_log_channel, msg.content, msg.attachments, msg.embeds)
 	
 	@commands.Cog.listener(name="on_message")

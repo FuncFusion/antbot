@@ -8,7 +8,6 @@ users_collection = MongoClient(MONGO_URI).antbot.users
 class DB:
 	class DMs:
 		async def get_channel(user_id, bot):
-			user_id = id(user_id)
 			user_doc = users_collection.find_one({"_id": user_id})
 			if not user_doc:
 				await DB.add_user(user_id, bot)
