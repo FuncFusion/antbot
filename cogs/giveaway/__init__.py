@@ -6,15 +6,16 @@ from discord.utils import MISSING
 from asyncio import sleep
 from random import sample
 from re import findall
+from pymongo.mongo_client import MongoClient
 from time import time
 from typing import Literal
-from pymongo.mongo_client import MongoClient
 
 from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL_ID
 
-from utils.time import get_secs
-from utils.shortcuts import no_color
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
+from utils.shortcuts import no_color
+from utils.time import get_secs
 from utils.users_db import DB as UDBUtils
 
 users_db = MongoClient(MONGO_URI).antbot.users
@@ -90,7 +91,7 @@ class GAInfo(discord.ui.Modal):
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		db.insert_one({
 			"_id": ga_msg.id,
-			"winners_count": int(self.winners_count.value),
+			"winners_count": max(1, int(self.winners_count.value)),
 			"participants": [],
 			"blacklist": []
 		})
@@ -166,8 +167,12 @@ async def end_ga(msg: discord.Message):
 
 class GAModerationCommands(commands.Cog):
 
-	@commands.hybrid_command(name="blacklist", aliases=["бл", "чс"])
-	async def bl(self, ctx, operation: Literal["add", "remove"], users: str):
+	@commands.hybrid_command(aliases=["bl", "бл", "чс"], description="Оперирование блэклистом розыгрыша")
+	async def blacklist(self, ctx, operation: Literal["add", "remove"], users: str):
+		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
+			pass
+		else:
+			raise Exception("AttributeError")
 		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)", users))
 		ga_filter = {"message_id": ctx.channel.id}
 		ga = db.find_one(ga_filter)
@@ -180,9 +185,29 @@ class GAModerationCommands(commands.Cog):
 		elif operation == "remove":
 			for id in user_ids:
 				db.update_one(ga_filter, {"$pull": {"blacklist": id}})
+	@blacklist.error
+	async def bl_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+			},
+			{
+				"contains": "AttributeError",
+				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+			},
+			{
+				"contains": "NoneType",
+				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+			}
+		])
 
-	@commands.hybrid_command(name="whitelist", aliases=["вл", "бс"])
-	async def wl(self, ctx, operation: Literal["add", "remove"], users: str):
+	@commands.hybrid_command(aliases=["wl", "вл", "бс"])
+	async def whitelist(self, ctx, operation: Literal["add", "remove"], users: str):
+		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
+			pass
+		else:
+			raise Exception("AttributeError")
 		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)", users))
 		ga_filter = {"message_id": ctx.channel.id}
 		ga = db.find_one(ga_filter)
@@ -195,3 +220,19 @@ class GAModerationCommands(commands.Cog):
 				db.update_one(ga_filter, {"$pull": {"participants": id}})
 			ga = db.find_one(ga_filter)
 			await ctx.channel.starter_message.edit(view=TakePart(str(len(ga["participants"]))))
+	@whitelist.error
+	async def wl_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+			},
+			{
+				"contains": "AttributeError",
+				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+			},
+			{
+				"contains": "NoneType",
+				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+			}
+		])
