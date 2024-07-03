@@ -68,6 +68,7 @@ icons = {
 		"py": "<:python:1186764496270794893>"
 	},
 	"names": {
+		"...": "",
 		"tick.json": "<:tickjson:1188838117940133930>",
 		"load.json": "<:loadjson:1188838120712577174>",
 		"sounds.json": "<:sounds_json:1142347091759353866>",
