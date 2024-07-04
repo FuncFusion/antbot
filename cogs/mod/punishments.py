@@ -9,6 +9,7 @@ from datetime import timedelta
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
+from utils.time import get_secs
 
 time_multipliers = {
 	"y": 31556952,
@@ -72,10 +73,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 	@app_commands.default_permissions(mute_members=True)
 	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
-		raw_term = findall(r"[0-9]+", term)
-		measure = findall(r"[a-zA-Zа-яА-Я]+", term)
-		term = int(raw_term[0]) * time_multipliers[measure[0]]
-		await user.timeout(timedelta(seconds=term), reason=reason)
+		await user.timeout(timedelta(seconds=get_secs(term)), reason=reason)
 		#
 		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
 		embed.set_thumbnail(url=user.avatar.url)
