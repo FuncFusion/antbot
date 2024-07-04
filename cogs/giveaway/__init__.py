@@ -172,6 +172,7 @@ async def end_ga(msg: discord.Message):
 class GAModerationCommands(commands.Cog):
 
 	@commands.hybrid_command(aliases=["bl", "бл", "чс"], description="Оперирование блэклистом розыгрыша")
+	@app_commands.describe(users="@Упоминания пользователей в формате")
 	async def blacklist(self, ctx, operation: Literal["add", "remove"], users: str):
 		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
 			pass
@@ -207,6 +208,7 @@ class GAModerationCommands(commands.Cog):
 		])
 
 	@commands.hybrid_command(aliases=["wl", "вл", "бс"])
+	@app_commands.describe(users="@Упоминания пользователей в формате")
 	async def whitelist(self, ctx, operation: Literal["add", "remove"], users: str):
 		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
 			pass
