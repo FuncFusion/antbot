@@ -5,6 +5,9 @@ from utils.shortcuts import no_color, no_ping
 
 
 class PingCommand(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+
 	@commands.hybrid_command(aliases=["p", "latency", "пинг", "п", "з", "зштп", "дфеутсн"], 
 		description="Показывает пинг бота.")
 	async def ping(self, ctx):

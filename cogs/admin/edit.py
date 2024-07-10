@@ -22,6 +22,8 @@ class EditCommand(commands.Cog):
 		else:
 			msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
 			await discord.Message.edit(self=msg, content=message+" "+text)
+		if ctx.interaction:
+			await ctx.send(f"{Emojis.check} Сообщение отредактировано", ephemeral=True)
 
 	@edit.error
 	async def edit_error(self, ctx, error: Exception):

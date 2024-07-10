@@ -2,10 +2,10 @@ import settings
 import discord
 from discord.ext import commands
 
-from cogs.admin import EditCommand, PingCommand, StatusCommands
+from cogs.admin import EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
-from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
+from cogs.general import JoinAndLeaveMessage, RemindCommand, ServerInfoCommand
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import Pin, ResolveCommand, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
