@@ -20,36 +20,10 @@ class LookForCommand(commands.Cog):
 
 	@app_commands.command(name="look-for",
 		description="Создаёт пост в 🔍・поиск-тимы о поиске тиммейта")
-	@app_commands.describe(game="Игра", details="Описание (айпи сервера/приглашение и тд)", image="Баннер к посту")
+	@app_commands.describe(image="Баннер к посту")
 
-	async def look_for(self, ctx, game: str, details: str, image: discord.Attachment=None):
-		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {game}", color=no_color)
-		if not image:
-			banners_count = {"minecraft": 3, "terraria": 0, "gartic": 0}
-			games = {
-				"minecraft": ["майнкрафт", "mc", "кубы", "говнокрафт"],
-				"terraria": ["террария", "терка", "террка"],
-				"gartic": ["гартик", "gartic phone", "сломанный телефон"]
-			}
-			validated_game = validate(game, games)
-			if validated_game == None:
-				game_banner = MISSING
-			else:
-				game_banner = discord.File(f"assets/game_banners/{validated_game}{randint(0, banners_count[validated_game])}.png",
-				filename="banner.png")
-				embed.set_image(url="attachment://banner.png")
-		else:
-			game_banner = await image.to_file(filename="banner.png")
-			embed.set_image(url="attachment://banner.png")
-		embed.set_author(name=ctx.user.display_name, icon_url=ctx.user.display_avatar.url)
-		embed.add_field(name="Подробности", value=details, inline=False)
-		embed.add_field(name=f"{Emojis.check} Присоединились", value="")
-		embed.add_field(name=f"{Emojis.cross} Отклонили", value="")
-		#
-		LOOK_FOR_CHANNEL = await self.bot.fetch_channel(LOOK_FOR_CHANNEL_ID)
-		lf_msg = await LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
-		await lf_msg.create_thread(name="Обсуждение")
-		await ctx.response.send_message(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", ephemeral=True)
+	async def look_for(self, ctx, image: discord.Attachment=None):
+		await ctx.response.send_modal(LFInfo(self.bot, image))
 
 	@look_for.error
 	async def lf_error(self, ctx, error):
@@ -105,4 +79,53 @@ class LookForView(discord.ui.View):
 				await ctx.response.send_message(f"{Emojis.exclamation_mark} Пока нет кого пинговать", ephemeral=True)
 		else:
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являеетесь автором поста", ephemeral=True)
+
+
+class LFInfo(discord.ui.Modal):
+	def __init__(self, bot, image):
+		super().__init__(title="Детали поста")
+		self.custom_id="lf:details"
+		self.bot = bot
+		self.image = image
+
+	game = discord.ui.TextInput(
+		label="Игра",
+		placeholder="майнкрафт",
+		max_length=100
+	)
+	description = discord.ui.TextInput(
+		label="Детали",
+		style=discord.TextStyle.long,
+		placeholder="Ищу тиммейта для игры на сервере\nАйпи сервера `play.originrealms.com`, только лицензия",
+		max_length=1999
+	)
+
+	async def on_submit(self, ctx: discord.Interaction):
+		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {self.game.value}", color=no_color)
+		if not self.image:
+			banners_count = {"minecraft": 3, "terraria": 0, "gartic": 0}
+			games = {
+				"minecraft": ["майнкрафт", "mc", "кубы", "говнокрафт"],
+				"terraria": ["террария", "терка", "террка"],
+				"gartic": ["гартик", "gartic phone", "сломанный телефон"]
+			}
+			validated_game = validate(self.game.value, games)
+			if validated_game == None:
+				game_banner = MISSING
+			else:
+				game_banner = discord.File(f"assets/game_banners/{validated_game}{randint(0, banners_count[validated_game])}.png",
+				filename="banner.png")
+				embed.set_image(url="attachment://banner.png")
+		else:
+			game_banner = await self.image.to_file(filename="banner.png")
+			embed.set_image(url="attachment://banner.png")
+		embed.set_author(name=ctx.user.display_name, icon_url=ctx.user.display_avatar.url)
+		embed.add_field(name="Подробности", value=self.description.value, inline=False)
+		embed.add_field(name=f"{Emojis.check} Присоединились", value="")
+		embed.add_field(name=f"{Emojis.cross} Отклонили", value="")
+		#
+		LOOK_FOR_CHANNEL = await self.bot.fetch_channel(LOOK_FOR_CHANNEL_ID)
+		lf_msg = await LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
+		await ctx.response.send_message(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", ephemeral=True)
+		await lf_msg.create_thread(name="Обсуждение")
 	

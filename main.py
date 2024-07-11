@@ -1,6 +1,7 @@
 import settings
 import discord
 from discord.ext import commands
+from discord.gateway import DiscordWebSocket
 
 from cogs.admin import EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
@@ -28,6 +29,7 @@ cogs = [EditCommand, PingCommand, StatusCommands,
 	    MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, IdeaView]
+
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
@@ -59,7 +61,7 @@ async def on_ready():
 
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
-	await Interaction.channel.edit(archived=True)
+	print(Interaction.user.raw_status)
 	await Interaction.response.send_message("say gex")
 
 	
