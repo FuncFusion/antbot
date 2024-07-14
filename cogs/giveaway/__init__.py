@@ -14,7 +14,7 @@ from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL
 
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
-from utils.shortcuts import no_color
+from utils.shortcuts import no_color, no_ping
 from utils.time import get_secs
 from utils.users_db import DB as UDBUtils
 
@@ -172,7 +172,7 @@ async def end_ga(msg: discord.Message):
 class GAModerationCommands(commands.Cog):
 
 	@commands.hybrid_command(aliases=["bl", "бл", "чс"], description="Оперирование блэклистом розыгрыша")
-	@app_commands.describe(users="@Упоминания пользователей в формате")
+	@app_commands.describe(users="@Упоминания пользователей")
 	async def blacklist(self, ctx, operation: Literal["add", "remove"], users: str):
 		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
 			pass
@@ -186,10 +186,13 @@ class GAModerationCommands(commands.Cog):
 				db.update_one(ga_filter, {"$push": {"blacklist": id}})
 				db.update_one(ga_filter, {"$pull": {"participants": id}})
 			ga = db.find_one(ga_filter)
-			await ctx.channel.starter_message.edit(view=TakePart(str(len(ga["participants"]))))
+			starter_message = await ctx.channel.parent.fetch_message(ctx.channel.id)
+			await starter_message.edit(view=TakePart(str(len(ga["participants"]))))
+			await ctx.reply(f"{Emojis.check} {users} Добален{'ы' if users.count('@') > 1 else ''} в блэклист", allowed_mentions=no_ping)
 		elif operation == "remove":
 			for id in user_ids:
 				db.update_one(ga_filter, {"$pull": {"blacklist": id}})
+			await ctx.reply(f"{Emojis.check} {users} Убран{'ы' if users.count('@') > 1 else ''} с блэклиста", allowed_mentions=no_ping)
 	@blacklist.error
 	async def bl_error(self, ctx, error):
 		await handle_errors(ctx, error, [
@@ -199,16 +202,16 @@ class GAModerationCommands(commands.Cog):
 			},
 			{
 				"contains": "AttributeError",
-				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша {error}"
 			},
 			{
 				"contains": "NoneType",
-				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша {error}"
 			}
 		])
 
 	@commands.hybrid_command(aliases=["wl", "вл", "бс"])
-	@app_commands.describe(users="@Упоминания пользователей в формате")
+	@app_commands.describe(users="@Упоминания пользователей")
 	async def whitelist(self, ctx, operation: Literal["add", "remove"], users: str):
 		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
 			pass
@@ -220,12 +223,15 @@ class GAModerationCommands(commands.Cog):
 		if operation == "add":
 			for id in user_ids:
 				db.update_one(ga_filter, {"$push": {"whitelist": id}})
+			await ctx.reply(f"{Emojis.check} {users} Добален{'ы' if users.count('@') > 1 else ''} в вайтлист", allowed_mentions=no_ping)
 		elif operation == "remove":
 			for id in user_ids:
 				db.update_one(ga_filter, {"$pull": {"whitelist": id}})
 				db.update_one(ga_filter, {"$pull": {"participants": id}})
 			ga = db.find_one(ga_filter)
-			await ctx.channel.starter_message.edit(view=TakePart(str(len(ga["participants"]))))
+			starter_message = await ctx.channel.parent.fetch_message(ctx.channel.id)
+			await starter_message.edit(view=TakePart(str(len(ga["participants"]))))
+			await ctx.reply(f"{Emojis.check} {users} Убран{'ы' if users.count('@') > 1 else ''} с вайтлиста", allowed_mentions=no_ping)
 	@whitelist.error
 	async def wl_error(self, ctx, error):
 		await handle_errors(ctx, error, [
