@@ -138,13 +138,13 @@ icons = {
 		"trim_pattern": "<:trim_pattern_file:1188838127272464394>",
 		"trim_material": "<:trim_material_file:1188838129495449671>",
 		"wolf_variant": "<:wolf:1246816990669312011>",
-
+		"lang": "<:lang_file:1188838193559257258>",
 		"models": "<:bbmodel:1186764426376904714>"
 	}
 }
 registries = ["advancement", "banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", 
 	"enchantment", "enchantment_provider", "jukebox_song", "painting_variant", "predicate", 
-	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "models",
+	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "lang", "models",
 	
 	"advancements", "predicates", "item_modifiers", "recipes"
 	]
