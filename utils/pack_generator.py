@@ -84,7 +84,7 @@ class PGenerator:
 			version = get_mcmeta_ver(type, version)
 			return version
 
-	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version=32):
+	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version="32"):
 		# Validating stuff
 		folders_include = PGenerator.validate_folders(folders_include, "dp")
 		folders_exclude = PGenerator.validate_folders(folders_exclude, "dp")
@@ -112,7 +112,7 @@ class PGenerator:
 		dp_f.seek(0)
 		return dp_f
 	
-	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version=32):
+	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version="32"):
 		# Validating stuff
 		all_folders = ["atlases", "blockstates", "font", "lang", "models", "particles", "shaders", "texts", "textures"]
 		folders_include = PGenerator.validate_folders(folders_include, "rp"); folders_include = folders_include if folders_include != [] else all_folders
@@ -177,7 +177,7 @@ class Modals:
 				self.namespaces.value.replace(" ", "").split(),
 				self.folders_include.value.replace(" ", "").split(), 
 				self.folders_exclude.value.replace(" ", "").split(), 
-				self.version.value if self.version.value != "" else 32
+				self.version.value if self.version.value != "" else "32"
 				)
 			await Interaction.response.send_message(f"{Emojis.deta_rack} Кастомный шаблон датапака", file=discord.File(dp, filename="Custom datapack UNZIP.zip"))
 	
@@ -222,6 +222,6 @@ class Modals:
 				self.namespaces.value.replace(" ", "").split(),
 				self.folders_include.value.replace(" ", "").split(), 
 				self.folders_exclude.value.replace(" ", "").split(), 
-				self.version.value if self.version.value != "" else 32
+				self.version.value if self.version.value != "" else "32"
 				)
 			await Interaction.response.send_message(f"{Emojis.resource_rack} Кастомный шаблон ресурспака", file=discord.File(rp, filename="Custom resourcepack UNZIP.zip"))
