@@ -10,10 +10,10 @@ class EditCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@commands.has_permissions(ban_members=True)
 	@commands.hybrid_command(aliases=["изменить", "эдит", "увше"],
 		description="Изменяет заданное сообщение.")
 	@app_commands.describe(message="Сообщение, которое будет изменяться.", text="Текст, на который изменится сообщение.")
-	@app_commands.default_permissions(manage_messages=True)
 
 	async def edit(self, ctx, message:str, *, text:str):
 		if ctx.message.reference == None:
@@ -43,5 +43,9 @@ class EditCommand(commands.Cog):
 			{
 				"contains": "'ValueError'",
 				"msg": f"{Emojis.exclamation_mark} Введён неверный айди"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
 			}
 		])

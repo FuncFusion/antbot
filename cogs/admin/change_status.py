@@ -9,9 +9,6 @@ from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping
 from utils.validator import validate
 
-async def pfp_ratelimit_msg(self, ctx, error):
-	await ctx.reply(f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже", allowed_mentions=no_ping)
-
 
 class StatusCommands(commands.Cog):
 	def __init__(self, bot: commands.Bot):
@@ -19,13 +16,24 @@ class StatusCommands(commands.Cog):
 		
 	@commands.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
 		description="Отключает бота.")
-	@app_commands.default_permissions(manage_guild=True)
+	@commands.has_permissions(manage_guild=True)
 	async def shutdown(self, ctx):
 		with open("assets/pfps/offline.png", "rb") as file:
 			await self.bot.user.edit(avatar=file.read())
 		await ctx.reply("Отключаюсь... 😴", allowed_mentions=no_ping)
 		await self.bot.close()
-	shutdown.error(pfp_ratelimit_msg)
+	@shutdown.error
+	async def off_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"contains": "HTTPException",
+				"msg": f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+			}
+		])
 
 
 	@commands.hybrid_command(name="status", aliases=["ыефегы", "статус"],
@@ -51,7 +59,7 @@ class StatusCommands(commands.Cog):
 				"msg": f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
 			},
 			{
-				"exception": commands.BotMissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Не достаточно прав"
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
 			}
 		])
