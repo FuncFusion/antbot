@@ -20,8 +20,8 @@ class Templates:
 
 
 class PGenerator:
-	def validate_folders(folders, type):
-		dp_folders = {
+	def validate_folders(folders, legacy):
+		legacy_dp_folders = {
 			"advancements": ["адванцмент", "ачивки", "достижения"],
 			"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
 			"chat_type": ["чат тайп", "тип чата"],
@@ -30,8 +30,27 @@ class PGenerator:
 			"dimension_type": ["дименшон тайп", "тип измерения"],
 			"loot_tables": ["лут тейблы", "таблицы лута", "таблицы добычи"],
 			"predicates": ["предикейтс", "предикаты"],
+			"item_modifiers": ["айтем модифиерс", "модификаторы предметов"],
 			"recipes": ["ресипис", "рецепты", "рецепты крафта"],
 			"structures": ["стракчерс", "структуры", "данжи"],
+			"tags": ["тэгс", "теги", "ярлыки"],
+			"trim_material": ["трим материал", "материал шаблона"],
+			"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
+			"wolf_variant": ["волф враинат", "вариант волка"],
+			"worldgen": ["ворлдген", "генерация", "генерация мира"]
+			}
+		dp_folders = {
+			"advancement": ["адванцмент", "ачивки", "достижения"],
+			"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
+			"chat_type": ["чат тайп", "тип чата"],
+			"damage_type": ["дэмедж тайп", "тип урона"],
+			"dimension": ["дименшон", "измерение"],
+			"dimension_type": ["дименшон тайп", "тип измерения"],
+			"loot_table": ["лут тейблы", "таблицы лута", "таблицы добычи"],
+			"predicate": ["предикейтс", "предикаты"],
+			"item_modifier": ["айтем модифиерс", "модификаторы предметов"],
+			"recipe": ["ресипис", "рецепты", "рецепты крафта"],
+			"structure": ["стракчерс", "структуры", "данжи"],
 			"tags": ["тэгс", "теги", "ярлыки"],
 			"trim_material": ["трим материал", "материал шаблона"],
 			"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
@@ -50,6 +69,7 @@ class PGenerator:
 			"textures": ["тещурс", "текстуры"]
 		}
 		existing_fldrs = dp_folders if type == "dp" else rp_folders
+		existing_fldrs = legacy_dp_folders if legacy and type == "dp" else existing_fldrs
 		valid_folders = set()
 		for folder in folders:
 			valid_folder = validate(folder, existing_fldrs)
@@ -86,20 +106,22 @@ class PGenerator:
 
 	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version="32"):
 		# Validating stuff
-		folders_include = PGenerator.validate_folders(folders_include, "dp")
-		folders_exclude = PGenerator.validate_folders(folders_exclude, "dp")
+		version = PGenerator.validate_version(version, "dp")
+		legacy = version < 45
+		folders_include = PGenerator.validate_folders(folders_include, "dp", legacy)
+		folders_exclude = PGenerator.validate_folders(folders_exclude, "dp", legacy)
 		namespaces = PGenerator.validate_namespaces(namespaces)
 		main_namespace = "namespace" if namespaces == [] else namespaces[0]
-		version = PGenerator.validate_version(version, "dp")
 		all_folders = ["advancement", "chat_type", "damage_type", "dimension", "dimension_type", "functions", "loot_tables", "predicates", "recipes", "structures", "tags", "worldgen"]
 		# Generating dp
 		dp_f = io.BytesIO()
 		with ZipFile(dp_f, "w") as dp:
+			function = "functions" if legacy else "function"
 			dp.writestr(f"{name}/pack.mcmeta", Templates.mcmeta.format(version))
-			dp.writestr(f"{name}/data/minecraft/tags/functions/load.json", dumps(Templates.load_json, indent="\t"))
-			dp.writestr(f"{name}/data/minecraft/tags/functions/tick.json", dumps(Templates.tick_json, indent="\t"))
-			dp.writestr(f"{name}/data/{main_namespace}/functions/load.mcfunction", Templates.load)
-			dp.writestr(f"{name}/data/{main_namespace}/functions/tick.mcfunction", Templates.tick)
+			dp.writestr(f"{name}/data/minecraft/tags/{function}/load.json", dumps(Templates.load_json, indent="\t"))
+			dp.writestr(f"{name}/data/minecraft/tags/{function}/tick.json", dumps(Templates.tick_json, indent="\t"))
+			dp.writestr(f"{name}/data/{main_namespace}/{function}/load.mcfunction", Templates.load)
+			dp.writestr(f"{name}/data/{main_namespace}/{function}/tick.mcfunction", Templates.tick)
 			for namespace in namespaces:
 				dp.mkdir(f"{name}/data/{namespace}")
 			if folders_exclude == []:
@@ -174,9 +196,9 @@ class Modals:
 		async def on_submit(self, Interaction: discord.Interaction):
 			dp = PGenerator.datapack(
 				self.name.value if self.name.value != "" else "datapak", 
-				self.namespaces.value.replace(" ", "").split(),
-				self.folders_include.value.replace(" ", "").split(), 
-				self.folders_exclude.value.replace(" ", "").split(), 
+				self.namespaces.value.split(),
+				self.folders_include.value.split(), 
+				self.folders_exclude.value.split(), 
 				self.version.value if self.version.value != "" else "32"
 				)
 			await Interaction.response.send_message(f"{Emojis.deta_rack} Кастомный шаблон датапака", file=discord.File(dp, filename="Custom datapack UNZIP.zip"))
@@ -195,7 +217,7 @@ class Modals:
 		namespaces = discord.ui.TextInput(
 			required=False,
 			label="Пространства имён",
-			placeholder="my_rp, essential, ...",
+			placeholder="my_rp essential ...",
 			max_length=512
 		)
 		folders_include = discord.ui.TextInput(
@@ -219,9 +241,9 @@ class Modals:
 		async def on_submit(self, Interaction: discord.Interaction):
 			rp = PGenerator.resourcepack(
 				self.name.value if self.name.value != "" else "repuksrack", 
-				self.namespaces.value.replace(" ", "").split(),
-				self.folders_include.value.replace(" ", "").split(), 
-				self.folders_exclude.value.replace(" ", "").split(), 
+				self.namespaces.value.split(),
+				self.folders_include.value.split(), 
+				self.folders_exclude.value.split(), 
 				self.version.value if self.version.value != "" else "32"
 				)
 			await Interaction.response.send_message(f"{Emojis.resource_rack} Кастомный шаблон ресурспака", file=discord.File(rp, filename="Custom resourcepack UNZIP.zip"))
