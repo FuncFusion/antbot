@@ -37,6 +37,8 @@ class R_u_sure(discord.ui.View):
 
 
 class ResolveCommand(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
 
 	@commands.hybrid_command(aliases=["solve", "ыщдму", "куыщдму", "решено", "ресолв", "солв"],
 		description="Архивирует ветку помощи при решении проблемы") 
@@ -66,7 +68,7 @@ class ResolveCommand(commands.Cog):
 		embed = discord.Embed(title=f"{Emojis.check} Проблема решена", color=no_color)
 		embed.add_field(name="Решение", value=f"{Emojis.link} {solution.jump_url}", inline=False)
 		embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
-			value=f"{Emojis.user if len(helpers_mentions) >= 2 else Emojis.users} {" ".join(helpers_mentions)}")
+			value=f"{Emojis.user if len(helpers_mentions) < 2 else Emojis.users} {" ".join(helpers_mentions)}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		await ctx.channel.edit(archived=True)
 

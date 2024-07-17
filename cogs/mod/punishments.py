@@ -9,6 +9,7 @@ from datetime import timedelta
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
+from utils.time import get_secs
 
 time_multipliers = {
 	"y": 31556952,
@@ -42,8 +43,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		self.bot = bot
 
 	@commands.command(aliases=["ифт", "бан", "банчек", "заблокировать"])
-	@app_commands.describe(user="Пользователь", reason="Причина бана")
-	@app_commands.default_permissions(ban_members=True)
+	@commands.has_permissions(ban_members=True)
 	async def ban(self, ctx, user: discord.Member, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.ban(reason=reason)
@@ -64,18 +64,18 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			{
 				"contains": "Forbidden",
 				"msg":"Кудааа, не туда воюешь"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
 			}
 		])
 		
 	@commands.command(aliases=["ьгеу", "мут"])
-	@app_commands.describe(user="Пользователь", term="Срок мута", reason="Причина мута")
-	@app_commands.default_permissions(mute_members=True)
+	@commands.has_permissions(mute_members=True)
 	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
-		raw_term = findall(r"[0-9]+", term)
-		measure = findall(r"[a-zA-Zа-яА-Я]+", term)
-		term = int(raw_term[0]) * time_multipliers[measure[0]]
-		await user.timeout(timedelta(seconds=term), reason=reason)
+		await user.timeout(timedelta(seconds=get_secs(term)), reason=reason)
 		#
 		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
 		embed.set_thumbnail(url=user.avatar.url)
@@ -109,12 +109,15 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			{
 				"contains": "Forbidden",
 				"msg": "Кудааа, не туда воюешь"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
 			}
 		])
 		
 	@commands.command(aliases=["лшсл", "кик", "изгнать"])
-	@app_commands.describe(user="Пользователь", reason="Причина кика")
-	@app_commands.default_permissions(kick_members=True)
+	@commands.has_permissions(kick_members=True)
 	async def kick(self, ctx, user: discord.Member, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.kick(reason=reason)
@@ -138,6 +141,10 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			{
 				"contains": "Forbidden",
 				"msg": "Э, не туда воюешь"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
 			}
 		])
 		

@@ -9,7 +9,7 @@ from utils.shortcuts import no_color, no_ping
 
 class ClearCommand(commands.Cog):
 
-	@app_commands.default_permissions(manage_messages=True)
+	@commands.has_permissions(manage_messages=True)
 	@commands.hybrid_command(aliases=["сдуфк", "клир", "очистить"], description="Очищает сообщения")
 	@app_commands.describe(count="Количество сообщений которое будет удалено", channel="Канал в котором будут удалены сообщения")
 
@@ -24,5 +24,9 @@ class ClearCommand(commands.Cog):
 			{
 				"exception": commands.MissingRequiredArgument,
 				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите количество сообщений которое будет удалено"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
 			}
 		])

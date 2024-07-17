@@ -1,11 +1,12 @@
 import settings
 import discord
 from discord.ext import commands
+import asyncio
 
-from cogs.admin import EditCommand, PingCommand, StatusCommands
+from cogs.admin import EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
-from cogs.general import JoinAndLeaveMessage, RemindCommand, SayCommand, ServerInfoCommand
+from cogs.general import JoinAndLeaveMessage, RemindCommand, ServerInfoCommand
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import Pin, ResolveCommand, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
@@ -28,6 +29,8 @@ cogs = [EditCommand, PingCommand, StatusCommands,
 	    MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, IdeaView]
+
+
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
@@ -59,7 +62,6 @@ async def on_ready():
 
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
-	await Interaction.channel.edit(archived=True)
 	await Interaction.response.send_message("say gex")
 
 	
