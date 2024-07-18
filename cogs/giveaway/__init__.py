@@ -129,7 +129,7 @@ class JudgeGA(discord.ui.View):
 		await posted_ga.create_thread(name=f"Розыгрыш {ga_author.name}")
 		db.update_one({"_id":ctx.message.id}, {"$set": {"message_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, "approved"))
-		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен")
+		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен {posted_ga.jump_url}")
 		await end_ga(posted_ga)
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")

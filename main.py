@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import asyncio
 
-from cogs.admin import EditCommand, PingCommand, StatusCommands, SayCommand
+from cogs.admin import DebugCommand, EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, RemindCommand, ServerInfoCommand
@@ -17,7 +17,7 @@ from cogs.voice_channels import CustomVoiceChannels
 
 logger = settings.logging.getLogger("bot")
 
-cogs = [EditCommand, PingCommand, StatusCommands,
+cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
 		Pin, ResolveCommand, StartMessage, SyntaxCommand,

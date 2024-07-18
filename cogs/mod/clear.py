@@ -15,8 +15,10 @@ class ClearCommand(commands.Cog):
 
 	async def clear(self, ctx, count: int, channel: discord.TextChannel=None):
 		channel = channel if channel != None else ctx.channel
-		await channel.purge(limit=count + (1 if channel == ctx.channel else 0))
-		await ctx.send("Удалено 3 сообщения", delete_after=0)
+		if ctx.interaction:
+			await ctx.message.delete()
+		await channel.purge(limit=count)
+		await ctx.send(f"{Emojis.check} Удалено {count} сообщения", delete_after=8, ephemeral=True)
 
 	@clear.error
 	async def clear_error(self, ctx, error):
