@@ -24,8 +24,8 @@ read_syntaxes()
 class SyntaxCommand(commands.Cog):
 
 	@commands.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
-		description="Показывает синтакс введеной майнкрафт команды")
-	@app_commands.describe(command="Команда с майнкрафта")
+		description="Показывает синтаксис введённой майнкрафт команды")
+	@app_commands.describe(command="Команда из майнкрафта")
 
 	async def syntax(self, ctx, command: str):
 		embed = discord.Embed(color=no_color, 
@@ -38,6 +38,10 @@ class SyntaxCommand(commands.Cog):
 			{
 				"exception": commands.MissingRequiredArgument,
 				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите команду"
+			},
+			{
+				"exception": errors.CommandInvokeError,
+				"msg": f"{Emojis.exclamation_mark} Введена неверная команда"
 			}
 		])
 
