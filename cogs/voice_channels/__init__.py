@@ -15,20 +15,24 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 	@commands.hybrid_command(name="transfer-ownership", aliases=["передать-права", "to", "пп"], \
 		description="Передать права на голосовой канал")
 	@app_commands.describe(user="Пользователь")
-	async def transfer_owner(self, ctx, user: discord.Member):	
-		if ctx.channel.category_id != VCS_CATEGORY_ID:
-			await ctx.reply(f"{Emojis.exclamation_mark} Используйте эту команду в чате голосового канала, в котором вы сидите", allowed_mentions=no_ping)
-		elif not ctx.channel.permissions_for(ctx.author).manage_channels:
+	async def transfer_owner(self, ctx, user: discord.Member):
+		if ctx.author.voice == None:
+			await ctx.reply(f"{Emojis.exclamation_mark} Вы не находитесь в голосовом канале", allowed_mentions=no_ping)
+		elif not ctx.author.voice.channel.permissions_for(ctx.author).manage_channels:
 			await ctx.reply(f"{Emojis.exclamation_mark} Вы не являетесь создателем данного голосового канала", allowed_mentions=no_ping)
 		else:
-			await ctx.channel.set_permissions(ctx.author, manage_channels=None, mute_members=None, 
+			await ctx.author.voice.channel.set_permissions(ctx.author, manage_channels=None, mute_members=None, 
 				deafen_members=None, move_members=None)
-			await ctx.channel.set_permissions(user, manage_channels=True, 
+			await ctx.author.voice.channel.set_permissions(user, manage_channels=True, 
 				deafen_members=True, move_members=True)
 			await ctx.reply(f"{Emojis.check} Права переданы {user.mention}", ephemeral=True, allowed_mentions=no_ping)
 	@transfer_owner.error
 	async def to_error(self, ctx, error):
 		await handle_errors(ctx, error, [
+			{
+				"contains": "AttributeError",
+				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+			},
 			{
 				"exception": commands.MissingPermissions,
 				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
