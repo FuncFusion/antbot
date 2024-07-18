@@ -53,16 +53,19 @@ class GAInfo(discord.ui.Modal):
 	prize = discord.ui.TextInput(
 		label="Приз(ы)",
 		style=discord.TextStyle.long,
+		min_length=3,
 		max_length=1999
 	)
 	description = discord.ui.TextInput(
 		label="Описание",
 		style=discord.TextStyle.long,
+		min_length=5,
 		max_length=1999
 	)
 	end_date = discord.ui.TextInput(
 		label="Закончится через...",
-		placeholder="10 минут 15 секнуд/2 дня/15ч 18 мин"
+		placeholder="10 минут 15 секнуд/2 дня/15ч 18 мин",
+		min_length=2
 	)
 	winners_count = discord.ui.TextInput(
 		label="Количество победителей",
@@ -75,10 +78,15 @@ class GAInfo(discord.ui.Modal):
 	)
 
 	async def on_submit(self, ctx: discord.Interaction):
+		end_date_secs = get_secs(self.end_date.value)
+		if end_date_secs < 60:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Неправильно указано время.", ephemeral=True)
+			return
+		#
 		embed = discord.Embed(color=no_color)
 		embed.add_field(name=f"{Emojis.party_popper} Приз(ы)", value=self.prize.value)
 		embed.add_field(name="Описание", value=self.description.value, inline=False)
-		embed.add_field(name="Конкурс закончится", value=f"<t:{int(time()) + get_secs(self.end_date.value)}:R>", inline=False)
+		embed.add_field(name="Конкурс закончится", value=f"<t:{int(time()) + end_date_secs}:R>", inline=False)
 		embed.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
 		#img
 		if self.image != None:
@@ -89,12 +97,15 @@ class GAInfo(discord.ui.Modal):
 		#
 		ga_judge_channel = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
-		db.insert_one({
+		ga_doc = {
 			"_id": ga_msg.id,
 			"winners_count": max(1, int(self.winners_count.value)),
 			"participants": [],
 			"blacklist": []
-		})
+		}
+		if bool(self.whitelist_only.value):
+			ga_doc.update({"whitelist": []})
+		db.insert_one(ga_doc)
 		await ctx.response.send_message(f"{Emojis.check} Розыгрыш отправлен на проверку", ephemeral=True)
 
 	
