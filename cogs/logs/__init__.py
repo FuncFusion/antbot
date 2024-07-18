@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import MISSING
 
-from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID
+from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
@@ -14,6 +14,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 	
 	@commands.Cog.listener(name="on_message_edit")
 	async def edited(self, before, after):
+		if after.guild.id != GUILD:return
 		if after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
 			# Build ebmed
@@ -31,6 +32,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 
 	@commands.Cog.listener(name="on_message_delete")
 	async def deleted(self, msg):
+		if msg.guild.id != GUILD:return
 		if msg.author.id != self.bot.user.id and not isinstance(msg.channel, discord.DMChannel):
 			# Getting files from message
 			if msg.attachments != None:
