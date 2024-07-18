@@ -61,5 +61,9 @@ class StatusCommands(commands.Cog):
 			{
 				"exception": commands.MissingPermissions,
 				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+			},
+			{
+				"contains": "Could not convert",
+				"msg": f"{Emojis.exclamation_mark} Неверно введено название статуса"
 			}
 		])

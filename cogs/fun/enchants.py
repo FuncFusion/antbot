@@ -117,7 +117,7 @@ class EnchantCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Введите текст который хотите зачаровать"
+				"msg": f"{Emojis.exclamation_mark} Введите текст, который хотите зачаровать"
 			}
 		])
 		
@@ -137,6 +137,6 @@ class EnchantCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Введите текст c которого хотите снять чары"
+				"msg": f"{Emojis.exclamation_mark} Введите текст, c которого хотите снять чары"
 			}
 		])

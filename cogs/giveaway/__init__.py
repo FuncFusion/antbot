@@ -31,7 +31,7 @@ class GiveawayCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@app_commands.command(name="giveaway", description="Создаёт пост о розыграше в #🎉・розыгрыши")
+	@app_commands.command(name="giveaway", description="Создаёт пост о розыгрыше в #🎉・розыгрыши")
 	async def ga(self, ctx, image: discord.Attachment=None):
 		user_id = ctx.user.id
 		if users_db.find_one({"_id": user_id}) == None:
@@ -40,12 +40,12 @@ class GiveawayCommand(commands.Cog):
 		if user_doc["disapproved_ga"] <= 3 or int(time()) - user_doc["last_disapproved_ga"] > FOUR_WEEKS:
 			await ctx.response.send_modal(GAInfo(self.bot, image))
 		else:
-			await ctx.response.send_message(f"{Emojis.cross} Слишком много отклонённых розыграшей за последнее время")
+			await ctx.response.send_message(f"{Emojis.cross} Слишком много отклонённых розыгрышей за последнее время")
 	
 
 class GAInfo(discord.ui.Modal):
 	def __init__(self, bot, image):
-		super().__init__(title="Детали розыграша")
+		super().__init__(title="Детали розыгрыша")
 		self.custom_id="ga:details"
 		self.bot = bot
 		self.image = image
@@ -210,7 +210,7 @@ class GAModerationCommands(commands.Cog):
 			}
 		])
 
-	@commands.hybrid_command(aliases=["wl", "вл", "бс"])
+	@commands.hybrid_command(aliases=["wl", "вл", "бс"], description="Оперирование вайтлистом розыгрыша")
 	@app_commands.describe(users="@Упоминания пользователей")
 	async def whitelist(self, ctx, operation: Literal["add", "remove"], users: str):
 		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:

@@ -40,7 +40,11 @@ class SyntaxCommand(commands.Cog):
 				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите команду"
 			},
 			{
-				"exception": errors.CommandInvokeError,
+				"exception": commands.CommandInvokeError,
+				"msg": f"{Emojis.exclamation_mark} Введена неверная команда"
+			},
+			{
+				"contains": "KeyError",
 				"msg": f"{Emojis.exclamation_mark} Введена неверная команда"
 			}
 		])

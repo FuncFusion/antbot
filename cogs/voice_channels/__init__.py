@@ -4,6 +4,7 @@ from discord import app_commands
 
 from settings import VCS_CATEGORY_ID, CREATE_VC_CHANNEL_ID
 from utils.general import handle_errors
+from utils.shortcuts import no_ping
 from utils.msg_utils import Emojis
 
 class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
@@ -15,18 +16,30 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 		description="Передать права на голосовой канал")
 	@app_commands.describe(user="Пользователь")
 	async def transfer_owner(self, ctx, user: discord.Member):	
-		if ctx.channel.category_id == VCS_CATEGORY_ID and ctx.channel.permissions_for(ctx.author).manage_channels:
+		if ctx.channel.category_id != VCS_CATEGORY_ID:
+			await ctx.reply(f"{Emojis.exclamation_mark} Используйте эту команду в чате голосового канала, в котором вы сидите", allowed_mentions=no_ping)
+		elif not ctx.channel.permissions_for(ctx.author).manage_channels:
+			await ctx.reply(f"{Emojis.exclamation_mark} Вы не являетесь создателем данного голосового канала", allowed_mentions=no_ping)
+		else:
 			await ctx.channel.set_permissions(ctx.author, manage_channels=None, mute_members=None, 
 				deafen_members=None, move_members=None)
 			await ctx.channel.set_permissions(user, manage_channels=True, 
 				deafen_members=True, move_members=True)
-			await ctx.send(f"{Emojis.check} Права переданы {user.mention}", ephemeral=True)
+			await ctx.reply(f"{Emojis.check} Права переданы {user.mention}", ephemeral=True, allowed_mentions=no_ping)
 	@transfer_owner.error
 	async def to_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingPermissions,
 				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+			},
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+			},
+			{
+				"exception": commands.MemberNotFound,
+				"msg": f"{Emojis.exclamation_mark} Участник не найден"
 			}
 		])
 

@@ -8,6 +8,7 @@ from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.validator import validate
 
+from utils.shortcuts import no_ping
 from utils.pack_generator import Modals
 
 
@@ -41,12 +42,12 @@ class TemplateCommand(commands.Cog):
 			await ctx.interaction.response.send_modal(pack_ctx[template]["modal"]())
 		elif type == "extended":
 			with open(f"assets/templates/Extended {template}.zip", "rb") as pack:
-				await ctx.send(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", 
-				file=discord.File(pack, filename=f"Extended_{template}_(UNZIP).zip"))
+				await ctx.reply(f"{pack_ctx[template]["emoji"]} Расширенный шаблон {pack_ctx[template]["accusative"]}", 
+				file=discord.File(pack, filename=f"Extended_{template}_(UNZIP).zip"), allowed_mentions=no_ping)
 		elif type == "basic":
 			with open(f"assets/templates/Basic {template}.zip", "rb") as pack:
-				await ctx.send(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", 
-				file=discord.File(pack, filename=f"Basic_{template}_(UNZIP).zip"))
+				await ctx.reply(f"{pack_ctx[template]["emoji"]} Базовый шаблон {pack_ctx[template]["accusative"]}", 
+				file=discord.File(pack, filename=f"Basic_{template}_(UNZIP).zip"), allowed_mentions=no_ping)
 
 	@template.error
 	async def template_error(self, ctx: commands.Context, error):
