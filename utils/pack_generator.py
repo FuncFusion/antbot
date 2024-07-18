@@ -20,56 +20,65 @@ class Templates:
 
 
 class PGenerator:
-	def validate_folders(folders, legacy):
-		legacy_dp_folders = {
-			"advancements": ["адванцмент", "ачивки", "достижения"],
-			"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
-			"chat_type": ["чат тайп", "тип чата"],
-			"damage_type": ["дэмедж тайп", "тип урона"],
-			"dimension": ["дименшон", "измерение"],
-			"dimension_type": ["дименшон тайп", "тип измерения"],
-			"loot_tables": ["лут тейблы", "таблицы лута", "таблицы добычи"],
-			"predicates": ["предикейтс", "предикаты"],
-			"item_modifiers": ["айтем модифиерс", "модификаторы предметов"],
-			"recipes": ["ресипис", "рецепты", "рецепты крафта"],
-			"structures": ["стракчерс", "структуры", "данжи"],
-			"tags": ["тэгс", "теги", "ярлыки"],
-			"trim_material": ["трим материал", "материал шаблона"],
-			"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
-			"wolf_variant": ["волф враинат", "вариант волка"],
-			"worldgen": ["ворлдген", "генерация", "генерация мира"]
-			}
-		dp_folders = {
-			"advancement": ["адванцмент", "ачивки", "достижения"],
-			"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
-			"chat_type": ["чат тайп", "тип чата"],
-			"damage_type": ["дэмедж тайп", "тип урона"],
-			"dimension": ["дименшон", "измерение"],
-			"dimension_type": ["дименшон тайп", "тип измерения"],
-			"loot_table": ["лут тейблы", "таблицы лута", "таблицы добычи"],
-			"predicate": ["предикейтс", "предикаты"],
-			"item_modifier": ["айтем модифиерс", "модификаторы предметов"],
-			"recipe": ["ресипис", "рецепты", "рецепты крафта"],
-			"structure": ["стракчерс", "структуры", "данжи"],
-			"tags": ["тэгс", "теги", "ярлыки"],
-			"trim_material": ["трим материал", "материал шаблона"],
-			"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
-			"wolf_variant": ["волф враинат", "вариант волка"],
-			"worldgen": ["ворлдген", "генерация", "генерация мира"]
-			}
-		rp_folders = {
-			"atlases": ["атласы"],
-			"blockstates": ["блокстейтс", "блок стейты", "состояния блоков"],
-			"font": ["фонт", "шрифт"],
-			"lang": ["лэнг", "язык"],
-			"models": ["моделс", "модели"],
-			"particles": ["партиклс", "партиклы", "частицы"],
-			"shaders": ["шейдерс", "шейдеры", "тёмная магия"],
-			"texts": ["текстс", "текста", "строки"],
-			"textures": ["тещурс", "текстуры"]
+	legacy_dp_folders = {
+		"advancements": ["адванцмент", "ачивки", "достижения"],
+		"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
+		"chat_type": ["чат тайп", "тип чата"],
+		"damage_type": ["дэмедж тайп", "тип урона"],
+		"dimension": ["дименшон", "измерение"],
+		"dimension_type": ["дименшон тайп", "тип измерения"],
+		"enchantment": ["энчантмент", "энчанты", "зачарования", "зачары"],
+		"enchantment_provider": ["энчантмент провайдер", "провайдер энчантов", "почставщик зачарования", "зачары"],
+		"jukebox_song": ["джукбокс сонг", "песня проигрователя", "диск", "пластинка"],
+		"loot_tables": ["лут тейблы", "таблицы лута", "таблицы добычи"],
+		"paintig_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
+		"predicates": ["предикейтс", "предикаты"],
+		"item_modifiers": ["айтем модифиерс", "модификаторы предметов"],
+		"recipes": ["ресипис", "рецепты", "рецепты крафта"],
+		"structures": ["стракчерс", "структуры", "данжи"],
+		"tags": ["тэгс", "теги", "ярлыки"],
+		"trim_material": ["трим материал", "материал шаблона"],
+		"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
+		"wolf_variant": ["волф враинат", "вариант волка"],
+		"worldgen": ["ворлдген", "генерация", "генерация мира"]
 		}
-		existing_fldrs = dp_folders if type == "dp" else rp_folders
-		existing_fldrs = legacy_dp_folders if legacy and type == "dp" else existing_fldrs
+	dp_folders = {
+		"advancement": ["адванцмент", "ачивки", "достижения"],
+		"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
+		"chat_type": ["чат тайп", "тип чата"],
+		"damage_type": ["дэмедж тайп", "тип урона"],
+		"dimension": ["дименшон", "измерение"],
+		"dimension_type": ["дименшон тайп", "тип измерения"],
+		"enchantment": ["энчантмент", "энчанты", "зачарования", "зачары"],
+		"enchantment_provider": ["энчантмент провайдер", "провайдер энчантов", "почставщик зачарования", "зачары"],
+		"jukebox_song": ["джукбокс сонг", "песня проигрователя", "диск", "пластинка"],
+		"loot_table": ["лут тейблы", "таблицы лута", "таблицы добычи"],
+		"paintig_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
+		"predicate": ["предикейтс", "предикаты"],
+		"item_modifier": ["айтем модифиерс", "модификаторы предметов"],
+		"recipe": ["ресипис", "рецепты", "рецепты крафта"],
+		"structure": ["стракчерс", "структуры", "данжи"],
+		"tags": ["тэгс", "теги", "ярлыки"],
+		"trim_material": ["трим материал", "материал шаблона"],
+		"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
+		"wolf_variant": ["волф враинат", "вариант волка"],
+		"worldgen": ["ворлдген", "генерация", "генерация мира"]
+		}
+	rp_folders = {
+		"atlases": ["атласы"],
+		"blockstates": ["блокстейтс", "блок стейты", "состояния блоков"],
+		"font": ["фонт", "шрифт"],
+		"lang": ["лэнг", "язык"],
+		"models": ["моделс", "модели"],
+		"particles": ["партиклс", "партиклы", "частицы"],
+		"shaders": ["шейдерс", "шейдеры", "тёмная магия"],
+		"texts": ["текстс", "текста", "строки"],
+		"textures": ["тещурс", "текстуры"]
+	}
+
+	def validate_folders(folders, legacy):
+		existing_fldrs = PGenerator.dp_folders if type == "dp" else PGenerator.rp_folders
+		existing_fldrs = PGenerator.legacy_dp_folders if legacy and type == "dp" else existing_fldrs
 		valid_folders = set()
 		for folder in folders:
 			valid_folder = validate(folder, existing_fldrs)
@@ -112,7 +121,8 @@ class PGenerator:
 		folders_exclude = PGenerator.validate_folders(folders_exclude, "dp", legacy)
 		namespaces = PGenerator.validate_namespaces(namespaces)
 		main_namespace = "namespace" if namespaces == [] else namespaces[0]
-		all_folders = ["advancement", "chat_type", "damage_type", "dimension", "dimension_type", "functions", "loot_tables", "predicates", "recipes", "structures", "tags", "worldgen"]
+		legacy_all_folders = list(PGenerator.legacy_dp_folders)
+		all_folders = list(PGenerator.dp_folders)
 		# Generating dp
 		dp_f = io.BytesIO()
 		with ZipFile(dp_f, "w") as dp:
@@ -126,8 +136,8 @@ class PGenerator:
 				dp.mkdir(f"{name}/data/{namespace}")
 			if folders_exclude == []:
 				if folders_include == []:
-					for folder in all_folders:
-						dp.mkdir(f"{name}/data/{main_namespace}/{folder}")
+					for folder in (all_folders if not legacy else legacy_all_folders):
+						dp.mkdir(f"{name}/data/{main_namespace}/{folder[:]}")
 				else:
 					for folder in folders_include:
 						dp.mkdir(f"{name}/data/{main_namespace}/{folder}")
