@@ -3,22 +3,104 @@ from discord.ext import commands
 from discord import app_commands
 
 from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
-from settings import IDEAS_CHANNEL_ID
-from settings import MONGO_URI
+from settings import IDEAS_CHANNEL_ID, MONGO_URI
+from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 
 
-db = MongoClient(MONGO_URI, server_api=ServerApi('1')).antbot.ideas
+db = MongoClient(MONGO_URI).antbot.ideas
+
+wrong_channel_errors = [
+	{
+		"contains": "AttributeError",
+		"msg": "Не тот канал"
+	},
+	{
+		"contains": "Wrong channel",
+		"msg": "Не тот канал"
+	}
+]
+
+
+class IdeaCommands(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+
+	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"],
+		description="Предложить идею")
+	@app_commands.describe(suggestion="Идея")
+	async def idea(self, ctx, *, suggestion: str):
+		ideas_count = str(db.count_documents({}))
+		embed = discord.Embed(color=no_color)
+		embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
+		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+		idea_msg = await ctx.guild.get_channel(IDEAS_CHANNEL_ID).send(embed=embed, view=IdeaView())
+		await idea_msg.create_thread(name="Обсуждение")
+		Ideas.create(ideas_count, suggestion, idea_msg.id)
+		await ctx.reply(f"{Emojis.check} Идея опубликована", allowed_mentions=no_ping)
+	@idea.error
+	async def idea_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": "Пожалуйста, укажите вашу идею"
+			}
+		])
+	
+	@app_commands.default_permissions(administrator=True)
+	@app_commands.command(name="view-voters", description="Показывает список голосующий")
+	async def view_voters(self, ctx):
+		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
+			raise Exception("Wrong channel")
+		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
+		ideas_message = await ideas_channel.fetch_message(ctx.channel.id)
+		idea_num = ideas_message.embeds[0].fields[0].name.split(" ")[-1]
+		idea = Ideas.get(idea_num)
+		upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
+		downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
+		embed = discord.Embed(title=f"{Emojis.users} Голоса", color=no_color)
+		embed.add_field(name="За", value=upvoters)
+		embed.add_field(name="Против", value=downvoters)
+		await ctx.response.send_message(embed=embed, ephemeral=True)
+	@view_voters.error
+	async def vv_error(self, ctx, error):
+		await handle_errors(ctx, error, wrong_channel_errors)
+	
+	@app_commands.default_permissions(administrator=True)
+	@app_commands.command(name="approve-idea", description="Одобряет идею")
+	async def apprpve_idea(self, ctx):
+		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
+			raise Exception("Wrong channel")
+		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
+		ideas_message = await ideas_channel.fetch_message(ctx.channel.id)
+		await ctx.response.send_modal(IdeaVerdict(ideas_message, "approve"))
+	@apprpve_idea.error
+	async def approve_error(self, ctx, error):
+		await handle_errors(ctx, error, wrong_channel_errors)
+	
+	@app_commands.default_permissions(administrator=True)
+	@app_commands.command(name="disapprove-idea", description="Отклоняет идею")
+	async def disapprpve_idea(self, ctx):
+		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
+			raise Exception("Wrong channel")
+		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
+		ideas_message = await ideas_channel.fetch_message(ctx.channel.id)
+		await ctx.response.send_modal(IdeaVerdict(ideas_message, "cancel"))
+	@disapprpve_idea.error
+	async def disapprove_error(self, ctx, error):
+		await handle_errors(ctx, error, wrong_channel_errors)
 
 
 class IdeaView(discord.ui.View):
-	def __init__(self, votes=["0", "0"]):
+	def __init__(self, votes=["0", "0"], disable=False):
 		super().__init__(timeout=None)
 		self.upvote.label = votes[0]
 		self.downvote.label = votes[1]
+		if disable:
+			self.upvote.disabled = True
+			self.downvote.disabled = True
 
 	@discord.ui.button(label="0", emoji=Emojis.check, style=discord.ButtonStyle.grey, custom_id="ideas:upvote")
 	async def upvote(self, ctx: discord.Interaction, button: discord.ui.Button):
@@ -61,76 +143,16 @@ class IdeaVerdict(discord.ui.Modal):
 			"approve": "🟢",
 			"cancel": "🔴"
 		}
+		idea_doc = Ideas.get(self.idea_num)
 		embed = self.msg.embeds[0]
 		embed.set_footer(text=f"{action_to_emoji[self.action]} Идея {action_to_word[self.action]}")
 		if self.verdict != "":
 			embed.add_field(name=f"{Emojis.txt} Вердикт", value=self.verdict.value)
-		await self.msg.edit(embed=embed, view=None)
+		await self.msg.edit(embed=embed, view=IdeaView(votes=[len(idea_doc["upvoters"]), len(idea_doc["downvoters"])], disable=True))
+		await interaction.response.send_message(f"{Emojis.check} Идея {self.idea_num} {action_to_word[self.action]}", ephemeral=True)
 		await self.msg.thread.edit(archived=True)
-		await interaction.response.send_message(f"Идея {self.idea_num} {action_to_word[self.action]}", ephemeral=True)
 
 
-class IdeaCommands(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
-		bot.tree.add_command(app_commands.ContextMenu(
-			name="👥 Просмотреть голоса",
-			callback=self.view_voters
-		))
-		bot.tree.add_command(app_commands.ContextMenu(
-			name="🟢 Одобрить идею",
-			callback=self.apprpve_idea
-		))
-		bot.tree.add_command(app_commands.ContextMenu(
-			name="🔴 Отклонить идею",
-			callback=self.cancel_idea
-		))
-
-	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"],
-		description="Предложить идею")
-	@app_commands.describe(suggestion="Идея")
-	async def idea(self, ctx, *, suggestion: str):
-		ideas_count = str(db.count_documents({}))
-		embed = discord.Embed(color=no_color)
-		embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
-		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-		idea_msg = await ctx.guild.get_channel(IDEAS_CHANNEL_ID).send(embed=embed, view=IdeaView())
-		await idea_msg.create_thread(name="Обсуждение", reason="Auto-thread for idea")
-		Ideas.create(ideas_count, suggestion, idea_msg.id)
-	@idea.error
-	async def idea_error(self, ctx, error):
-		if isinstance(error, commands.MissingRequiredArgument):
-			await ctx.reply(f"{Emojis.exclamation_mark} Пожалуйста, укажите вашу идею", allowed_mentions=no_ping)
-		else:
-			await ctx.reply(f"{Emojis.question_mark} Шо та произошло но я не понял что. Подробности: `{error}`", allowed_mentions=no_ping)
-	
-	@app_commands.default_permissions(administrator=True)
-	async def view_voters(self, ctx: discord.Interaction, message:discord.Message):
-		if ctx.channel.id != IDEAS_CHANNEL_ID:
-			await ctx.response.send_message(f"Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
-		else:
-			idea_num = message.embeds[0].fields[0].name.split(" ")[-1]
-			idea = Ideas.get(idea_num)
-			upvoters = "\n".join([f"<@{id}>" for id in idea["upvoters"]])
-			downvoters = "\n".join([f"<@{id}>\n" for id in idea["downvoters"]])
-			embed = discord.Embed(title=f"{Emojis.users} Голоса", color=no_color)
-			embed.add_field(name="За", value=upvoters)
-			embed.add_field(name="Против", value=downvoters)
-			await ctx.response.send_message(embed=embed, ephemeral=True)
-	
-	@app_commands.default_permissions(administrator=True)
-	async def apprpve_idea(self, ctx: discord.Interaction, message:discord.Message):
-		if ctx.channel.id != IDEAS_CHANNEL_ID:
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
-		else:
-			await ctx.response.send_modal(IdeaVerdict(message, "approve"))
-	
-	@app_commands.default_permissions(administrator=True)
-	async def cancel_idea(self, ctx: discord.Interaction, message:discord.Message):
-		if ctx.channel.id != IDEAS_CHANNEL_ID:
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Работает только в <#{IDEAS_CHANNEL_ID}>", ephemeral=True)
-		else:
-			await ctx.response.send_modal(IdeaVerdict(message, "cancel"))
 
 class Ideas:
 	def get(index):
