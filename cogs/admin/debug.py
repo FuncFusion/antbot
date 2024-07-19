@@ -1,9 +1,12 @@
 from discord.ext import commands
 from discord import app_commands
 
+from importlib import reload
+
 from utils.general import handle_errors
 from utils.shortcuts import no_ping
 from utils.msg_utils import Emojis
+import temp
 
 
 class DebugCommand(commands.Cog):
@@ -12,11 +15,10 @@ class DebugCommand(commands.Cog):
 
 	async def debug(self, ctx, *, text: str):
 		if ctx.author.id == 536441049644793858 or ctx.author.id == 567014541507035148:
-			try:
-				evaled = str(eval(text))
-			except Exception as e:
-				evaled = str(e)
-			await ctx.channel.send(evaled)
+			with open("temp.py", "w") as code:
+				code.write(f"import discord\nfrom discord.ext import commands\nasync def debug_func(ctx):\n {text.replace("\n", "\n ")}")
+			reload(temp)
+			await temp.debug_func(ctx)
 		else:
 			await ctx.reply("Ты не мой разраб 😈", allowed_mentions=no_ping)
 
