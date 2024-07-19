@@ -30,11 +30,11 @@ class LookForCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "game",
-				"msg": f"{Emojis.exclamation_mark} Укажите игру, для которой ищите тиммейта"
+				"msg": "Укажите игру, для которой ищите тиммейта"
 			},
 			{
 				"contains": "details",
-				"msg": f"{Emojis.exclamation_mark} Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
+				"msg": "Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
 			}
 		])
 

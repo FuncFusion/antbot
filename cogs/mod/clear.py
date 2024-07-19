@@ -25,10 +25,10 @@ class ClearCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите количество сообщений которое будет удалено"
+				"msg": "Пожалуйста, укажите количество сообщений которое будет удалено"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])

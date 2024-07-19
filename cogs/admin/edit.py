@@ -30,22 +30,22 @@ class EditCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+				"msg": "Не хватает аргументов"
 			},
 			{
 				"contains": "403 Forbidden",
-				"msg": f"{Emojis.exclamation_mark} Не могу изменять чужие сообщения"
+				"msg": "Не могу изменять чужие сообщения"
 			},
 			{
 				"contains": "'NotFound'",
-				"msg": f"{Emojis.exclamation_mark} Не нашёл сообщения с таким айди"
+				"msg": "Не нашёл сообщения с таким айди"
 			},
 			{
 				"contains": "'ValueError'",
-				"msg": f"{Emojis.exclamation_mark} Введён неверный айди"
+				"msg": "Введён неверный айди"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])

@@ -23,10 +23,10 @@ class SayCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Введите текст который хотите сказать от моего имени"
+				"msg": "Введите текст который хотите сказать от моего имени"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])

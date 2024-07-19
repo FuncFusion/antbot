@@ -185,11 +185,11 @@ class GAModerationCommands(commands.Cog):
 	@commands.hybrid_command(aliases=["bl", "бл", "чс"], description="Оперирование блэклистом розыгрыша")
 	@app_commands.describe(users="@Упоминания пользователей")
 	async def blacklist(self, ctx, operation: Literal["add", "remove"], users: str):
-		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
-			pass
-		else:
+		if not (isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID):
 			raise Exception("AttributeError")
-		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)", users))
+		user_ids = list(map(int, findall(r"(?<=<@)\d+(?=>)", users)))
+		if len(user_ids) == 0:
+			raise commands.UserNotFound("No users found")
 		ga_filter = {"message_id": ctx.channel.id}
 		ga = db.find_one(ga_filter)
 		if operation == "add":
@@ -208,27 +208,35 @@ class GAModerationCommands(commands.Cog):
 	async def bl_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
+				"exception": commands.BadLiteralArgument,
+				"msg": "Неверная сабкоманда"
+			},
+			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+				"msg": "Не хватает аргументов"
+			},
+			{
+				"exception": commands.UserNotFound,
+				"msg": "Не найдено ни одного пользователя из списка"
 			},
 			{
 				"contains": "AttributeError",
-				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша {error}"
+				"msg": "Это не ветка розыгрыша"
 			},
 			{
 				"contains": "NoneType",
-				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша {error}"
+				"msg": "Это не ветка розыгрыша"
 			}
 		])
 
 	@commands.hybrid_command(aliases=["wl", "вл", "бс"], description="Оперирование вайтлистом розыгрыша")
 	@app_commands.describe(users="@Упоминания пользователей")
 	async def whitelist(self, ctx, operation: Literal["add", "remove"], users: str):
-		if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID:
-			pass
-		else:
+		if not (isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID):
 			raise Exception("AttributeError")
-		user_ids = map(int, findall(r"(?<=<@)\d+(?=>)", users))
+		user_ids = list(map(int, findall(r"(?<=<@)\d+(?=>)", users)))
+		if len(user_ids) == 0:
+			raise commands.UserNotFound("No users found")
 		ga_filter = {"message_id": ctx.channel.id}
 		ga = db.find_one(ga_filter)
 		if operation == "add":
@@ -247,15 +255,23 @@ class GAModerationCommands(commands.Cog):
 	async def wl_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
+				"exception": commands.BadLiteralArgument,
+				"msg": f"Неверная сабкоманда"
+			},
+			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+				"msg": f"Не хватает аргументов"
+			},
+			{
+				"exception": commands.UserNotFound,
+				"msg": "Не найдено ни одного пользователя из списка"
 			},
 			{
 				"contains": "AttributeError",
-				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+				"msg": f"Это не ветка розыгрыша"
 			},
 			{
 				"contains": "NoneType",
-				"msg": f"{Emojis.exclamation_mark} Это не ветка розыгрыша"
+				"msg": f"Это не ветка розыгрыша"
 			}
 		])

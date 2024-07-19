@@ -59,11 +59,11 @@ class PackformatCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+				"msg": "Не хватает аргументов"
 			},
 			{
 				"contains": "AttributeError",
-				"msg": f"{Emojis.exclamation_mark} Неверно указан тип пакформата"
+				"msg": "Неверно указан тип пакформата"
 			}
 		])
 

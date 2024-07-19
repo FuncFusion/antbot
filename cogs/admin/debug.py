@@ -7,7 +7,7 @@ from utils.msg_utils import Emojis
 
 class DebugCommand(commands.Cog):
 	@commands.has_permissions(ban_members=True)
-	@commands.command(aliases=["d"],)
+	@commands.command(aliases=["d"])
 
 	async def debug(self, ctx, *, text: str):
 		try:
@@ -15,18 +15,16 @@ class DebugCommand(commands.Cog):
 		except Exception as e:
 			evaled = str(e)
 		await ctx.channel.send(evaled)
-		if ctx.interaction:
-			await ctx.send("_ _", ephemeral=True, delete_after=0)
 
 	@debug.error
 	async def say_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Введите текст который хотите сказать от моего имени"
+				"msg": f"Введите текст который хотите сказать от моего имени"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": f"Недостаточно прав"
 			}
 		])

@@ -77,23 +77,23 @@ class ResolveCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "has no attribute 'parent_id'",
-				"msg": f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи"
+				"msg": "Эта команда работает только в ветках помощи"
 			},
 			{
 				"contains": "not help forum",
-				"msg": f"{Emojis.exclamation_mark} Эта команда работает только в ветках помощи"
+				"msg": "Эта команда работает только в ветках помощи"
 			},
 			{
 				"contains": "not author/op",
-				"msg": f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором"
+				"msg": "Вы не являетесь автором этой ветки либо модератором"
 			},
 			{
 				"contains": "Wrong message",
-				"msg": f"{Emojis.exclamation_mark} Неверная ссылка/айди сообщения"
+				"msg": "Неверная ссылка/айди сообщения"
 			},
 			{
 				"contains": "Missing arg",
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, @упомяните людей, которые помогли вам с проблемой"
+				"msg": f"Пожалуйста, @упомяните людей, которые помогли вам с проблемой"
 			}
 		])
 		
