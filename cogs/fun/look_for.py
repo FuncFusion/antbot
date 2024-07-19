@@ -60,11 +60,11 @@ class LookForView(discord.ui.View):
 		embed.set_field_at(2, name=embed.fields[2].name, value="\n".join(declined_users))
 		await ctx.response.edit_message(embed=embed, attachments=[])
 	
-	@discord.ui.button(label="Присоединится", emoji=Emojis.check, custom_id="look-for:join")
+	@discord.ui.button(label="Присоединиться", emoji=Emojis.check, custom_id="look-for:join")
 	async def join(self, ctx, button):
 		await LookForView.response(ctx, "join")
 	
-	@discord.ui.button(label="Отказатся", emoji=Emojis.cross, custom_id="look-for:decline")
+	@discord.ui.button(label="Отказаться", emoji=Emojis.cross, custom_id="look-for:decline")
 	async def decline(self, ctx: discord.Interaction, button: discord.ui.Button):
 		await LookForView.response(ctx, "decline")
 	
@@ -73,7 +73,7 @@ class LookForView(discord.ui.View):
 		joined_users = ctx.message.embeds[0].fields[1].value.replace("\n", " ")
 		if str(ctx.user.id) == ctx.message.embeds[0].author.icon_url.split("/")[4]: # post author's id
 			if "<@" in joined_users:
-				await ctx.message.thread.send(f"{joined_users} вас зовёт {ctx.user.mention}")
+				await ctx.message.thread.send(f"{joined_users}, вас зовёт {ctx.user.mention}!")
 				await ctx.response.send_message("Участники пингануты", ephemeral=True)
 			else:
 				await ctx.response.send_message(f"{Emojis.exclamation_mark} Пока нет кого пинговать", ephemeral=True)

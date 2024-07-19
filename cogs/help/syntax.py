@@ -29,7 +29,7 @@ class SyntaxCommand(commands.Cog):
 
 	async def syntax(self, ctx, command: str):
 		embed = discord.Embed(color=no_color, 
-			description=f"# {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command}>)\n" + syntaxes[command])
+			description=f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command}>)\n" + syntaxes[command])
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@syntax.error
