@@ -2,6 +2,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from utils.general import handle_errors
+from utils.shortcuts import no_ping
 from utils.msg_utils import Emojis
 
 
@@ -10,18 +11,21 @@ class DebugCommand(commands.Cog):
 	@commands.command(aliases=["d"])
 
 	async def debug(self, ctx, *, text: str):
-		try:
-			evaled = str(eval(text))
-		except Exception as e:
-			evaled = str(e)
-		await ctx.channel.send(evaled)
+		if ctx.author.id == 536441049644793858 or ctx.author.id == 567014541507035148:
+			try:
+				evaled = str(eval(text))
+			except Exception as e:
+				evaled = str(e)
+			await ctx.channel.send(evaled)
+		else:
+			await ctx.reply("Ты не мой разраб 😈", allowed_mentions=no_ping)
 
 	@debug.error
 	async def say_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"Введите текст который хотите сказать от моего имени"
+				"msg": f"Введите текст, который хотите сказать от моего имени"
 			},
 			{
 				"exception": commands.MissingPermissions,

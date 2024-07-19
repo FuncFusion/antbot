@@ -39,6 +39,9 @@ class GiveawayCommand(commands.Cog):
 		else:
 			await ctx.response.send_message(f"{Emojis.cross} Слишком много отклонённых розыгрышей за последнее время")
 	
+	@commands.command(name="giveaway", aliases=["ga", "розыгрыш"])
+	async def giveaway(self, ctx):
+		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду `/giveaway`", allowed_mentions=no_ping)
 
 class GAInfo(discord.ui.Modal):
 	def __init__(self, bot, image):
