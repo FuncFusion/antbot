@@ -13,7 +13,7 @@ from typing import Literal
 from settings import MONGO_URI, GIVEAWAYS_CHANNEL_ID, GIVEAWAYS_REQUESTS_CHANNEL_ID
 
 from utils.general import handle_errors
-from utils.msg_utils import Emojis
+from utils.msg_utils import Emojis, user_from_embed
 from utils.shortcuts import no_color, no_ping
 from utils.time import get_secs
 from utils.users_db import DB as UDBUtils
@@ -22,9 +22,6 @@ users_db = MongoClient(MONGO_URI).antbot.users
 db = MongoClient(MONGO_URI).antbot.giveaways
 
 FOUR_WEEKS = 4 * 7 * 24 * 60 * 60
-
-def from_embed(message):
-	return int(message.embeds[0].author.icon_url.split("/")[4])
 
 
 class GiveawayCommand(commands.Cog):
@@ -123,7 +120,7 @@ class JudgeGA(discord.ui.View):
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
-		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
+		ga_author = await self.bot.fetch_user(user_from_embed(ctx.message))
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0], view=TakePart())
 		await posted_ga.create_thread(name=f"Розыгрыш {ga_author.name}")
@@ -134,12 +131,12 @@ class JudgeGA(discord.ui.View):
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
-		user_id = from_embed(ctx.message)
+		user_id = user_from_embed(ctx.message)
 		users_db.update_one({"_id": user_id}, {"$inc": {"disapproved_ga": 1}})
 		users_db.update_one({"_id": user_id}, {"$set": {"last_disapproved_ga": int(time())}})
 		db.delete_one({"_id": ctx.message.id})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, "disapproved"))
-		ga_author = await self.bot.fetch_user(from_embed(ctx.message))
+		ga_author = await self.bot.fetch_user(user_from_embed(ctx.message))
 		await ga_author.send(f"{Emojis.cross} Ваш розыгрыш отклонён")
 
 class TakePart(discord.ui.View):

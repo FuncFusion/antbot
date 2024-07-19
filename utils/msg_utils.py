@@ -52,6 +52,8 @@ def split_msg(s):
 		parts.remove('')
 	return parts
 
+def user_from_embed(message):
+	return int(message.embeds[0].author.icon_url.split("/")[4])
 
 class Emojis:
 	mcf = "<:mcfunction:1142345406106312754>"

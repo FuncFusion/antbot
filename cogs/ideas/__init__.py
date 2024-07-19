@@ -6,7 +6,7 @@ from pymongo.mongo_client import MongoClient
 
 from settings import IDEAS_CHANNEL_ID, MONGO_URI
 from utils.general import handle_errors
-from utils.msg_utils import Emojis
+from utils.msg_utils import Emojis, user_from_embed
 from utils.shortcuts import no_ping, no_color
 
 
@@ -71,11 +71,15 @@ class IdeaCommands(commands.Cog):
 	@app_commands.default_permissions(administrator=True)
 	@app_commands.command(name="approve-idea", description="Одобряет идею")
 	async def apprpve_idea(self, ctx):
+		print(ctx.channel.parent.id, ctx.channel.parent.id != IDEAS_CHANNEL_ID)
 		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
 			raise Exception("Wrong channel")
 		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
-		ideas_message = await ideas_channel.fetch_message(ctx.channel.id)
-		await ctx.response.send_modal(IdeaVerdict(ideas_message, "approve"))
+		idea_message = await ideas_channel.fetch_message(ctx.channel.id)
+		idea_author_id = user_from_embed(idea_message)
+		idea_author = await self.bot.fetch_user(idea_author_id)
+		await idea_author.send(f"{Emojis.check} Ваша идея одобрена {idea_message.jump_url}")
+		await ctx.response.send_modal(IdeaVerdict(idea_message, "approve"))
 	@apprpve_idea.error
 	async def approve_error(self, ctx, error):
 		await handle_errors(ctx, error, wrong_channel_errors)
@@ -83,11 +87,15 @@ class IdeaCommands(commands.Cog):
 	@app_commands.default_permissions(administrator=True)
 	@app_commands.command(name="disapprove-idea", description="Отклоняет идею")
 	async def disapprpve_idea(self, ctx):
+		print(ctx.channel.parent.id, ctx.channel.parent.id != IDEAS_CHANNEL_ID)
 		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
 			raise Exception("Wrong channel")
 		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
-		ideas_message = await ideas_channel.fetch_message(ctx.channel.id)
-		await ctx.response.send_modal(IdeaVerdict(ideas_message, "cancel"))
+		idea_message = await ideas_channel.fetch_message(ctx.channel.id)
+		idea_author_id = user_from_embed(idea_message)
+		idea_author = await self.bot.fetch_user(idea_author_id)
+		await idea_author.send(f"{Emojis.cross} Ваша идея отклонена {idea_message.jump_url}")
+		await ctx.response.send_modal(IdeaVerdict(idea_message, "cancel"))
 	@disapprpve_idea.error
 	async def disapprove_error(self, ctx, error):
 		await handle_errors(ctx, error, wrong_channel_errors)
