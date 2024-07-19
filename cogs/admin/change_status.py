@@ -27,11 +27,11 @@ class StatusCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "HTTPException",
-				"msg": f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
+				"msg": f" {Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])
 
@@ -56,14 +56,14 @@ class StatusCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "HTTPException",
-				"msg": f"{Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
+				"msg": f" {Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": f"Недостаточно прав"
 			},
 			{
 				"contains": "Could not convert",
-				"msg": f"{Emojis.exclamation_mark} Неверно введено название статуса"
+				"msg": f"Неверно введено название статуса"
 			}
 		])

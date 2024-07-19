@@ -59,15 +59,15 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg":f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
+				"msg": "Пожалуйста, укажите пользователя"
 			},
 			{
 				"contains": "Forbidden",
-				"msg":"Кудааа, не туда воюешь"
+				"msg": "Кудааа, не туда воюешь"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])
 		
@@ -88,23 +88,23 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "user",
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
+				"msg": "Пожалуйста, укажите пользователя"
 			},
 			{
 				"contains": "term",
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
+				"msg": "Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
 			},
 			{
 				"exception": commands.MemberNotFound,
-				"msg": f"{Emojis.exclamation_mark} Пользователь не найден"
+				"msg": "Пользователь не найден"
 			},
 			{
 				"contains": "IndexError",
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
+				"msg": "Пожалуйста, укажите срок мута в формате <время><мера измерения времени сокращённо>"
 			},
 			{
 				"contains": "KeyError",
-				"msg": f"{Emojis.exclamation_mark} Неверная мера измерения времени"
+				"msg": "Неверная мера измерения времени"
 			},
 			{
 				"contains": "Forbidden",
@@ -112,7 +112,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])
 		
@@ -132,11 +132,11 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите пользователя"
+				"msg": "Пожалуйста, укажите пользователя"
 			},
 			{
 				"exception": commands.MemberNotFound,
-				"msg": f"{Emojis.exclamation_mark} Пользователь не найден"
+				"msg": "Пользователь не найден"
 			},
 			{
 				"contains": "Forbidden",
@@ -144,7 +144,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])
 		

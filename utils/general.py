@@ -1,6 +1,7 @@
 import discord
 
 from settings import BOT_COMMANDS_CHANNEL_ID
+from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping
 
 async def handle_errors(ctx, error, errors):
@@ -14,10 +15,11 @@ async def handle_errors(ctx, error, errors):
 			curr_score += 1
 		#
 		if curr_score == case_cost:
+			emoji = Emojis.exclamation_mark if not case['msg'].startswith("<") else ''
 			if isinstance(ctx, discord.Interaction):
-				await ctx.response.send_message(case["msg"], allowed_mentions=no_ping, ephemeral=True)
+				await ctx.response.send_message(f"{emoji}{case['msg']}", allowed_mentions=no_ping, ephemeral=True)
 			else:
-				await ctx.reply(case["msg"], allowed_mentions=no_ping, delete_after=(None if ctx.channel.id == \
+				await ctx.reply(f"{emoji}{case['msg']}", allowed_mentions=no_ping, delete_after=(None if ctx.channel.id == \
 				BOT_COMMANDS_CHANNEL_ID else 5))
 			break
 	else:
@@ -27,6 +29,6 @@ async def handle_errors(ctx, error, errors):
 				allowed_mentions=no_ping, ephemeral=True)
 		else:
 			await ctx.reply(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
-				<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`".replace("\t", ""),
+				<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{type(error)}: {error}`".replace("\t", ""),
 				allowed_mentions=no_ping)
 		print(error_msg)

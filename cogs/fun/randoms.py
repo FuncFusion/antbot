@@ -32,7 +32,7 @@ class RandomCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "ValueError",
-				"msg": f"{Emojis.exclamation_mark} Допускаются только целочисленные занчения"
+				"msg": "Допускаются только целочисленные занчения"
 			}
 		])
 

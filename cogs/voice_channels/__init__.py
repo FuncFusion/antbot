@@ -31,19 +31,19 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "AttributeError",
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			},
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+				"msg": "Не хватает аргументов"
 			},
 			{
 				"exception": commands.MemberNotFound,
-				"msg": f"{Emojis.exclamation_mark} Участник не найден"
+				"msg": "Участник не найден"
 			}
 		])
 

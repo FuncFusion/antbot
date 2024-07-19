@@ -48,7 +48,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "KeyError",
-				"msg": f"{Emojis.exclamation_mark} Факьюшка по вашему запросу не найдена"
+				"msg": "Факьюшка по вашему запросу не найдена"
 			}
 		])
 

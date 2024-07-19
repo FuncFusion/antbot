@@ -15,13 +15,17 @@ class EditCommand(commands.Cog):
 		description="Изменяет заданное сообщение.")
 	@app_commands.describe(message="Сообщение, которое будет изменяться.", text="Текст, на который изменится сообщение.")
 
-	async def edit(self, ctx, message:str, *, text:str):
+	async def edit(self, ctx, message:str, *, text:str=""):
+		mentions = discord.AllowedMentions.none()
 		if ctx.message.reference == None:
 			msg = await get_msg_by_id_arg(self, ctx, self.bot, message)
-			await discord.Message.edit(self=msg,content=text)
+			if msg.mentions != []: mentions = discord.AllowedMentions.all()
+			await discord.Message.edit(self=msg, content=text[:2000], allowed_mentions=mentions)
 		else:
 			msg = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-			await discord.Message.edit(self=msg, content=message+" "+text)
+			if msg.mentions != []: mentions = discord.AllowedMentions.all()
+			content = message+" "+text
+			await discord.Message.edit(self=msg, content=content[:2000], allowed_mentions=mentions)
 		if ctx.interaction:
 			await ctx.send(f"{Emojis.check} Сообщение отредактировано", ephemeral=True)
 
@@ -30,22 +34,22 @@ class EditCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Не хватает аргументов"
+				"msg": "Не хватает аргументов"
 			},
 			{
 				"contains": "403 Forbidden",
-				"msg": f"{Emojis.exclamation_mark} Не могу изменять чужие сообщения"
+				"msg": "Не могу изменять чужие сообщения"
 			},
 			{
 				"contains": "'NotFound'",
-				"msg": f"{Emojis.exclamation_mark} Не нашёл сообщения с таким айди"
+				"msg": "Не нашёл сообщения с таким айди"
 			},
 			{
 				"contains": "'ValueError'",
-				"msg": f"{Emojis.exclamation_mark} Введён неверный айди"
+				"msg": "Введён неверный айди"
 			},
 			{
 				"exception": commands.MissingPermissions,
-				"msg": f"{Emojis.exclamation_mark} Недостаточно прав"
+				"msg": "Недостаточно прав"
 			}
 		])

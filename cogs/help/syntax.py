@@ -37,15 +37,15 @@ class SyntaxCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Пожалуйста, укажите команду"
+				"msg": "Пожалуйста, укажите команду"
 			},
 			{
 				"exception": commands.CommandInvokeError,
-				"msg": f"{Emojis.exclamation_mark} Введена неверная команда"
+				"msg": "Введена неверная команда"
 			},
 			{
 				"contains": "KeyError",
-				"msg": f"{Emojis.exclamation_mark} Введена неверная команда"
+				"msg": "Введена неверная команда"
 			}
 		])
 

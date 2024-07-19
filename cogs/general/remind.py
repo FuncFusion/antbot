@@ -65,16 +65,16 @@ class RemindCommand(commands.Cog):
 			{
 				"exception": commands.MissingRequiredArgument,
 				"contains": "time",
-				"msg": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
+				"msg": "Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
 			},
 			{
 				"exception": commands.MissingRequiredArgument,
 				"contains": "reason",
-				"msg": f"{Emojis.exclamation_mark} Укажите напоминание"
+				"msg": "Укажите напоминание"
 			},
 			{
 				"contains": "IndexError",
-				"msg": f"{Emojis.exclamation_mark} Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
+				"msg": "Укажите через какое время хотите установить напоминание в формате <время><мера измерения времени сокращённо>"
 			}
 		])
 	

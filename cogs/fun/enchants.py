@@ -110,15 +110,18 @@ class EnchantCommands(commands.Cog):
 		enchanted = text
 		for char in normal2sga_table:
 			enchanted = enchanted.replace(char, normal2sga_table[char]+"\u200b")
-		await ctx.reply(enchanted, allowed_mentions=no_ping)
+		messages = [enchanted[i:i + 2000] for i in range(0, len(enchanted), 2000)]
+		await ctx.reply(messages[0], allowed_mentions=no_ping)
+		for message in messages[1:]:
+			await ctx.channel.send(message)
 
 	@enchant.error
 	async def enchant_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Введите текст, который хотите зачаровать"
-			}
+				"msg": "Введите текст, который хотите зачаровать"
+			},
 		])
 		
 
@@ -130,13 +133,16 @@ class EnchantCommands(commands.Cog):
 		unenchanted = text
 		for char in sga2normal_table:
 			unenchanted = unenchanted.replace(char, sga2normal_table[char])
-		await ctx.reply(unenchanted, allowed_mentions=no_ping)
+		messages = [unenchanted[i:i + 2000] for i in range(0, len(unenchanted), 2000)]
+		await ctx.reply(messages[0], allowed_mentions=no_ping)
+		for message in messages[1:]:
+			await ctx.channel.send(message)
 
 	@unenchant.error
 	async def unenchant_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": f"{Emojis.exclamation_mark} Введите текст, c которого хотите снять чары"
+				"msg": "Введите текст, c которого хотите снять чары"
 			}
 		])
