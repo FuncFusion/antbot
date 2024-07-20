@@ -6,6 +6,7 @@ antbot.ico
 
 # 🤨
 fonts/
+syntax_hl/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
