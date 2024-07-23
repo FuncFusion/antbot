@@ -7,7 +7,7 @@ from utils.msg_utils import Emojis
 
 class SayCommand(commands.Cog):
 	@commands.has_permissions(ban_members=True)
-	@commands.hybrid_command(aliases=["s", "сказать", "молвить", "сей", "сэй", "ыфн", "ы"],
+	@commands.hybrid_command(aliases=["tell", "сказать", "молвить", "сей", "сэй", "ыфн"],
 		description="Отправляет сообщение от имени бота")
 	@app_commands.describe(text="Текст сообщения, которое отправит бот")
 

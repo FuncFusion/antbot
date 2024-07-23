@@ -23,7 +23,7 @@ read_syntaxes()
 
 class SyntaxCommand(commands.Cog):
 
-	@commands.hybrid_command(aliases=["stx", "ынтефч", "ыея", "синтакс", "синтаксис", "сткс"],
+	@commands.hybrid_command(aliases=["stx", "s", "ы", "ынтефч", "ыеч", "синтакс", "синтаксис", "сткс"],
 		description="Показывает синтаксис введённой майнкрафт команды")
 	@app_commands.describe(command="Команда из майнкрафта")
 
