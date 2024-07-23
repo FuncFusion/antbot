@@ -8,7 +8,7 @@ import io
 from settings import LEAVES_CHANNEL_ID, JOINS_CHANNEL_ID
 
 
-async def generate_banner(user):
+async def generate_banner(user, draw_number=False):
 	def fit_size(base, limit, font_path, text):
 		font_size = base
 		font = ImageFont.truetype(font_path, base)
@@ -29,7 +29,10 @@ async def generate_banner(user):
 	m5_font = fit_size(40, 512, "assets/fonts/m5.otf", user.name)
 	banner_draw.text((921, 240), user.display_name, font=m10_font, fill="white", anchor="mm")
 	banner_draw.text((921, 340), user.name, font=m5_font, fill="white", anchor="mm")
-	#
+	# Number
+    if draw_number:
+        banner_draw.text((921, 440), f"№{user.guild.member_count}", font=m10_font, fill="white", anchor="mm")
+    #
 	file_greeting = io.BytesIO()
 	greeting_banner.save(file_greeting, format="PNG")
 	file_greeting.seek(0)
@@ -52,7 +55,7 @@ class JoinAndLeaveMessage(commands.Cog):
 			"{0} только что приземлился",
 			"Дикий {0} присоединился"
 		])
-		greeting_image = await generate_banner(user)
+		greeting_image = await generate_banner(user, True)
 		JOINS_CHANNEL = await self.bot.fetch_channel(JOINS_CHANNEL_ID)
 		await JOINS_CHANNEL.send(greeting_msg.format(user.mention), file=greeting_image)
 	
