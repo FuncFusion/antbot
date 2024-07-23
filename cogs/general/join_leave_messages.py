@@ -9,9 +9,9 @@ from settings import LEAVES_CHANNEL_ID, JOINS_CHANNEL_ID
 
 
 async def generate_banner(user, draw_number=False):
-	def fit_size(base, limit, font_path, text):
-		font_size = base
-		font = ImageFont.truetype(font_path, base)
+    def fit_size(base, limit, font_path, text):
+        font_size = base
+        font = ImageFont.truetype(font_path, base)
 		while \
 		(hitbox:=banner_draw.textbbox((0,0), text, font=font))[2] - hitbox[0] >= limit:
 			font_size -= 2
@@ -27,11 +27,12 @@ async def generate_banner(user, draw_number=False):
 	banner_draw = ImageDraw.Draw(greeting_banner)
 	m10_font = fit_size(100, 768, "assets/fonts/m10.ttf", user.display_name)
 	m5_font = fit_size(40, 512, "assets/fonts/m5.otf", user.name)
-	banner_draw.text((921, 240), user.display_name, font=m10_font, fill="white", anchor="mm")
-	banner_draw.text((921, 340), user.name, font=m5_font, fill="white", anchor="mm")
+	banner_draw.text((921, 190), user.display_name, font=m10_font, fill="white", anchor="mm")
+	banner_draw.text((921, 290), user.name, font=m5_font, fill="white", anchor="mm")
 	# Number
-    if draw_number:
-        banner_draw.text((921, 440), f"№{user.guild.member_count}", font=m10_font, fill="white", anchor="mm")
+	if draw_number:
+	   m5_number_font = fit_size(60, 640, "assets/fonts/m5.otf", user.name)
+	   banner_draw.text((921, 390), f"№{user.guild.member_count}", font=m5_number_font, fill="white", anchor="mm")
     #
 	file_greeting = io.BytesIO()
 	greeting_banner.save(file_greeting, format="PNG")
