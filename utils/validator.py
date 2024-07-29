@@ -10,7 +10,11 @@ def validate(string, valid_strings):
 					return valid_string
 	return None
 
-def least_distance(string, valid_strings):
+def all_valid(string, valid_strings):
+	matched_strings = []
 	for valid_string in valid_strings:
-		distances = (distance(string, alias) for alias in valid_strings[valid_string])
-	return min(distances)
+		for alias in valid_strings[valid_string]:
+			if string.lower() in alias.lower() or distance(string, alias) <= len(alias)/2:
+				matched_strings.append(valid_string)
+				break
+	return matched_strings
