@@ -1,11 +1,13 @@
 from Levenshtein import distance
 
 def validate(string, valid_strings):
+	string = string.lower()
 	for valid_string in valid_strings:
 		if distance(string, valid_string) <= len(valid_string)/2:
 			return valid_string
 		else:
 			for alias in valid_strings[valid_string]:
+				alias = alias.lower()
 				if distance(string, alias) <= len(alias)/2:
 					return valid_string
 	return None
