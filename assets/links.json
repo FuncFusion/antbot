@@ -12,5 +12,22 @@
 	"https://github.com/MulverineX/player_motion": ["Player Motion","Delta new","pm","Моушн игрока","игрока моушн","плеер моушн","новая дельта","пм","Здфнук Ьщешщт","зь"],
 	"https://github.com/BigPapi13/Delta": ["Delta (legacy)","Delta old","старая дельта","старый моушн игрока"],
 	"https://github.com/Godlander/objmc": ["OBJMC","object mc","обджмс","обджект мс"],
-	"https://midwut.github.io/website/": ["MIDWUT", "мидвут", "ьшвцге"]
+	"https://midwut.github.io/website/": ["MIDWUT", "мидвут", "ьшвцге"],
+	"https://block-display.com/bdengine/": ["BDEngine","block display engine","bde","блок дисплей","ивутпшту","бдэнджин"],
+	"https://cccode.pages.dev/version-diff/": ["VersionDiff","verdiff","vd","сравнение версий","вершондифф","вердифф","вд","мукышщтвшаа"],
+	"https://github.com/Aeldrion/Iris": ["Iris","advanced raycast library","Айрис","продвинутая либа рейкастов","ирис","шкшы"],
+	"https://www.minecraftjson.com/": ["minecraftjson.com","json text","json text generator","tellraw generator","mcjson","jsontextgen","майнкрафтджсон","джсон текст","генератор джсон текста","генератор теллро","мсжсон","жсонтекстген","ьштускфаеоыщт"],
+	"https://github.com/AjjMC/ajjgui": ["ajjgui","custom gui lib","ажжгуи","кастом интерфейсы","кастом гуи","фоопгш"],
+	"https://github.com/AtlasEngineCa/ParticleEmitter": ["ParticleEmitter","Custom particle patterns","bedrock particles to java","ПартиклЭмиттер","излучатель частиц","кастомные узоры партиклами","ЗфкешсдуУьшеешук"],
+	"https://github.com/PuckiSilver/mc-silica": ["mc-silica","cooldown lib","cdlib","силика","мссилика","кдлиб","кулдаун библиотека","ьс-ышдшсф"],
+	"https://github.com/ShockMicro/CorePerspectiveModels": ["CorePerspectiveModels","cpm","core perspective models","корперспективмоделс","сщкузукызусешмуьщвуды"],
+	"https://github.com/ShockMicro/VanillaDynamicEmissives": ["VanillaDynamicEmissives","emissive textures","vde","emissives","ВаниллаДайнемикЭмиссивс","вде","эмиссивные текстуры","эмиссивность","мфтшддфвнтфьшсуьшыышмуы"],
+	"https://github.com/CloudWolfYT/ShaderSelectorV2": ["ShaderSelectorV2","shader selector","post shaders switch","ss","Шейдер селектор","переключать пост шейдеров","шс","ырфвукыудусещк"],
+	"https://github.com/onnowhere/VertexEdit": ["VertexEdit","veredit","ve","вершинный редактор","вэдит","мукеучувше"],
+	"https://sourceblock.net/beta/en-US/tools/data-packs/raycasting-generator": ["Raycast Generator","raycastgen","rg","генератор рейкастов","рейкастген","кфнсфые путукфещк"],
+	"https://vberlier.github.io/animated-models/": ["Item model animator","animated-models","am","аниматор моделей предметов","аним модели","ам","шеуь ьщвуд фтшьфещк"],
+	"https://github.com/Neylz/opti-mcfunction": ["opti-mcfunction","optimize datapacks","optimcf","optimize functions","оптимизация функций","опти-мсфанкшн","оптимизация функций","оптимсф","щзеш-ьсагтсешщт"],
+	"https://github.com/ElGeroIngles/invisible-minecarts-mc": ["invisible-minecarts-mc","invis minecarts","invis carts","инвиз майнкарты","невидимые вагонетки","инвиз вагон","штмшышиду ьштусфкеы ьс"],
+	"https://github.com/HeDeAnTheonlyone/Taglib": ["Taglib","tag collection","tl","теглиб","коллекция тегов","тл","ефпдши"],
+	"https://bookshelf.docs.gunivers.net/en/latest/ ": ["Bookshelf","букшелф","книжная полка","ищщлыруда"]
 }
