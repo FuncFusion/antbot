@@ -13,7 +13,7 @@ from utils.validator import validate, all_valid
 
 with open("assets/links.json", "r", encoding="utf-8") as f:
 	links = load(f)
-offered_links = [app_commands.Choice(name=links[link][0], value=link) for link in links][:25]
+offered_links = [app_commands.Choice(name=links[link][0], value=links[link][0]) for link in links][:25]
 
 
 class LinkCommand(commands.Cog):
