@@ -20,7 +20,7 @@ class LinkCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["l", "линк", "ссылка", "дштл", "ccskrf"], description="Скидывает полезную ссылку")
+	@commands.hybrid_command(aliases=["l", "л", "линк", "ссылка", "дштл", "ccskrf"], description="Скидывает ссылку на ресурс")
 
 	async def link(self, ctx, *, resource):
 		resource_link = validate(resource, links)

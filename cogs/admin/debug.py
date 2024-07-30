@@ -15,7 +15,7 @@ class DebugCommand(commands.Cog):
 
 	async def debug(self, ctx, *, text: str):
 		if ctx.author.id == 536441049644793858 or ctx.author.id == 567014541507035148:
-			with open("temp.py", "w") as code:
+			with open("temp.py", "w", encoding="utf-8") as code:
 				code.write(f"import discord\nfrom discord.ext import commands\nasync def debug_func(ctx):\n {text.replace("\n", "\n ")}")
 			reload(temp)
 			await temp.debug_func(ctx)
