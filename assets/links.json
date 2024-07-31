@@ -12,7 +12,6 @@
 	"https://github.com/MulverineX/player_motion": ["Player Motion","Delta new","pm","Моушн игрока","игрока моушн","плеер моушн","новая дельта","пм","Здфнук Ьщешщт","зь"],
 	"https://github.com/BigPapi13/Delta": ["Delta (legacy)","Delta old","старая дельта","старый моушн игрока"],
 	"https://github.com/Godlander/objmc": ["OBJMC","object mc","обджмс","обджект мс"],
-	"https://midwut.github.io/website/": ["MIDWUT", "мидвут", "ьшвцге"],
 	"https://block-display.com/bdengine/": ["BDEngine","block display engine","bde","блок дисплей","ивутпшту","бдэнджин"],
 	"https://cccode.pages.dev/version-diff/": ["VersionDiff","verdiff","vd","сравнение версий","вершондифф","вердифф","вд","мукышщтвшаа"],
 	"https://github.com/Aeldrion/Iris": ["Iris","advanced raycast library","Айрис","продвинутая либа рейкастов","ирис","шкшы"],
@@ -29,5 +28,19 @@
 	"https://github.com/Neylz/opti-mcfunction": ["opti-mcfunction","optimize datapacks","optimcf","optimize functions","оптимизация функций","опти-мсфанкшн","оптимизация функций","оптимсф","щзеш-ьсагтсешщт"],
 	"https://github.com/ElGeroIngles/invisible-minecarts-mc": ["invisible-minecarts-mc","invis minecarts","invis carts","инвиз майнкарты","невидимые вагонетки","инвиз вагон","штмшышиду ьштусфкеы ьс"],
 	"https://github.com/HeDeAnTheonlyone/Taglib": ["Taglib","tag collection","tl","теглиб","коллекция тегов","тл","ефпдши"],
-	"https://bookshelf.docs.gunivers.net/en/latest/ ": ["Bookshelf","букшелф","книжная полка","ищщлыруда"]
+	"https://bookshelf.docs.gunivers.net/en/latest/ ": ["Bookshelf","букшелф","книжная полка","ищщлыруда"],
+	"https://misode.github.io/nbt2components/": ["NBT2Components","convert nbt to components","nbt2c","нбт2компоненты","нбт в компоненты","нбтвк","тие2сщьзщтутеы"],
+	"https://modrinth.com/mod/shader-reload": ["Shader Reload Mod","shader-reload","shr","мод на перезагрузку шейдеров","шейдер релоад","шр","ырфвук кудщфв"],
+	"https://modrinth.com/mod/datamancer": ["Datamancer","dtmncr","dm","датамансер","датамансер","дм","вфефьфтсук"],
+	"https://modrinth.com/mod/datapack-debugger": ["Datapack Debugger mod","dp debugger","breakpoint mod","датапак дебаггер мод","дебаггер датапаков","брейкпоинт мод","дпдбг","вфефзфсл вуигппук"],
+	"https://www.blockbench.net/": ["Blockbench website", "bb site","сайт блокбенча","сайт бб"],
+	"https://discord.gg/blockbench": ["Blockbench discord server","bb discord","блокбенч дискорд","бб дискорд сервер","бб дс"],
+	"https://animated-java.dev/": ["Animated Java Website","animated java site","aj site","сайт анимейтейд джава","адж сайт","фтшьфеув офмф цуиышеу"],
+	"https://discord.gg/SQ6tTXbmUJ": ["Animated Java discord server","animated java discord","aj discord","адж дискорд сервер","адж дс"],
+	"https://discord.gg/RpzWN9S": ["ShaderLABS discord server","shaderlabs","шейдерлабс дискорд сервер","шейдерлабс","ырфвукдфиы"],
+	"https://github.com/kemo14331/Particle-Converter/blob/main/README_EN.md": ["Particle Converter","particle-convert","image to particles","партикл конвертер","партикл конверт","картинку в партиклы","конвертер частиц","зфкешсду сщтмукеук"],
+	"https://weld.smithed.dev/": ["Weld","pack merger","weld.smithed.dev","велд","слиятель паков","цудв"],
+	"https://comunidadaylas.github.io/PackSquash/": ["PackSquash","pack size optimizer","psq","пак скваш","оптимизатор размера паков","пск","зфслыйгфыр"],
+	"https://www.soltoder.com/mc-uuid-converter/": ["MC UUID converter","mc-uuid-converter","uuid convert","uuid","майнкрафт конвертер ююайди","мс ююид конвертер","конвертатор ююайди","ююайди","ююид","ьс ггшв сщтмукеук"],
+	"https://midwut.github.io/website/": ["MIDWUT", "мидвут", "ьшвцге"]
 }

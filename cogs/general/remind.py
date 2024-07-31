@@ -35,7 +35,7 @@ time_names = {
 	"лет": ["y", "г"]
 }
 
-
+# Useless but may appear in the next versions
 class RemindCommand(commands.Cog):
 	@commands.hybrid_command(aliases=["reminder", "rem", "alarm", "remind-me", "remindme", "напомнить", "напоминатель", "напомни", "будильник", "нап", "куьштв", "куьштвук", "куь", "фдфкь", "куьштв-ьу", "куьштвьу"],
 		description="Напоминает о чём-то через определённое время с помощью пинга.")
