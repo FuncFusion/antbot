@@ -64,7 +64,13 @@ class Logs(commands.Cog, name="no_help_logs"):
 	async def send2dms(self, msg):
 		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID and not msg.author.bot:
 			target_user = await self.bot.fetch_user(int(msg.channel.topic))
-			await target_user.send(msg.content)
+			if msg.attachments != None:
+				files = []
+				for attachment in msg.attachments:
+					files.append(await attachment.to_file())
+			else:
+				files = MISSING
+			await target_user.send(msg.content, files=files)
 
 
 class JumpMessage(discord.ui.View):
