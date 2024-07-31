@@ -60,6 +60,7 @@ class ResolveCommand(commands.Cog):
 				description=f"{Emojis.exclamation_mark} Вы не указали ни сообщение, ни людей которые помогли решить проблему, \
 				это заархивирует ветку без решения".replace("\t", ""))
 			await ctx.send(embed=embed, view=R_u_sure())
+			return
 		elif type((solution:=await get_msg_by_id_arg(self, ctx, self.bot, solution))) != discord.Message:
 			raise Exception("Wrong message")
 		elif helpers == "None" or "@" not in helpers:
