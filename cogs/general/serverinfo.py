@@ -20,7 +20,6 @@ class ServerInfoCommand(commands.Cog):
 				bot_count += 1
 			else:
 				member_count += 1
-		invitation_link = await ctx.channel.create_invite(max_age=86400)
 		embed = discord.Embed(title=server.name, color=server.owner.color)
 		embed.set_thumbnail(url=server.icon.url)
 		embed.add_field(name="Владелец", value=f"{Emojis.crown} <@{server.owner_id}>", inline=False)
@@ -28,7 +27,7 @@ class ServerInfoCommand(commands.Cog):
 		embed.add_field(name="Участники", value=f"{Emojis.users} {member_count} • {Emojis.bot} {bot_count}", inline=False)
 		embed.add_field(name="Каналы", value=f"{Emojis.text_channel} {len(server.text_channels)} • {Emojis.speaker} {len(server.voice_channels)} • {Emojis.chat_type} {len(server.forums)}", inline=False)
 		embed.add_field(name="Роли", value=f"{Emojis.role} {len(server.roles)}", inline=False)
-		embed.add_field(name="Приглашение (иссякает через сутки)", value=f"{Emojis.link} {invitation_link}")
+		embed.add_field(name="Приглашение", value=f"{Emojis.link} https://discord.gg/anthill-914772142300749854")
 		embed.set_footer(text=f"🆔 {server.id}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
