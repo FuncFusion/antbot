@@ -204,3 +204,5 @@ class Emojis:
 	bell = "<:bell:1250909629165342842>"
 	party_popper = "<:party_popper:1255829653965242449>"
 	trophy = "<:trophy:1256921258797437020>"
+	vc_left = "<:vc_left:1268653354477813862>"
+	vc_joined = "<:vc_joined:1268653332860502056>"

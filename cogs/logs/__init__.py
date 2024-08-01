@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import MISSING
 
-from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD
+from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD, CREATE_VC_CHANNEL_ID
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
@@ -12,10 +12,37 @@ class Logs(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
 		self.bot = bot
 	
+	@commands.Cog.listener(name="on_member_update")
+	async def nick_changed(self, before, after):
+		if after.guild.id == GUILD and before.nick != after.nick:
+			embed = discord.Embed(title=f"{Emojis.user} Ник обновлён", color=no_color)
+			embed.set_author(name=after.name, icon_url=after.avatar.url)
+			embed.add_field(name="До", value=before.display_name)
+			embed.add_field(name="После", value=after.display_name)
+			embed.add_field(name="Участник", value=after.mention, inline=False)
+			#
+			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
+			await log_channel.send(embed=embed)
+	
+	@commands.Cog.listener(name="on_voice_state_update")
+	async def voice_event(self, member, before, after):
+		if member.guild.id == GUILD:
+			if after.channel and after.channel.id != CREATE_VC_CHANNEL_ID:
+				embed = discord.Embed(title=f"{Emojis.vc_joined} Участник зашёл в гк", color=no_color)
+				embed.set_author(name=member.name, icon_url=member.avatar.url)
+				embed.add_field(name="Канал", value=f"{after.channel.name} ({after.channel.mention})")
+			elif not after.channel:
+				embed = discord.Embed(title=f"{Emojis.vc_left} Участник покинул гк", color=no_color)
+				embed.set_author(name=member.name, icon_url=member.avatar.url)
+				embed.add_field(name="Канал", value=f"{before.channel.name} ({before.channel.mention})")
+			else:return
+			#
+			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
+			await log_channel.send(embed=embed)
+	
 	@commands.Cog.listener(name="on_message_edit")
 	async def edited(self, before, after):
-		if after.guild.id != GUILD:return
-		if after.author.id != self.bot.user.id and before.content != after.content\
+		if after.guild.id == GUILD and after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.edited_msg} Сообщение отредактировано", color=no_color)
