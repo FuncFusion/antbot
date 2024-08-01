@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from discord.utils import MISSING
 
+from datetime import datetime, timedelta, timezone
+
 from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD, CREATE_VC_CHANNEL_ID
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
@@ -59,8 +61,10 @@ class Logs(commands.Cog, name="no_help_logs"):
 
 	@commands.Cog.listener(name="on_message_delete")
 	async def deleted(self, msg):
+		print("SIBID")
 		if msg.guild.id != GUILD:return
 		if msg.author.id != self.bot.user.id and not isinstance(msg.channel, discord.DMChannel):
+			print("a")
 			# Getting files from message
 			if msg.attachments != None:
 				files = []
@@ -68,10 +72,22 @@ class Logs(commands.Cog, name="no_help_logs"):
 					files.append(await attachment.to_file())
 			else:
 				files = MISSING
+			# Deleter
+			print("b")
+			now = datetime.now(timezone.utc)
+			print("c")
+			deleter = msg.author.mention
+			guild = await self.bot.fetch_guild(GUILD)
+			async for entry in guild.audit_logs(limit=5):
+				if entry.action == discord.AuditLogAction.message_delete and entry.target.id == msg.author.id and\
+				abs(now - entry.created_at) <= timedelta(seconds=1):
+					deleter = entry.user.mention
+			print("d")
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.deleted_msg} Сообщение удалено", color=no_color)
 			embed.set_author(icon_url=msg.author.avatar.url, name=msg.author.name)
 			embed.add_field(name="Автор", value=msg.author.mention)
+			embed.add_field(name="Удалитель", value=deleter)
 			embed.add_field(name="Канал", value=msg.channel.jump_url)
 			embed.add_field(name="Содержимое", value=msg.content[:1021] + ("..." if len(msg.content) >= 1024 else ""), inline=False)
 			#
