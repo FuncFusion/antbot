@@ -61,10 +61,8 @@ class Logs(commands.Cog, name="no_help_logs"):
 
 	@commands.Cog.listener(name="on_message_delete")
 	async def deleted(self, msg):
-		print("SIBID")
 		if msg.guild.id != GUILD:return
 		if msg.author.id != self.bot.user.id and not isinstance(msg.channel, discord.DMChannel):
-			print("a")
 			# Getting files from message
 			if msg.attachments != None:
 				files = []
@@ -73,16 +71,13 @@ class Logs(commands.Cog, name="no_help_logs"):
 			else:
 				files = MISSING
 			# Deleter
-			print("b")
 			now = datetime.now(timezone.utc)
-			print("c")
 			deleter = msg.author.mention
 			guild = await self.bot.fetch_guild(GUILD)
 			async for entry in guild.audit_logs(limit=5):
 				if entry.action == discord.AuditLogAction.message_delete and entry.target.id == msg.author.id and\
 				abs(now - entry.created_at) <= timedelta(seconds=1):
 					deleter = entry.user.mention
-			print("d")
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.deleted_msg} Сообщение удалено", color=no_color)
 			embed.set_author(icon_url=msg.author.avatar.url, name=msg.author.name)
