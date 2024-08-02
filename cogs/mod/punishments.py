@@ -12,22 +12,6 @@ from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.time import get_secs
 
-time_multipliers = {
-	"y": 31556952,
-	"mo": 2678400,
-	"w": 604800,
-	"d": 86400,
-	"h": 3600,
-	"m": 60,
-	"s": 1,
-	"г": 31556952,
-	"ме": 2678400,
-	"н": 604800,
-	"д": 86400,
-	"ч": 3600,
-	"м": 60,
-	"с": 1
-}
 
 def generate_stupid_reason():
     return choice([
@@ -67,7 +51,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			},
 			{
 				"contains": "Forbidden",
-				"msg": "Кудааа, не туда воюешь"
+				"msg": "Э, не туда воюешь"
 			},
 			{
 				"exception": commands.MissingPermissions,
@@ -135,7 +119,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			},
 			{
 				"contains": "Forbidden",
-				"msg": "Кудааа, не туда воюешь"
+				"msg": "Э, не туда воюешь"
 			},
 			{
 				"exception": commands.MissingPermissions,

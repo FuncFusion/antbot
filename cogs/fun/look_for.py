@@ -37,6 +37,10 @@ class LookForCommand(commands.Cog):
 				"msg": "Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
 			}
 		])
+	
+	@commands.hybrid_command(name="look-for")
+	async def look_for_pointer(self, ctx):
+		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду </look-for:1207711798732652555>", allowed_mentions=no_ping)
 
 
 class LookForView(discord.ui.View):
