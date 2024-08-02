@@ -4,6 +4,7 @@ from discord import app_commands
 
 from re import findall
 from random import choice
+from typing import Union
 from datetime import timedelta
 
 from utils.general import handle_errors
@@ -69,9 +70,32 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 				"msg": "Недостаточно прав"
 			}
 		])
+	
+	@commands.command(aliases=["гтиат", "анбан", "разблокировать"])
+	@commands.has_permissions(ban_members=True)
+	async def unban(self, ctx, user: Union[discord.Member, discord.User]):
+		await ctx.guild.unban(user)
+		#
+		embed = discord.Embed(title=f"{Emojis.ban} Разбан", color=no_color)
+		embed.set_thumbnail(url=user.avatar.url)
+		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
+		embed.add_field(name="Разабаненый участник", value=f"{user.name}({user.mention})", inline=False)
+		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	@ban.error
+	async def ban_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": "Пожалуйста, укажите пользователя"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": "Недостаточно прав"
+			}
+		])
 		
 	@commands.command(aliases=["ьгеу", "мут"])
-	@commands.has_permissions(mute_members=True)
+	@commands.has_permissions(moderate_members=True)
 	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.timeout(timedelta(seconds=get_secs(term)), reason=reason)
