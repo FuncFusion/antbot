@@ -8,7 +8,7 @@ from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, RemindCommand, ServerInfoCommand
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import LinkCommand, Pin, ResolveCommand, StartMessage, SyntaxCommand
+from cogs.help import LinkCommand, Pin, ResolveCommand, R_u_sure, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
@@ -28,7 +28,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		ClearCommand, PunishmentCommands,
 	    MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, IdeaView]
+views = [LookForView, IdeaView, R_u_sure]
 
 
 
