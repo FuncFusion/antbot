@@ -61,7 +61,11 @@ class JoinAndLeaveMessage(commands.Cog):
 		user = payload.user
 		leaving_msg = choice([
 			"{0} куда",
-			"{0} ливнул"
+			"{0} ливнул",
+			"{0} покинул сервер! Давайте пожелаем ему удачи",
+			"{0} только что улетел",
+			"Пока пока {0}",
+			"Рады были тебя видеть {0}"
 		])
 		leaving_image = await generate_banner(user)
 		LEAVES_CHANNEL = await self.bot.fetch_channel(LEAVES_CHANNEL_ID)
