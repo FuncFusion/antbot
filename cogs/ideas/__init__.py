@@ -71,7 +71,6 @@ class IdeaCommands(commands.Cog):
 	@app_commands.default_permissions(administrator=True)
 	@app_commands.command(name="approve-idea", description="Одобряет идею")
 	async def apprpve_idea(self, ctx):
-		print(ctx.channel.parent.id, ctx.channel.parent.id != IDEAS_CHANNEL_ID)
 		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
 			raise Exception("Wrong channel")
 		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
@@ -140,24 +139,17 @@ class IdeaVerdict(discord.ui.Modal):
 	verdict = discord.ui.TextInput(
 		label="Вердикт",
 		placeholder="",
-		max_length=100
+		max_length=1000
 	)
 	async def on_submit(self, interaction: discord.Interaction):
-		action_to_word = {
-			"approve": "одобрена",
-			"cancel": "отклонена"
-		}
-		action_to_emoji= {
-			"approve": "🟢",
-			"cancel": "🔴"
-		}
 		idea_doc = Ideas.get(self.idea_num)
 		embed = self.msg.embeds[0]
-		embed.set_footer(text=f"{action_to_emoji[self.action]} Идея {action_to_word[self.action]}")
 		if self.verdict != "":
-			embed.add_field(name=f"{Emojis.txt} Вердикт", value=self.verdict.value)
+			embed.add_field(name=f"{Emojis.txt}{Emojis.check if self.action=='approve' else Emojis.cross} Вердикт", \
+				value=self.verdict.value)
 		await self.msg.edit(embed=embed, view=IdeaView(votes=[len(idea_doc["upvoters"]), len(idea_doc["downvoters"])], disable=True))
-		await interaction.response.send_message(f"{Emojis.check} Идея {self.idea_num} {action_to_word[self.action]}", ephemeral=True)
+		await interaction.response.send_message(f"{Emojis.check} Идея {self.idea_num} {'одобрена' if self.action=='approve' else \
+			'отклонена'}", ephemeral=True)
 		await self.msg.thread.edit(archived=True)
 
 
