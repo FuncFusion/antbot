@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 from discord.gateway import DiscordWebSocket
 
-async def mobile(self, status=None, browser="Embedded") -> None:
+async def mobile(self, status=None) -> None:
 	"""Sends the IDENTIFY packet."""
 	payload = {
 		'op': self.IDENTIFY,
@@ -10,7 +10,7 @@ async def mobile(self, status=None, browser="Embedded") -> None:
 			'token': self.token,
 			'properties': {
 				'os': 'SayGexOS',
-				'browser': f'Discord {browser}',
+				'browser': f'Discord Android',
 				'device': 'FF FG 1 "AntBot"',
 			},
 			'compress': True,
@@ -36,8 +36,4 @@ async def mobile(self, status=None, browser="Embedded") -> None:
 	await self.call_hooks('before_identify', self.shard_id, initial=self._initial_identify)
 	await self.send_as_json(payload)
 
-class MobileSocket(DiscordWebSocket):
-	def __init__(self, socket: aiohttp.ClientWebSocketResponse, *, loop: asyncio.AbstractEventLoop, status=None) -> None:
-		super().__init__(socket=socket, loop=loop)
-		self.status = status
 DiscordWebSocket.identify = mobile

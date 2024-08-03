@@ -1,15 +1,20 @@
-from settings import MONGO_URI, SNAPSHOT_PING_ROLE
+from discord.ext import commands, tasks
+
+from settings import MONGO_URI, SNAPSHOT_PING_ROLE, SNAPSHOTS_CHANNEL_ID
 
 import requests
-from asyncio import sleep
 from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
 db = MongoClient(MONGO_URI).antbot.misc
 
+class SnapshotScraper(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+		self.check_for_update.start()
 
-async def snapshot_scraper(snapshot_channel):
-	async def check_for_update():
+	@tasks.loop(minutes=30)
+	async def check_for_update(self):
+		snapshot_channel = await self.bot.fetch_channel(SNAPSHOTS_CHANNEL_ID)
 		last_known_version = db.find_one({"_id": "latest_known_snapshot"})["_"]
 		response = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json")
 		data = response.json()
@@ -22,8 +27,4 @@ async def snapshot_scraper(snapshot_channel):
 				/en-us/article/minecraft-{'snapshot-' if latest_version == latest_version_id else ''}\
 				{'java-edition-' if data['versions'][0]['type'] == 'release' else ''}{latest_version}".replace("\t", ""))
 			await snapshot_msg.pin()
-		else:
-			await sleep(900)
-			await check_for_update()
-	await check_for_update()
 	

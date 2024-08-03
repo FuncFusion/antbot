@@ -12,7 +12,7 @@ from cogs.help import LinkCommand, Pin, ResolveCommand, R_u_sure, StartMessage, 
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
-from cogs.minecraft import MessageFormatter, PackformatCommand, snapshot_scraper, TemplateCommand
+from cogs.minecraft import MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 
 logger = settings.logging.getLogger("bot")
@@ -26,10 +26,9 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		GiveawayCommand, GAModerationCommands,
 		Logs,
 		ClearCommand, PunishmentCommands,
-	    MessageFormatter, PackformatCommand, TemplateCommand,
+	    MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, IdeaView, R_u_sure]
-
 
 
 class AntBot(commands.Bot):
@@ -53,12 +52,6 @@ class AntBot(commands.Bot):
 
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
-
-@bot.event
-async def on_ready():
-	# snapshot scraper
-	snapshot_channel = await bot.fetch_channel(settings.SNAPSHOTS_CHANNEL_ID)
-	await snapshot_scraper(snapshot_channel)
 
 @bot.tree.command()
 async def saygex(Interaction: discord.Interaction):
