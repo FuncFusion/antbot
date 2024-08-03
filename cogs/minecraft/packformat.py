@@ -13,7 +13,6 @@ from settings import MONGO_URI
 from utils.msg_utils import Emojis
 from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
-from utils.validator import validate
 
 db = MongoClient(MONGO_URI).antbot.misc
 
