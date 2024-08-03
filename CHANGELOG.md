@@ -14,6 +14,8 @@
 - remind
 - transfer-ownership
 - idea
+- - approve-idea
+- disapprove-idea
 - link
 - resolve
 - syntax
