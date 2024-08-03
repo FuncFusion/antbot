@@ -17,9 +17,6 @@ from utils.validator import validate
 
 db = MongoClient(MONGO_URI).antbot.misc
 
-pf_req = requests.get("https://minecraft.wiki/w/Pack_format",timeout=10)
-pf_content = BeautifulSoup(pf_req.content, "html.parser")
-
 
 class PackformatCommand(commands.Cog):
 	def __init__(self, bot):
@@ -29,7 +26,7 @@ class PackformatCommand(commands.Cog):
 	@tasks.loop(minutes=40)
 	async def get_latest_mcmeta(self):
 		req = requests.get("https://minecraft.wiki/w/Pack_format",timeout=10)
-		content = BeautifulSoup(pf_req.content, "html.parser")
+		content = BeautifulSoup(req.content, "html.parser")
 		tables = ((content.find_all("table")[1], "dp"), (content.find("tbody"), "rp"))
 		versions = {"dp": odict(), "rp": odict(), "releases_dp": odict(), "releases_rp": odict()}
 		for table, pack in tables:
@@ -41,7 +38,8 @@ class PackformatCommand(commands.Cog):
 					release = cells[2].get_text()
 					for rel in release.split("–"):
 						versions[pack][rel.replace(" ", "")] = num
-						versions["releases_"+pack][rel.replace(" ", "")] = num
+						if release != "–":
+							versions["releases_"+pack][release[:-1]] = num
 					for snap in snapshot.split("–"):
 						versions[pack][snap.replace(" ", "")] = num
 		db.update_one({"_id": "latest_mcmeta"}, {"$set": {"_": dumps(versions)}})
@@ -54,21 +52,29 @@ class PackformatCommand(commands.Cog):
 	@app_commands.describe(version="Интересующая версия (так же можно указать 'все')")
 
 	async def packformat(self, ctx, *, version: str=None):
-		versions = odict(loads(db.find_one({"_id": "latest_mcmeta"})["_"]))
-		if version in ("all", "a", "в", "все"):
-			version = version.replace(" ", ".")
+		def format_table(table):
+			return "\n".join([f"`{j}` - `{i}`" for i, j in table])
+		#
+		versions = loads(db.find_one({"_id": "latest_mcmeta"})["_"])
+		version = None if not version else version.replace(" ", ".")
+		if version in ("all", "al", "a", "все", "вс", "в", "фдд", "фд", "ф"):
+			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Все версии пак формата", color=no_color)
+			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=format_table(list(versions["releases_dp"].items())))
+			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=format_table(list(versions["releases_rp"].items())))
+			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		elif version:
-			version = validate(version, versions)
-			embed = discord.Embed(title=f"{Emojis.pack_mcmeta} Пакформат для {version}", color=no_color)
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпак", value=versions["dp"][version])
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспак", value=versions["rp"][version])
+			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Пакформат для {version}", color=no_color)
+			try:
+				dp_ver = f"`{versions["dp"][version]}`"
+			except:
+				dp_ver = f"`-`"
+			embed.add_field(name=f"{Emojis.deta_rack} Датaпак", value=dp_ver)
+			embed.add_field(name=f"{Emojis.resource_rack} Ресурспак", value=f"`{versions["rp"][version]}`")
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		else:
-			embed = discord.Embed(title=f"{Emojis.pack_mcmeta} Последние версии пак формата", color=no_color)
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value="\n".join([f"{'\u2002'*(6-len(i))}{i} - {j}" for i, j in \
-				list(versions["releases_dp"].items())[-5:]]))
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value="\n".join([f"{'\u2002'*(6-len(i))}{i} - {j}" for i, j \
-				in list(versions["releases_rp"].items())[-5:]]))
+			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Последние версии пак формата", color=no_color)
+			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=format_table(list(versions["releases_dp"].items())[-5:]))
+			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=format_table(list(versions["releases_rp"].items())[-5:]))
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
@@ -76,12 +82,8 @@ class PackformatCommand(commands.Cog):
 	async def packformat_error(self, ctx, error: Exception):
 		await handle_errors(ctx, error, [
 			{
-				"exception": commands.MissingRequiredArgument,
-				"msg": "Не хватает аргументов"
-			},
-			{
-				"contains": "AttributeError",
-				"msg": "Неверно указан тип пакформата"
+				"contains": "KeyError",
+				"msg": "Неверно указана версия/версия находится в промежутке (см. в </packformat:1203447815305691206> `version:all`)"
 			}
 		])
 
