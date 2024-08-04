@@ -2,41 +2,13 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from settings import HELP_FORUM_ID
+from settings import HELP_FORUM_ID, SOLVED_TAG
 
 from re import findall
 
 from utils.general import handle_errors
 from utils.msg_utils import Emojis, get_msg_by_id_arg
 from utils.shortcuts import no_color, no_ping
-
-
-class R_u_sure(discord.ui.View):
-	def __init__(self):
-		super().__init__(timeout=None)
-
-	@discord.ui.button(label="Да", style=discord.ButtonStyle.red, custom_id="resolve:submit")
-	async def submit(self, ctx: discord.Interaction, button: discord.ui.Button):
-		is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
-		if ctx.user != ctx.channel.owner and not is_moderator:
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", ephemeral=True, allowed_mentions=no_ping)
-		else:
-			await ctx.message.delete()
-			resolve_embed = discord.Embed(title=f"{Emojis.cross} Ветка закрыта без решения", color=no_color)
-			await ctx.response.send_message(embed=resolve_embed)
-			await ctx.channel.edit(archived=True)
-			self.stop()
-	
-	@discord.ui.button(label="Нет", style=discord.ButtonStyle.gray, custom_id="resolve:cancel")
-	async def cancel(self, ctx: discord.Interaction, button: discord.ui.Button):
-		is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
-		if ctx.user != ctx.channel.owner and not is_moderator:
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", ephemeral=True, allowed_mentions=no_ping)
-		else:
-			await ctx.message.delete()
-			await ctx.response.send_message(content=f"{Emojis.exclamation_mark} Пожалуйста, укажите в `soultion` команды </resolve:1250486582109274206> ссылку на сообщение которое помголо \
-				вам решить проблему, и @упомяните в `helpers` людей которые помогли вам её решить".replace("\t", ""), ephemeral=True)
-			self.stop()
 
 
 class ResolveCommand(commands.Cog):
@@ -74,6 +46,7 @@ class ResolveCommand(commands.Cog):
 		embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
 			value=f"{Emojis.user if len(helpers_mentions) < 2 else Emojis.users} {" ".join(helpers_mentions)}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.channel.add_tags(SOLVED_TAG)
 		await ctx.channel.edit(archived=True)
 
 	@resolve.error
@@ -100,4 +73,32 @@ class ResolveCommand(commands.Cog):
 				"msg": f"Пожалуйста, @упомяните людей, которые помогли вам с проблемой"
 			}
 		])
+
+
+class R_u_sure(discord.ui.View):
+	def __init__(self):
+		super().__init__(timeout=None)
+
+	@discord.ui.button(label="Да", style=discord.ButtonStyle.red, custom_id="resolve:submit")
+	async def submit(self, ctx: discord.Interaction, button: discord.ui.Button):
+		is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
+		if ctx.user != ctx.channel.owner and not is_moderator:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", ephemeral=True, allowed_mentions=no_ping)
+		else:
+			await ctx.message.delete()
+			resolve_embed = discord.Embed(title=f"{Emojis.cross} Ветка закрыта без решения", color=no_color)
+			await ctx.response.send_message(embed=resolve_embed)
+			await ctx.channel.edit(archived=True)
+			self.stop()
+	
+	@discord.ui.button(label="Нет", style=discord.ButtonStyle.gray, custom_id="resolve:cancel")
+	async def cancel(self, ctx: discord.Interaction, button: discord.ui.Button):
+		is_moderator = ctx.channel.permissions_for(ctx.user).manage_messages
+		if ctx.user != ctx.channel.owner and not is_moderator:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", ephemeral=True, allowed_mentions=no_ping)
+		else:
+			await ctx.message.delete()
+			await ctx.response.send_message(content=f"{Emojis.exclamation_mark} Пожалуйста, укажите в `soultion` команды </resolve:1250486582109274206> ссылку на сообщение которое помголо \
+				вам решить проблему, и @упомяните в `helpers` людей которые помогли вам её решить".replace("\t", ""), ephemeral=True)
+			self.stop()
 		

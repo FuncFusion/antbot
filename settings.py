@@ -1,3 +1,4 @@
+import discord
 import os
 import logging
 from logging.config import dictConfig
@@ -29,6 +30,9 @@ VCS_CATEGORY_ID = 1097272593356165234
 CREATE_VC_CHANNEL_ID = 1097272593838514352
 
 SNAPSHOT_PING_ROLE = 1262328810779443270
+
+SOLVED_TAG = discord.ForumTag(name="решен")
+SOLVED_TAG.id=1269643259609612319
 
 LOGGING_CONFIG = {
     "version": 1,
