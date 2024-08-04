@@ -27,5 +27,4 @@ def all_valid(string, valid_strings, accuracy=2):
 
 def least_distance(string, valid_strings):
 	distances = [distance(string, valid_string) for valid_string in valid_strings]
-	closest = valid_strings[distances.index(min(distances))]
-	return closest
+	return valid_strings[distances.index(min(distances))]
