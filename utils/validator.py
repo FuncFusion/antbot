@@ -24,3 +24,7 @@ def all_valid(string, valid_strings, accuracy=2):
 					matched_strings.append(valid_string)
 					break
 	return matched_strings
+
+def least_distance(string, valid_strings):
+	distances = [distance(string, valid_string) for valid_string in valid_strings]
+	return valid_strings[distances.index(min(distances))]
