@@ -8,7 +8,7 @@ from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, RemindCommand, ServerInfoCommand
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import LinkCommand, Pin, ResolveCommand, R_u_sure, StartMessage, SyntaxCommand
+from cogs.help import HelpCommand, LinkCommand, Pin, ResolveCommand, R_u_sure, StartMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
@@ -20,7 +20,7 @@ logger = settings.logging.getLogger("bot")
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
-		LinkCommand, Pin, ResolveCommand, StartMessage, SyntaxCommand,
+		HelpCommand, LinkCommand, Pin, ResolveCommand, StartMessage, SyntaxCommand,
 		IdeaCommands,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand,
 		GiveawayCommand, GAModerationCommands,
@@ -36,6 +36,7 @@ class AntBot(commands.Bot):
 		super().__init__(intents=intents, command_prefix=command_prefix)
 
 	async def setup_hook(self):
+		self.remove_command("help")
 		for cog in cogs:
 			await self.add_cog(cog(self))
 		for view in views:
