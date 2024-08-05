@@ -19,6 +19,7 @@
 - idea
 - approve-idea
 - disapprove-idea
+- view-voters
 - link
 - resolve
 - syntax
