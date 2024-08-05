@@ -25,6 +25,8 @@ class HelpCommand(commands.Cog):
 		description="Показывает как пользоватся командами/фичами антбота")
 	async def help(self, ctx, feature):
 		feature = validate(feature, features, 3)
+		if not feature:
+			raise AttributeError("wrong command/feature")
 		guide = search(fr"(^## {feature}[\S\s]+?)(> ?\n> !\[[\w ]*\]\((\w+\.png)|\n\n)", wiki, MULTILINE)
 		if guide.group(2).endswith(".png"):
 			file = discord.File(f"wiki/{guide.group(3)}", filename="image.png")
@@ -41,10 +43,16 @@ class HelpCommand(commands.Cog):
 
 	@help.error
 	async def help_error(self, ctx, error):
-		await handle_errors(ctx, error, [{
-			"contains": "AttributeError",
-			"msg": "Не существует такой команды/фичи"
-		}])
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": "Не хватает аргументов"
+			},
+			{
+				"contains": "AttributeError",
+				"msg": "Не существует такой команды/фичи"
+			}
+		])
 
 features = {
 	"Форматтер": ["форматтер", "форматтер сообщений", "хайлайтер", "генератор древа файлов", "formatter", "highlighter", 
