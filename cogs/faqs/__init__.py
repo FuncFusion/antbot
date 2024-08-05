@@ -24,7 +24,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["faq","fqs","qna","qnas","факьюшки","чаво","чавошки","вопросы-и-ответы","вопросыиответы", "вопросыответы","афйы"],
+	@commands.hybrid_command(aliases=["faq","fqs","qna","qnas","факьюшки","чаво","чавошки","вопросы-и-ответы","вопросыиответы", "вопросыответы","афйы","ф"],
 		description = "Показывает список всех факьюшек/алиасов к определённой факьюшке")
 	@app_commands.describe(name = "Название факьюшки, алиасы которого вы хотите посмотреть")
 	async def faqs(self, ctx, *, name=None):
