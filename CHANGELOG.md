@@ -11,7 +11,7 @@
 - look-for
 - random
 - randomrange
-- serverinfo
+- server-info
 - giveaway
 - blacklist
 - whitelist

@@ -23,8 +23,8 @@ class HelpCommand(commands.Cog):
 	
 	@commands.hybrid_command(aliases=["h", "?", "х", "хелп", "помощь", "рудз"], 
 		description="Показывает как пользоватся командами/фичами антбота")
-	async def help(self, ctx, feature):
-		feature = validate(feature, features, 3)
+	async def help(self, ctx, *, feature):
+		feature = validate(feature, features, 3.5)
 		commands = await self.bot.tree.fetch_commands()
 		mention = feature
 		for command in commands:
@@ -33,7 +33,7 @@ class HelpCommand(commands.Cog):
 				break
 		if not feature:
 			raise AttributeError("wrong command/feature")
-		guide = search(fr"(^## {feature}[\S\s]+?)(> ?\n> !\[[\w ]*\]\((\w+\.png)|\n\n)", wiki, MULTILINE)
+		guide = search(fr"(^## {feature}[\S\s]+?)(> ?\n> !\[[\w ]*\]\(([\w-]+\.png)|\n\n)", wiki, MULTILINE)
 		if guide.group(2).endswith(".png"):
 			file = discord.File(f"wiki/{guide.group(3)}", filename="image.png")
 		else:
@@ -65,9 +65,9 @@ features = {
 	"Форматтер": ["форматтер", "форматтер сообщений", "хайлайтер", "генератор древа файлов", "formatter", "highlighter", 
 		"tree generator"],
 	"Закреп в своих ветках помощи/творчества": ["пин", "закреп", "pin"],
-	"Система собственных голосовых каналов": ["система гк", "кастом гк", "гк", "свои гк"],
+	"Система собственных голосовых каналов": ["система гк", "кастом гк", "гк", "свои гк", "голосовые каналы"],
 	"FAQшки": ["?", "faq", "FAQS", "факушки", "факу"],
-	"Уведомление о выходе новой версии майна": ["новые снапшоты","снапшот скрейпер","snapshot scraper","new snapshots"],
+	"Уведомление о выходе новой версии майна": ["новые снапшоты","снапшот скрейпер","snapshot scraper","new snapshots","снапшоты"],
 	"Логи": ["logs","дщпы"],
 	"status": ["ыефегы", "статус"],
 	"edit": ["изменить", "эдит", "увше"],
@@ -78,14 +78,14 @@ features = {
 	"look-for": [],
 	"random": ["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
 	"randomrange": ["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
-	"giveaway": [],
+	"giveaway": ["ga", "розыгрыш"],
 	"blacklist": ["bl", "бл", "чс"],
 	"whitelist": ["wl", "вл", "бс"],
 	"transfer-ownership": ["передать-права", "to", "пп"],
 	"idea": ["швуф", "идея", "suggest", "предложить", "ыгппуые"],
 	"approve-idea": [],
 	"disapprove-idea": [],
-	"serverinfo": ["info", "server", "si", "сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
+	"server-info": ["serverinfo", "info", "server", "si", "сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
 	"view-voters": [],
 	"help": ["h", "?", "х", "хелп", "помощь", "рудз"],
 	"link": ["l", "л", "линк", "ссылка", "дштл", "ccskrf"],
