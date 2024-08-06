@@ -37,7 +37,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		await user.ban(reason=reason)
 		#
 		embed = discord.Embed(title=f"{Emojis.ban} Бан", color=no_color)
-		embed.set_thumbnail(url=user.avatar.url)
+		embed.set_thumbnail(url=user.display_avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Причина", value=reason)
 		embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
@@ -65,7 +65,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		await ctx.guild.unban(user)
 		#
 		embed = discord.Embed(title=f"{Emojis.ban} Разбан", color=no_color)
-		embed.set_thumbnail(url=user.avatar.url)
+		embed.set_thumbnail(url=user.display_avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Разабаненый участник", value=f"{user.name}({user.mention})", inline=False)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
@@ -89,7 +89,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		await user.timeout(timedelta(seconds=get_secs(term)), reason=reason)
 		#
 		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
-		embed.set_thumbnail(url=user.avatar.url)
+		embed.set_thumbnail(url=user.display_avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Причина", value=reason)
 		embed.add_field(name="Замученый участник", value=user.mention, inline=False)
@@ -133,7 +133,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.kick(reason=reason)
 		embed = discord.Embed(title=f"{Emojis.door}Кик", color=no_color)
-		embed.set_thumbnail(url=user.avatar.url)
+		embed.set_thumbnail(url=user.display_avatar.url)
 		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
 		embed.add_field(name="Причина", value=reason)
 		embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)

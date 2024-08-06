@@ -87,7 +87,7 @@ class GAInfo(discord.ui.Modal):
 		embed.add_field(name=f"{Emojis.party_popper} Приз(ы)", value=self.prize.value)
 		embed.add_field(name="Описание", value=self.description.value, inline=False)
 		embed.add_field(name="Конкурс закончится", value=f"<t:{int(time()) + end_date_secs}:R>", inline=False)
-		embed.set_author(name=ctx.user.name, icon_url=ctx.user.avatar.url)
+		embed.set_author(name=ctx.user.name, icon_url=ctx.user.display_avatar.url)
 		#img
 		if self.image != None:
 			image_attachment = await self.image.to_file(filename="giveaway.png")
