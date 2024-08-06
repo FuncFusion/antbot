@@ -6,11 +6,13 @@ from settings import DMS_LOGS_GUILD_ID
 
 from Levenshtein import distance
 import re
+from typing import List
 import json
 
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
+from utils.validator import all_valid
 
 
 with open("cogs/faqs/faqs.json", 'r', encoding="utf-8") as file: db = json.load(file)
@@ -18,6 +20,8 @@ faq_names = sorted(list(db.keys()))
 faq_list = list(db.keys())
 for value in db.values():
 	faq_list.extend(value.get('aliases', []))
+
+offered_faqs = [app_commands.Choice(name=faq, value=faq) for faq in faq_list[:25]]
 
 
 class FAQs(commands.Cog, name="FAQ команды"):
@@ -42,6 +46,13 @@ class FAQs(commands.Cog, name="FAQ команды"):
 			embed.title = f"{Emojis.txt} Список алиасов для \"{faq}\""
 			embed.add_field(name="", value=aliases, inline=False)
 			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+	
+	@faqs.autocomplete(name="name")
+	async def link_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
+		global offered_faqs
+		if curr != "":
+			offered_faqs = [app_commands.Choice(name=faq, value=faq) for faq in all_valid(curr, faq_list)][:25]
+		return offered_faqs
 	
 	@faqs.error
 	async def faqs_error(self, ctx, error):
