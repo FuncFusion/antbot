@@ -14,26 +14,26 @@ class StatusCommands(commands.Cog):
 	def __init__(self, bot: commands.Bot):
 		self.bot = bot
 		
-	@commands.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
-		description="Отключает бота.")
-	@commands.has_permissions(manage_guild=True)
-	async def shutdown(self, ctx):
-		with open("assets/pfps/offline.png", "rb") as file:
-			await self.bot.user.edit(avatar=file.read())
-		await ctx.reply("Отключаюсь... 😴", allowed_mentions=no_ping)
-		await self.bot.close()
-	@shutdown.error
-	async def off_error(self, ctx, error):
-		await handle_errors(ctx, error, [
-			{
-				"contains": "HTTPException",
-				"msg": f" {Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
-			},
-			{
-				"exception": commands.MissingPermissions,
-				"msg": "Недостаточно прав"
-			}
-		])
+	# @commands.hybrid_command(aliases=["offline", "off", "disconnect", "дисконнект", "отключись", "выкл", "выключись", "оффлайн", "офф", "вшысщттусе", "щаадшту", "щаа", "ыргевщцт"],
+	# 	description="Отключает бота.")
+	# @commands.has_permissions(manage_guild=True)
+	# async def shutdown(self, ctx):
+	# 	with open("assets/pfps/offline.png", "rb") as file:
+	# 		await self.bot.user.edit(avatar=file.read())
+	# 	await ctx.reply("Отключаюсь... 😴", allowed_mentions=no_ping)
+	# 	await self.bot.close()
+	# @shutdown.error
+	# async def off_error(self, ctx, error):
+	# 	await handle_errors(ctx, error, [
+	# 		{
+	# 			"contains": "HTTPException",
+	# 			"msg": f" {Emojis.mojo} Тихо, тихо, не могу так быстро менять аватарку. Попробуй позже"
+	# 		},
+	# 		{
+	# 			"exception": commands.MissingPermissions,
+	# 			"msg": "Недостаточно прав"
+	# 		}
+	# 	])
 
 
 	@commands.hybrid_command(name="status", aliases=["ыефегы", "статус"],
