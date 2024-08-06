@@ -25,6 +25,12 @@ class HelpCommand(commands.Cog):
 		description="Показывает как пользоватся командами/фичами антбота")
 	async def help(self, ctx, feature):
 		feature = validate(feature, features, 3)
+		commands = await self.bot.tree.fetch_commands()
+		mention = feature
+		for command in commands:
+			if feature == command.name:
+				mention = command.mention
+				break
 		if not feature:
 			raise AttributeError("wrong command/feature")
 		guide = search(fr"(^## {feature}[\S\s]+?)(> ?\n> !\[[\w ]*\]\((\w+\.png)|\n\n)", wiki, MULTILINE)
@@ -32,7 +38,7 @@ class HelpCommand(commands.Cog):
 			file = discord.File(f"wiki/{guide.group(3)}", filename="image.png")
 		else:
 			file = MISSING
-		await ctx.reply(guide.group(1), file=file, allowed_mentions=no_ping)
+		await ctx.reply(guide.group(1).replace(f"## {feature}", f"## {mention}"), file=file, allowed_mentions=no_ping)
 	
 	@help.autocomplete("feature")
 	async def help_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:

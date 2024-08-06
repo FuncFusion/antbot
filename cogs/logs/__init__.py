@@ -3,12 +3,16 @@ from discord.ext import commands
 from discord.utils import MISSING
 
 from datetime import datetime, timedelta, timezone
+from pymongo.mongo_client import MongoClient
 
-from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD, CREATE_VC_CHANNEL_ID
+from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD, CREATE_VC_CHANNEL_ID, MONGO_URI
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.fake_user import fake_send
 from utils.users_db import DB
+
+command_statistics = MongoClient(MONGO_URI).antbot.command_statistics
+
 
 class Logs(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
@@ -109,6 +113,11 @@ class Logs(commands.Cog, name="no_help_logs"):
 			else:
 				files = MISSING
 			await target_user.send(msg.content, files=files)
+	
+	#commands usage
+	@commands.Cog.listener(name="on_command")
+	async def command_used(self, ctx):
+		command_statistics.update_one({"_id": ctx.command.name}, {"$inc": {"uses": 1}}, upsert=True)
 
 
 class JumpMessage(discord.ui.View):

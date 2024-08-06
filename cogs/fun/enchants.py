@@ -146,3 +146,4 @@ class EnchantCommands(commands.Cog):
 				"msg": "Введите текст, c которого хотите снять чары"
 			}
 		])
+
