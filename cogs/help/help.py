@@ -52,7 +52,7 @@ class HelpCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": "Не хватает аргументов"
+				"msg": "Не хватает аргументов. Используй </help:1269737191353876480> что бы просмотреть возможные опции"
 			},
 			{
 				"contains": "AttributeError",
