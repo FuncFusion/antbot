@@ -19,7 +19,7 @@ async def generate_banner(user):
 		return font
 	# Pasting avatar
 	greeting_banner = Image.open("assets/greeting_banner.png")
-	avatar = await user.avatar.read()
+	avatar = await user.display_avatar.read()
 	avatar = Image.open(io.BytesIO(avatar)).resize((312, 312)).convert("RGBA")
 	avatar = avatar.crop((0, 0, 312, 289))
 	greeting_banner.paste(avatar,  (190, 54), avatar)

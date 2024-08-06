@@ -32,10 +32,10 @@ async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING)
 	if isinstance(content, list):
 		for text in content:
 			if text == content[-1]:
-				await user_copy_webhook.send(content=text, avatar_url=user.avatar.url, username=user.display_name, 
+				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, 
 				files=files, thread=thread)
 			else:
-				await user_copy_webhook.send(content=text, avatar_url=user.avatar.url, username=user.display_name, thread=thread)	
+				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread)	
 	else:
-		await user_copy_webhook.send(content=content, avatar_url=user.avatar.url, username=user.display_name, 
+		await user_copy_webhook.send(content=content, avatar_url=user.display_avatar.url, username=user.display_name, 
 		thread=thread, files=files)
