@@ -22,7 +22,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 	async def nick_changed(self, before, after):
 		if after.guild.id == GUILD and before.nick != after.nick:
 			embed = discord.Embed(title=f"{Emojis.user} Ник обновлён", color=no_color)
-			embed.set_author(name=after.name, icon_url=after.avatar.url)
+			embed.set_author(name=after.name, icon_url=after.display_avatar.url)
 			embed.add_field(name="До", value=before.display_name)
 			embed.add_field(name="После", value=after.display_name)
 			embed.add_field(name="Участник", value=after.mention, inline=False)
@@ -35,11 +35,11 @@ class Logs(commands.Cog, name="no_help_logs"):
 		if member.guild.id == GUILD:
 			if after.channel and after.channel.id != CREATE_VC_CHANNEL_ID:
 				embed = discord.Embed(title=f"{Emojis.vc_joined} Участник зашёл в гк", color=no_color)
-				embed.set_author(name=member.name, icon_url=member.avatar.url)
+				embed.set_author(name=member.name, icon_url=member.display_avatar.url)
 				embed.add_field(name="Канал", value=f"{after.channel.name} ({after.channel.mention})")
 			elif not after.channel:
 				embed = discord.Embed(title=f"{Emojis.vc_left} Участник покинул гк", color=no_color)
-				embed.set_author(name=member.name, icon_url=member.avatar.url)
+				embed.set_author(name=member.name, icon_url=member.display_avatar.url)
 				embed.add_field(name="Канал", value=f"{before.channel.name} ({before.channel.mention})")
 			else:return
 			#
@@ -52,7 +52,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 		and not isinstance(after.channel, discord.DMChannel):
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.edited_msg} Сообщение отредактировано", color=no_color)
-			embed.set_author(icon_url=after.author.avatar.url, name=after.author.name)
+			embed.set_author(icon_url=after.author.display_avatar.url, name=after.author.name)
 			embed.add_field(name="Автор", value=after.author.mention)
 			embed.add_field(name="Канал", value=after.channel.jump_url)
 			embed.add_field(name="До", value=before.content[:1021] + ("..." if len(before.content) >= 1024 else ""), 
@@ -84,7 +84,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 					deleter = entry.user.mention
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.deleted_msg} Сообщение удалено", color=no_color)
-			embed.set_author(icon_url=msg.author.avatar.url, name=msg.author.name)
+			embed.set_author(icon_url=msg.author.display_avatar.url, name=msg.author.name)
 			embed.add_field(name="Автор", value=msg.author.mention)
 			embed.add_field(name="Удалитель", value=deleter)
 			embed.add_field(name="Канал", value=msg.channel.jump_url)
