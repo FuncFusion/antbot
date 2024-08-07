@@ -20,8 +20,8 @@ class RandomCommands(commands.Cog):
 		minInt, maxInt = -2147483648, 2147483647
 		clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
 		minimum, maximum = clamp(int(float(minimum)), minInt, maxInt), clamp(int(float(maximum)), minInt, maxInt)
-		minimum = min(minimum, maximum)
-		maximum = max(minimum, maximum)
+		if minimum > maximum:
+			minimum, maximum = maximum, minimum
 		result = randint(minimum, maximum)
 		embed = discord.Embed(color=no_color, title=f"Рандомное число между {minimum} и {maximum}:")
 		embed.add_field(name=result, value='', inline=True)
