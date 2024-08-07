@@ -51,7 +51,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 	async def link_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		global offered_faqs
 		if curr != "":
-			offered_faqs = [app_commands.Choice(name=faq, value=faq) for faq in all_valid(curr, faq_list)][:25]
+			offered_faqs = [app_commands.Choice(name=faq, value=faq) for faq in all_valid(curr, db)][:25]
 		return offered_faqs
 	
 	@faqs.error

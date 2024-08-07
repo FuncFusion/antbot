@@ -3,15 +3,16 @@ from discord.ext import commands
 from discord import app_commands
 from discord.utils import MISSING
 
-from Levenshtein import distance
+from pymongo.mongo_client import MongoClient
 from random import randint
 
-from settings import LOOK_FOR_CHANNEL_ID
-
+from settings import LOOK_FOR_CHANNEL_ID, MONGO_URI
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
 from utils.validator import validate
+
+db = MongoClient(MONGO_URI).antbot.look_for
 
 
 class LookForCommand(commands.Cog):
@@ -27,16 +28,7 @@ class LookForCommand(commands.Cog):
 
 	@look_for.error
 	async def lf_error(self, ctx, error):
-		await handle_errors(ctx, error, [
-			{
-				"contains": "game",
-				"msg": "Укажите игру, для которой ищите тиммейта"
-			},
-			{
-				"contains": "details",
-				"msg": "Укажите подробности (айпи сервера/ссылка с приглашением и тд)"
-			}
-		])
+		await handle_errors(ctx, error, [])
 	
 	@commands.command(name="look-for")
 	async def look_for_pointer(self, ctx):
@@ -75,7 +67,7 @@ class LookForView(discord.ui.View):
 	@discord.ui.button(label="Пингануть участников", emoji=Emojis.users, custom_id="look-for:ping-all")
 	async def ping_all(self, ctx: discord.Interaction, button: discord.ui.Button):
 		joined_users = ctx.message.embeds[0].fields[1].value.replace("\n", " ")
-		if str(ctx.user.id) == ctx.message.embeds[0].author.icon_url.split("/")[4]: # post author's id
+		if ctx.user.id == db.find_one({"_id": ctx.message.id})["author_id"]:
 			if "<@" in joined_users:
 				await ctx.message.thread.send(f"{joined_users}, вас зовёт {ctx.user.mention}!")
 				await ctx.response.send_message("Участники пингануты", ephemeral=True)
@@ -130,6 +122,7 @@ class LFInfo(discord.ui.Modal):
 		#
 		LOOK_FOR_CHANNEL = await self.bot.fetch_channel(LOOK_FOR_CHANNEL_ID)
 		lf_msg = await LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
+		db.insert_one({"_id": lf_msg.id, "author_id": ctx.user.id})
 		await ctx.response.send_message(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", ephemeral=True)
 		await lf_msg.create_thread(name="Обсуждение")
 	

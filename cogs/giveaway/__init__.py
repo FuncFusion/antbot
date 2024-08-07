@@ -99,6 +99,7 @@ class GAInfo(discord.ui.Modal):
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		ga_doc = {
 			"_id": ga_msg.id,
+			"author_id": ctx.user.id,
 			"winners_count": max(1, int(self.winners_count.value)),
 			"participants": [],
 			"blacklist": []
@@ -123,7 +124,7 @@ class JudgeGA(discord.ui.View):
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
-		ga_author = await self.bot.fetch_user(user_from_embed(ctx.message))
+		ga_author = await self.bot.fetch_user(db.find_one({"_id":ctx.message.id})["author_id"])
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
 		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0], view=TakePart())
 		await posted_ga.create_thread(name=f"Розыгрыш {ga_author.name}")
@@ -134,7 +135,7 @@ class JudgeGA(discord.ui.View):
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
-		user_id = user_from_embed(ctx.message)
+		user_id = db.find_one({"_id":ctx.message.id})["author_id"]
 		users_db.update_one({"_id": user_id}, {"$inc": {"disapproved_ga": 1}})
 		users_db.update_one({"_id": user_id}, {"$set": {"last_disapproved_ga": int(time())}})
 		db.delete_one({"_id": ctx.message.id})
