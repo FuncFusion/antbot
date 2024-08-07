@@ -1,8 +1,9 @@
 import discord
 from discord.ext import commands
 
-from settings import HELP_FORUM_ID, CREATIONS_FORUM_ID
+from asyncio import sleep
 
+from settings import HELP_FORUM_ID, CREATIONS_FORUM_ID
 from utils.msg_utils import Emojis
 from utils.shortcuts import  no_color
 
@@ -10,6 +11,7 @@ from utils.shortcuts import  no_color
 class StartMessage(commands.Cog):
 	@commands.Cog.listener("on_thread_create")
 	async def new_help_post(self, trd):
+		await sleep(0.5)
 		if trd.parent_id == HELP_FORUM_ID:
 			# Building embed
 			embed = discord.Embed(title=f"{Emojis.pin} Ознакомтесь с правилами получения помощи!", color=no_color, 

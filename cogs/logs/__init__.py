@@ -48,7 +48,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 	
 	@commands.Cog.listener(name="on_message_edit")
 	async def edited(self, before, after):
-		if after.guild.id == GUILD and after.author.id != self.bot.user.id and before.content != after.content\
+		if after.guild and after.guild.id == GUILD and after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
 			# Build ebmed
 			embed = discord.Embed(title=f"{Emojis.edited_msg} Сообщение отредактировано", color=no_color)
