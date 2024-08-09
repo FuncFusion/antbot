@@ -8,7 +8,7 @@ from json import load
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
-from utils.validator import validate, all_valid
+from utils.validator import closest_match, all_valid
 
 
 with open("assets/links.json", "r", encoding="utf-8") as f:
@@ -23,7 +23,7 @@ class LinkCommand(commands.Cog):
 	@commands.hybrid_command(aliases=["l", "л", "линк", "ссылка", "дштл", "ccskrf"], description="Скидывает ссылку на ресурс")
 
 	async def link(self, ctx, *, resource):
-		resource_link = validate(resource, links)
+		resource_link = closest_match(resource, links, 10)
 		if resource_link == None:
 			raise Exception("Not Found")
 		await ctx.reply(f"## {Emojis.link} [{links[resource_link][0]}]({resource_link})", allowed_mentions=no_ping)
