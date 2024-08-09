@@ -1,6 +1,6 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands, tasks
 from discord.utils import MISSING
 
 from asyncio import sleep
@@ -27,6 +27,13 @@ FOUR_WEEKS = 4 * 7 * 24 * 60 * 60
 class GiveawayCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		# Checking GAs from prev session
+		self.check_giveaways.start()
+	
+	@tasks.loop(count=1, seconds=1)
+	async def check_giveaways(self):
+		for ga in db.find():
+			await end_ga(ga["message_id"], self.bot)
 
 	@app_commands.command(name="giveaway", description="Создаёт пост о розыгрыше в #🎉・розыгрыши")
 	async def ga(self, ctx, image: discord.Attachment=None):
@@ -100,6 +107,7 @@ class GAInfo(discord.ui.Modal):
 		ga_doc = {
 			"_id": ga_msg.id,
 			"author_id": ctx.user.id,
+			"end_date": end_date_secs,
 			"winners_count": max(1, int(self.winners_count.value)),
 			"participants": [],
 			"blacklist": []
@@ -131,7 +139,7 @@ class JudgeGA(discord.ui.View):
 		db.update_one({"_id":ctx.message.id}, {"$set": {"message_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, "approved"))
 		await ga_author.send(f"{Emojis.check} Ваш розыгрыш одобрен {posted_ga.jump_url}")
-		await end_ga(posted_ga)
+		await end_ga(posted_ga.id, self.bot)
 
 	@discord.ui.button(label="Отклонить", emoji=Emojis.cross, custom_id="ga:disapprove")
 	async def disapprove(self, ctx, button):
@@ -164,11 +172,14 @@ class TakePart(discord.ui.View):
 			await ctx.message.edit(view=TakePart(str(int(self.take_part.label)+1)))
 			await ctx.response.send_message(f"{Emojis.check} Вы добавлены в список учасвствующих", ephemeral=True)
 
-async def end_ga(msg: discord.Message):
+
+async def end_ga(msg_id, bot):
+	ga_channel = await bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
+	msg = await ga_channel.fetch_message(msg_id)
 	end_date = msg.embeds[0].fields[2].value[3:-3]
 	await sleep(int(end_date) - int(time()))
 	#
-	ga = db.find_one({"message_id": msg.id})
+	ga = db.find_one({"message_id": msg_id})
 	participants_count = len(ga["participants"])
 	winners_count = ga["winners_count"] if ga["winners_count"] <= participants_count else participants_count
 	winners = sample(ga["participants"], winners_count)
@@ -180,6 +191,8 @@ async def end_ga(msg: discord.Message):
 		value="\n".join([f"{i}. <@{winners[i]}>" for i in range(len(winners))]))
 	await msg.edit(embed=edited_embed, view=TakePart(participants_count, True))
 	await msg.thread.send(f"# {edited_embed.fields[1].name}\n{edited_embed.fields[1].value}")
+	db.delete_one({"message_id": msg_id})
+
 
 class GAModerationCommands(commands.Cog):
 
