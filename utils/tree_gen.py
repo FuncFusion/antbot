@@ -43,7 +43,7 @@ def generate_tree(folders: str):
 			formatted_name = name
 		indent = "\u3000" * abs(len(item.replace(name, "")) - (1 if name != item else 0))
 		tree += f"{indent}{'\u23bf' if name != item else ""}{curr_icon}`{formatted_name}`\n"
-	return tree
+	return tree[:-1]
 
 icons = {
 	"folder": "<:folder:1142345186949734482>",
