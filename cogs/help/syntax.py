@@ -9,7 +9,7 @@ import os
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
-from utils.validator import all_valid, validate, least_distance
+from utils.validator import all_valid, closest_match
 
 
 syntaxes = {}
@@ -28,8 +28,7 @@ class SyntaxCommand(commands.Cog):
 	@app_commands.describe(command="Команда из майнкрафта")
 
 	async def syntax(self, ctx, *, command: str):
-		candidates = all_valid(command, syntaxes, 3)
-		command = least_distance(command, candidates)
+		command = closest_match(command, syntaxes, 8)
 		embed = discord.Embed(color=no_color, 
 			description=f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command])
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
