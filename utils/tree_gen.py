@@ -4,10 +4,11 @@ def generate_tree(folders: str):
 	file_ext = ""
 	folder_history = [""]
 	for idx, item in enumerate(folders):
-		if idx == len(folders)-1:
-			break
+		print(item, idx == len(folders)-1)
 		name = item.lstrip()
-		indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
+			indent_difference == 0
+		else:
+			indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
 		if "." in item or name in icons["names"]:
 			file_ext = item.split(".")[-1]
 			if name in icons["names"]:
