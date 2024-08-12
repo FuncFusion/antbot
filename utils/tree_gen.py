@@ -4,8 +4,8 @@ def generate_tree(folders: str):
 	file_ext = ""
 	folder_history = [""]
 	for idx, item in enumerate(folders):
-		print(item, idx == len(folders)-1)
 		name = item.lstrip()
+		if idx == len(folders)-1:
 			indent_difference == 0
 		else:
 			indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
