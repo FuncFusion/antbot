@@ -6,21 +6,22 @@ import asyncio
 from cogs.admin import DebugCommand, EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
-from cogs.general import JoinAndLeaveMessage, RemindCommand, ServerInfoCommand
+from cogs.general import JoinAndLeaveMessage, ServerInfoCommand
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import HelpCommand, LinkCommand, Pin, ResolveCommand, R_u_sure, StartMessage, SyntaxCommand
+from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
 from cogs.minecraft import MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 
+
 logger = settings.logging.getLogger("bot")
 
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
-		HelpCommand, LinkCommand, Pin, ResolveCommand, StartMessage, SyntaxCommand,
+		HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, StarterMessage, SyntaxCommand,
 		IdeaCommands,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand,
 		GiveawayCommand, GAModerationCommands,
