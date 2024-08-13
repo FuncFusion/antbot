@@ -4,10 +4,11 @@ def generate_tree(folders: str):
 	file_ext = ""
 	folder_history = [""]
 	for idx, item in enumerate(folders):
-		if idx == len(folders)-1:
-			break
 		name = item.lstrip()
-		indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
+		if idx == len(folders)-1:
+			indent_difference == 0
+		else:
+			indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
 		if "." in item or name in icons["names"]:
 			file_ext = item.split(".")[-1]
 			if name in icons["names"]:
@@ -43,7 +44,7 @@ def generate_tree(folders: str):
 			formatted_name = name
 		indent = "\u3000" * abs(len(item.replace(name, "")) - (1 if name != item else 0))
 		tree += f"{indent}{'\u23bf' if name != item else ""}{curr_icon}`{formatted_name}`\n"
-	return tree
+	return tree[:-1]
 
 icons = {
 	"folder": "<:folder:1142345186949734482>",

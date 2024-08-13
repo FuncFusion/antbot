@@ -183,7 +183,7 @@ class Hl:
 			matches = search(ansi_codes_re, element)
 			optimized += "\u001b"+element if prev_color != matches.group(0) else element.replace(prev_color, "")
 			prev_color = matches.group(0)
-		return optimized
+		return optimized.rstrip("\n")
 
 	def highlight(func, theme="default"):
 		# Shotcuts
