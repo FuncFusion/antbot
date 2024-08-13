@@ -12,8 +12,11 @@ class CustomVoiceChannels(commands.Cog, name="Голосовые каналы"):
 		self.bot = bot
 
 	@commands.has_permissions(manage_channels=True)
-	@commands.hybrid_command(name="transfer-ownership", aliases=["передать-права", "to", "пп"], \
-		description="Передать права на голосовой канал")
+	@commands.hybrid_command(name="transfer-ownership",
+		aliases=["передать-права", "to", "пп"], \
+		description="Передаёт права на голосовой канал указанному пользователю.",
+		usage="`/transfer-ownership <пользователь>`",
+		help="### Пример:\n`/transfer-ownership SuperAnt_`\n`/transfer-ownership <@536441049644793858>`")
 	@app_commands.describe(user="Пользователь")
 	async def transfer_owner(self, ctx, user: discord.Member):
 		if ctx.author.voice == None:

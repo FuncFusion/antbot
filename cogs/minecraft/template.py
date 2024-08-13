@@ -13,8 +13,11 @@ from utils.pack_generator import Modals
 
 
 class TemplateCommand(commands.Cog):
-	@commands.hybrid_command(aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"],
-		description="Создаёт шаблон датапака/ресурспака")
+	@commands.hybrid_command(
+		aliases=["tl", "темплейт", "тэмплейт", "еуьздфеу", "шаблон"],
+		description="Создаёт шаблон датапака/ресурспака.",
+		usage="`/template [датапак|ресурспак] [базовый|расширенный|настраиваемый]`",
+		help="После введения данной команды с аргументом `настраиваемый` у вас вылезет окно, где можно указать следующие аргументы настраиваемого пака: `<название пака> [неймспейсы] [включить папки в пак (function/loot_table) (все по умолчанию)] [исключить папки в паке (function/loot_table)] [версия (последняя по умолчанию)]`\n### Пример:\n`/template custom - bth function loot_table damage_type - -`")
 	@app_commands.describe(template="Датапак/ресусрпак", type="Тип пака")
 
 	async def template(self, ctx, template:Literal["Датапак", "Ресурспак"]="datapack", 

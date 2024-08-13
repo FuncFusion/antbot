@@ -11,8 +11,12 @@ class EditCommand(commands.Cog):
 		self.bot = bot
 
 	@commands.has_permissions(ban_members=True)
-	@commands.hybrid_command(aliases=["изменить", "эдит", "увше"],
-		description="Изменяет заданное сообщение.")
+	@commands.hybrid_command(
+		aliases=["изменить", "эдит", "увше"],
+		description="**Админская команда. **Изменяет указанное сообщение антбота.",
+		usage="`/edit <айди/ссылка на сообщение> <текст>`\n`/edit <текст>` (с ответом на сообщение)",
+		help="Если хотите указать айди сообщения, то используйте команду в том же канале, где и нужное вам сообщение. Если использовать ссылку, то неважно, в каком канале вы воспроизводите команду. Вы также можете ответить на нужное сообщение, чтоб вообще не писать айди/ссылку на него.")
+	@app_commands.default_permissions(ban_members=True)
 	@app_commands.describe(message="Сообщение, которое будет изменяться.", text="Текст, на который изменится сообщение.")
 
 	async def edit(self, ctx, message:str, *, text:str=""):

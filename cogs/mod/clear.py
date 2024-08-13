@@ -10,8 +10,13 @@ from utils.shortcuts import no_color, no_ping
 class ClearCommand(commands.Cog):
 
 	@commands.has_permissions(manage_messages=True)
-	@commands.hybrid_command(aliases=["сдуфк", "клир", "очистить"], description="Очищает сообщения")
-	@app_commands.describe(count="Количество сообщений которое будет удалено", channel="Канал в котором будут удалены сообщения")
+	@commands.hybrid_command(
+		aliases=["сдуфк", "клир", "очистить"],
+		description="**Модераторская команда.** Очищает сообщения в указанном канале.",
+		usage="`/clear <количество сообщений> [канал (по дефолту текущий)]`",
+		help="### Пример:\n`/clear 16`")
+	@app_commands.default_permissions(manage_messages=True)
+	@app_commands.describe(count="Количество сообщений, которое будет удалено", channel="Канал, в котором будут удалены сообщения")
 
 	async def clear(self, ctx, count: int, channel: discord.TextChannel=None):
 		channel = channel if channel != None else ctx.channel

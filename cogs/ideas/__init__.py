@@ -28,8 +28,11 @@ class IdeaCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"],
-		description="Предложить идею")
+	@commands.hybrid_command(
+		aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"],
+		description="Позволяет предложить идею для сервера, публикуя её в канале `💡・идеи`.",
+		usage="`/idea <идея>`",
+		help="### Пример:\n`/idea Добавить канал для сэйгексинга`")
 	@app_commands.describe(suggestion="Идея")
 	async def idea(self, ctx, *, suggestion: str):
 		ideas_count = str(db.count_documents({}))
@@ -50,7 +53,7 @@ class IdeaCommands(commands.Cog):
 		])
 	
 	@app_commands.default_permissions(administrator=True)
-	@app_commands.command(name="view-voters", description="Показывает список голосующий")
+	@app_commands.command(name="view-voters",description="Показывает список голосующих")
 	async def view_voters(self, ctx):
 		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
 			raise Exception("Wrong channel")
@@ -67,10 +70,14 @@ class IdeaCommands(commands.Cog):
 	@view_voters.error
 	async def vv_error(self, ctx, error):
 		await handle_errors(ctx, error, wrong_channel_errors)
+
+	@commands.command(name="view-voters", aliases=["vv", "вью-вотерс", "посмотреть-голоса", "мшуц-мщеукы", "мм","пг"],)
+	async def view_voters_pointer(self, ctx):
+		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду </view-voters:1263846916798681158>", allowed_mentions=no_ping)
 	
 	@app_commands.default_permissions(administrator=True)
 	@app_commands.command(name="approve-idea", description="Одобряет идею")
-	async def apprpve_idea(self, ctx):
+	async def approve_idea(self, ctx):
 		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
 			raise Exception("Wrong channel")
 		ideas_channel = await self.bot.fetch_channel(IDEAS_CHANNEL_ID)
@@ -79,13 +86,21 @@ class IdeaCommands(commands.Cog):
 		idea_author = await self.bot.fetch_user(idea_author_id)
 		await idea_author.send(f"{Emojis.check} Ваша идея одобрена {idea_message.jump_url}")
 		await ctx.response.send_modal(IdeaVerdict(idea_message, "approve"))
-	@apprpve_idea.error
+	@approve_idea.error
 	async def approve_error(self, ctx, error):
 		await handle_errors(ctx, error, wrong_channel_errors)
+
+	@commands.command(name="approve-idea",
+		aliases=["approve", "accept", "accept-idea", "одобрить-идею", "фззкщму-швуф", "фззкщму","фссузе"],
+		description="Одобряет идею.",
+		usage="`/approve-idea` (в ветке обсуждения идеи)",
+		help="После введения этой команды появиться окно для введения вердикта. Автор идеи получит сообщение в лс о том, что идея была одобрена.")
+	async def approve_idea_pointer(self, ctx):
+		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду </approve-idea:1263846916798681159>", allowed_mentions=no_ping)
 	
 	@app_commands.default_permissions(administrator=True)
 	@app_commands.command(name="disapprove-idea", description="Отклоняет идею")
-	async def disapprpve_idea(self, ctx):
+	async def disapprove_idea(self, ctx):
 		print(ctx.channel.parent.id, ctx.channel.parent.id != IDEAS_CHANNEL_ID)
 		if ctx.channel.parent.id != IDEAS_CHANNEL_ID:
 			raise Exception("Wrong channel")
@@ -95,9 +110,17 @@ class IdeaCommands(commands.Cog):
 		idea_author = await self.bot.fetch_user(idea_author_id)
 		await idea_author.send(f"{Emojis.cross} Ваша идея отклонена {idea_message.jump_url}")
 		await ctx.response.send_modal(IdeaVerdict(idea_message, "cancel"))
-	@disapprpve_idea.error
+	@disapprove_idea.error
 	async def disapprove_error(self, ctx, error):
 		await handle_errors(ctx, error, wrong_channel_errors)
+
+	@commands.command(name="disapprove-idea",
+		aliases=["disapprove", "deny", "deny-idea", "отклонить-идею", "вшыфззкщму-швуф", "вшыфззкщму","вутн"],
+		description="Отклоняет идею.",
+		usage="`/disapprove-idea` (в ветке обсуждения идеи)",
+		help="После введения этой команды появиться окно для введения вердикта. Автор идеи получит сообщение в лс о том, что идея была отклонена.")
+	async def disapprove_idea_pointer(self, ctx):
+		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду </disapprove-idea:1263846916798681160>", allowed_mentions=no_ping)
 
 
 class IdeaView(discord.ui.View):

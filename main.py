@@ -54,9 +54,9 @@ class AntBot(commands.Bot):
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
 
-@bot.tree.command()
-async def saygex(Interaction: discord.Interaction):
-	await Interaction.response.send_message("say gex")
+# @bot.tree.command()
+# async def saygex(Interaction: discord.Interaction):
+# 	await Interaction.response.send_message("say gex")
 
 
 	
