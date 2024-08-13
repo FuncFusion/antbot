@@ -20,7 +20,11 @@ class LinkCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["l", "л", "линк", "ссылка", "дштл", "ccskrf"], description="Скидывает ссылку на ресурс")
+	@commands.hybrid_command(
+		aliases=["l", "л", "линк", "ссылка", "дштл", "ccskrf", "resource","ресурс"],
+		description="Скидывает ссылку на ресурс.",
+		usage="`/link <название ресурса>`",
+		help="Написав просто `/link`, в автокомплите увидите список доступных ресурсов. Там максимум может отображаться 25 элементов, поэтому просто начните писать название ресурса, и он там появится. Вы можете предлагать полезные ресурсы для добавления в бота в канале `🐜・antbot`.\n### Пример:\n`/link dp essentials`")
 
 	async def link(self, ctx, *, resource):
 		resource_link = closest_match(resource, links, 10)
@@ -39,5 +43,6 @@ class LinkCommand(commands.Cog):
 	async def link_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		global offered_links
 		if curr != "":
-			offered_links = [app_commands.Choice(name=links[link][0], value=links[link][0]) for link in all_valid(curr, links)][:25]
-		return offered_links
+			return [app_commands.Choice(name=links[link][0], value=links[link][0]) for link in all_valid(curr, links)][:25]
+		else:
+			return offered_links

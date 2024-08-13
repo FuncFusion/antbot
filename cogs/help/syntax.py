@@ -20,17 +20,22 @@ for filename in os.listdir("assets/syntaxes"):
 
 offered_commands = [app_commands.Choice(name=command, value=command) for command in list(syntaxes)[:25]]
 
-
 class SyntaxCommand(commands.Cog):
 
-	@commands.hybrid_command(aliases=["stx", "s", "ы", "ынтефч", "ыеч", "синтакс", "синтаксис", "сткс"],
-		description="Показывает синтаксис введённой майнкрафт команды")
+	@commands.hybrid_command(
+		aliases=["stx", "s", "ы", "ынтефч", "ыеч", "синтакс", "синтаксис", "сткс"],
+		description="Показывает синтаксис указанной майнкрафт команды.",
+		usage="`/syntax <команда>`",
+		help="### Пример:\n`/syntax item`")
 	@app_commands.describe(command="Команда из майнкрафта")
 
-	async def syntax(self, ctx, *, command: str):
-		command = closest_match(command, syntaxes, 8)
-		embed = discord.Embed(color=no_color, 
-			description=f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command])
+	async def syntax(self, ctx, *, command:str):
+		syntaxes_dict = {}
+		for syntax in syntaxes.keys():
+			syntaxes_dict.update({syntax: []})
+		command = closest_match(command, syntaxes_dict, 10)
+		embed = discord.Embed(color=no_color)
+		embed.description=f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command]
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@syntax.error
@@ -38,7 +43,7 @@ class SyntaxCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": "Пожалуйста, укажите команду"
+				"msg": "Пожалуйста, укажите команду. Испльзуйте **слэш** команду </syntax:1250486582109274207>, где в автокомплите будет видно список команд."
 			},
 			{
 				"exception": commands.CommandInvokeError,
@@ -54,5 +59,6 @@ class SyntaxCommand(commands.Cog):
 	async def syntax_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		global offered_commands
 		if curr != "":
-			offered_commands = [app_commands.Choice(name=command, value=command) for command in all_valid(curr, syntaxes)][:25]
-		return offered_commands
+			return [app_commands.Choice(name=command, value=command) for command in all_valid(curr, syntaxes)][:25]
+		else:
+			return offered_commands

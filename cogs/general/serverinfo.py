@@ -7,8 +7,11 @@ from utils.shortcuts import no_ping
 
 
 class ServerInfoCommand(commands.Cog):
-	@commands.hybrid_command(name="server-info", aliases=["info", "server", "si", "сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
-		description="Показывает информацию о сервере")
+	@commands.hybrid_command(name="server-info",
+		aliases=["info", "server", "si", "сервер-инфо", "инфо", "сервер", "си", "ыукмукштащ", "штащ", "ыукмук", "ыш"],
+		description="Показывает информацию о сервере.",
+		usage="`/server-info`",
+		help="")
 
 	async def serverinfo(self, ctx):
 		# setup vars

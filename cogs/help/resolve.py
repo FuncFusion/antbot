@@ -15,9 +15,12 @@ class ResolveCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["solve", "ыщдму", "куыщдму", "решено", "ресолв", "солв"],
-		description="Архивирует ветку помощи при решении проблемы") 
-	@app_commands.describe(solution="Сообщение которое помогло решить проблему (ссылка)",
+	@commands.hybrid_command(
+		aliases=["solve", "ыщдму", "куыщдму", "решено", "ресолв", "солв"],
+		description="Архивирует ветку помощи при решении проблемы.",
+		usage="`/resolve [cсылка|айди сообщения с решением проблемы] [пользователь(и), которые помогли]`",
+		help="Используйте факьюшку `?resolve`, чтоб узнать больше о том, как правильно использовать эту команду.\n### Пример:\n`/resolve https://discord.com/channels/1097272592676700250/1262127423294672906/1262127471256403968 <@536441049644793858>`") 
+	@app_commands.describe(solution="Сообщение, которое помогло решить проблему (ссылка)",
 		helpers="Люди, которые помогли решить проблему")
 
 	async def resolve(self, ctx, solution: str=None, *, helpers: str="None"):
@@ -43,7 +46,7 @@ class ResolveCommand(commands.Cog):
 		# Building embed
 		embed = discord.Embed(title=f"{Emojis.check} Проблема решена", color=no_color)
 		embed.add_field(name="Решение", value=f"{Emojis.link} {solution.jump_url}", inline=False)
-		embed.add_field(name="Люди которые помогли" if len(helpers_mentions) >= 2 else "Человек который помог", 
+		embed.add_field(name="Люди, которые помогли" if len(helpers_mentions) >= 2 else "Человек, который помог", 
 			value=f"{Emojis.user if len(helpers_mentions) < 2 else Emojis.users} {" ".join(helpers_mentions)}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		await ctx.channel.add_tags(SOLVED_TAG)

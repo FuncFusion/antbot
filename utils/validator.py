@@ -44,6 +44,6 @@ def closest_match(string, valid_dict, distance_limit=0):
 			if alias_distance < best_distance:
 				best_match = key
 				best_distance = alias_distance
-		if distance_limit > 0 and best_distance > distance_limit:
-			return None
+	if distance_limit > 0 and best_distance > distance_limit:
+		return None
 	return best_match

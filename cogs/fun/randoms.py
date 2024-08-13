@@ -12,8 +12,11 @@ from utils.shortcuts import no_color, no_ping
 
 class RandomCommands(commands.Cog):
 
-	@commands.hybrid_command(aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
-		description="Генерирует рандомное число в заданном промежутке")
+	@commands.hybrid_command(
+		aliases=["random-range", "rr", "рандом-число", "сгенерь-число", "кфтвщь-кфтпу", "кк"],
+		description="Генерирует рандомное число в заданном промежутке.",
+		usage="`/randomrange <минимальное число в диапазоне> <максимальное число в диапазоне>`",
+		help="### Пример:\n`/randomrange -69 420`")
 	@app_commands.describe(minimum="Минимальное число в промежутке", maximum="Максимальное число в промежутке")
 
 	async def randomrange(self, ctx, minimum: str='-2147483648', maximum: str='2147483647'):
@@ -37,8 +40,11 @@ class RandomCommands(commands.Cog):
 		])
 
 
-	@commands.hybrid_command(aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
-		description="Выдаёт случайный ответ из заданных на вопрос. [text] разделяется символом \"|\" или переносом строки")
+	@commands.hybrid_command(
+		aliases=["rand", "r", "rng", "рандом", "ранд", "случайный-ответ", "сгенерь-ответ", "кфтвщь", "кфтв", "к", "ктп"],
+		description="Выдаёт случайный ответ на вопрос одним из заданных ответов.",
+		usage="`/random <вопрос>|<ответ1>|<ответ2>`\n\n`!random <вопрос>\n<ответ1>\n<ответ2>`",
+		help="Вопрос и ответы можно разделять символом \"|\" или переносом строки.\n### Пример:\n`/random Когда мне делать мой датапак?|Сегодня|Завтра|Никогда, забей на него`")
 	@app_commands.describe(text="Текст вопроса и ответов. Разделяются символом \"|\" или переносом строки")
 
 	async def random(self, ctx, *, text: str):

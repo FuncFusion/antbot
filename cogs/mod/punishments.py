@@ -30,8 +30,13 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(aliases=["ифт", "бан", "банчек", "заблокировать"])
+	@commands.hybrid_command(
+		aliases=["ифт", "бан", "банчек", "заблокировать"],
+		description="**Модераторская команда.** Банит указанного пользователя.",
+		usage="`/ban <пользователь> [причина]`",
+		help="")
 	@commands.has_permissions(ban_members=True)
+	@app_commands.default_permissions(ban_members=True)
 	async def ban(self, ctx, user: discord.Member, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.ban(reason=reason)
@@ -59,8 +64,13 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			}
 		])
 	
-	@commands.command(aliases=["гтиат", "анбан", "разблокировать"])
+	@commands.hybrid_command(
+		aliases=["гтиат", "анбан", "разблокировать"],
+		description="**Модераторская команда.** Разбанивает указанного пользователя.",
+		usage="`/unban <пользователь>`",
+		help="")
 	@commands.has_permissions(ban_members=True)
+	@app_commands.default_permissions(ban_members=True)
 	async def unban(self, ctx, user: Union[discord.Member, discord.User]):
 		await ctx.guild.unban(user)
 		#
@@ -82,8 +92,13 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			}
 		])
 		
-	@commands.command(aliases=["ьгеу", "мут"])
+	@commands.hybrid_command(
+		aliases=["ьгеу", "мут"],
+		description="**Модераторская команда.** Мутит указанного пользователя.",
+		usage="`/mute <пользователь> <время> [причина]`",
+		help="")
 	@commands.has_permissions(moderate_members=True)
+	@app_commands.default_permissions(moderate_members=True)
 	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.timeout(timedelta(seconds=get_secs(term)), reason=reason)
@@ -127,8 +142,13 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			}
 		])
 		
-	@commands.command(aliases=["лшсл", "кик", "изгнать"])
+	@commands.hybrid_command(
+		aliases=["лшсл", "кик", "изгнать"],
+		description="**Модераторская команда.** Кикает указанного пользователя.",
+		usage="`/kick <пользователь> [причина]`",
+		help="")
 	@commands.has_permissions(kick_members=True)
+	@app_commands.default_permissions(kick_members=True)
 	async def kick(self, ctx, user: discord.Member, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.kick(reason=reason)

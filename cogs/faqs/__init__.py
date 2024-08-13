@@ -28,9 +28,12 @@ class FAQs(commands.Cog, name="FAQ команды"):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["faq","fqs","qna","qnas","факьюшки","чаво","чавошки","вопросы-и-ответы","вопросыиответы", "вопросыответы","афйы","ф","факс"],
-		description = "Показывает список всех факьюшек/алиасов к определённой факьюшке")
-	@app_commands.describe(name = "Название факьюшки, алиасы которого вы хотите посмотреть")
+	@commands.hybrid_command(
+		aliases=["faq","fqs","qna","qnas","факьюшки","чаво","чавошки","вопросы-и-ответы","вопросыиответы", "вопросыответы","афйы","ф","факс"],
+		description = "Показывает список всех факьюшек/алиасов к определённой факьюшке.",
+		usage="`/faqs [название факьюшки]`",
+		help="Смотрите `/help FAQшки` для получения большей информации о них.")
+	@app_commands.describe(name = "Название факьюшки, алиасы которой вы хотите посмотреть")
 	async def faqs(self, ctx, *, name=None):
 		embed = discord.Embed(color=no_color)
 		if name == None:
