@@ -16,9 +16,10 @@ db = MongoClient(MONGO_URI).antbot.not_offered_help_threads
 DAY = 60 * 60 * 24
 
 
-class StarterMessage(commands.Cog):
+class PingHelpers(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.check_threads.start()
 	
 	@tasks.loop(seconds=1, count=1)
 	async def check_threads(self):
@@ -27,18 +28,20 @@ class StarterMessage(commands.Cog):
 			await self.offer_ping_helpers(trd_doc["about_dp"], trd_doc["about_rp"], trd, trd_doc["when_offer"])
 
 	async def offer_ping_helpers(self, about_dp, about_rp, trd, when_offer):
-		db.insert_one({
-			"_id": trd.id,
-			"about_dp": about_dp,
-			"about_rp": about_rp,
-			"when_offer": when_offer
-		})
+		try:
+			db.insert_one({
+				"_id": trd.id,
+				"about_dp": about_dp,
+				"about_rp": about_rp,
+				"when_offer": when_offer
+			})
+		except:pass
 		left_before_offer = when_offer - int(time())
 		await sleep(left_before_offer)
 		trd = await self.bot.fetch_channel(trd.id)
 		if not trd.archived:
 			await trd.send(f"{trd.owner.mention}, не получили ответ? Можете позвать мастеров на помощь!", 
-				view=PingHelpers(about_dp, about_rp))
+				view=Ping_related_helpers(about_dp, about_rp))
 		db.delete_one({"_id": trd.id})
 
 	@commands.Cog.listener("on_thread_create")
@@ -52,10 +55,10 @@ class StarterMessage(commands.Cog):
 				about_rp = True
 			if not (about_dp and about_rp):
 				pass
-			await self.offer_ping_helpers(about_dp, about_rp, trd, int(time)+DAY)
+			await self.offer_ping_helpers(about_dp, about_rp, trd, int(time())+DAY)
 
 
-class PingHelpers(discord.ui.View):
+class Ping_related_helpers(discord.ui.View):
 	def __init__(self, about_dp, about_rp):
 		super().__init__(timeout=None)
 		if not about_dp:
