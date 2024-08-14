@@ -15,11 +15,9 @@ from utils.validator import validate, all_valid, closest_match
 class HelpCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		global all_features
-		all_features = special_features.copy()
-		all_features.update({command.name: command.aliases for command in self.bot.commands})
+		self.all_features = special_features.copy()
 		global offered_features
-		offered_features = [app_commands.Choice(name=feature, value=feature) for feature in list(all_features)][:25]
+		offered_features = [app_commands.Choice(name=feature, value=feature) for feature in list(self.all_features)][:25]
 	
 	@commands.hybrid_command(
 		aliases=["h", "?", "х", "хелп", "помощь", "рудз"], 
@@ -43,7 +41,7 @@ class HelpCommand(commands.Cog):
 			embed.description = f"## Команды:\n{cmd_mentions}\n## Фичи:\n{special_feature_list}\n"
 			await ctx.reply(embed=embed, file=thumbnail, allowed_mentions=no_ping)
 			return
-		feature = closest_match(feature, all_features, 10)
+		feature = closest_match(feature, self.all_features, 10)
 		if feature == None:
 			raise AttributeError
 		embed = discord.Embed(color=no_color)
@@ -79,7 +77,7 @@ class HelpCommand(commands.Cog):
 	async def help_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		global offered_features
 		if curr != "":
-			return [app_commands.Choice(name=feature, value=feature) for feature in all_valid(curr, all_features)][:25]
+			return [app_commands.Choice(name=feature, value=feature) for feature in all_valid(curr, self.all_features)][:25]
 		else:
 			return offered_features
 

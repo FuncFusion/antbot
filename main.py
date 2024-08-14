@@ -44,6 +44,8 @@ class AntBot(commands.Bot):
 			self.add_view(view())
 		self.add_view(JudgeGA(self))
 		await self.tree.sync()
+		HelpCog = self.get_cog("HelpCommand")
+		HelpCog.all_features.update({command.name: command.aliases for command in self.commands})
 		
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 		try:
