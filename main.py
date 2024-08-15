@@ -8,7 +8,7 @@ from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, ServerInfoCommand
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
+from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
@@ -29,7 +29,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		ClearCommand, PunishmentCommands,
 	    MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, IdeaView, R_u_sure]
+views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers]
 
 
 class AntBot(commands.Bot):

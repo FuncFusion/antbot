@@ -13,7 +13,7 @@ from utils.shortcuts import  no_color
 
 db = MongoClient(MONGO_URI).antbot.not_offered_help_threads
 
-DAY = 60 * 60 * 24
+DAY = 1
 
 
 class PingHelpers(commands.Cog):
@@ -59,17 +59,40 @@ class PingHelpers(commands.Cog):
 
 
 class Ping_related_helpers(discord.ui.View):
-	def __init__(self, about_dp, about_rp):
+	def __init__(self, about_dp=True, about_rp=False, disabled=False):
 		super().__init__(timeout=None)
-		if not about_dp:
+		self.about_dp = about_dp
+		self.about_rp = about_rp
+		if disabled:
+			self.ping_dp_masters.disabled = True
+			self.ping_rp_masters.disabled = True
+			self.ping_all_masters.disabled = True
+		if (about_dp and about_rp):
 			self.remove_item(self.ping_dp_masters)
-		if not about_rp:
 			self.remove_item(self.ping_rp_masters)
+		else:
+			self.remove_item(self.ping_all_masters)
+			if not about_dp:
+				self.remove_item(self.ping_dp_masters)
+			elif not about_rp:
+				self.remove_item(self.ping_rp_masters)
+	
+	async def buttons_callback(self, ctx, mentions):
+		is_owner = True if ctx.user == ctx.channel.owner else False
+		if is_owner:
+			await ctx.response.send_message(mentions)
+			await ctx.message.edit(view=Ping_related_helpers(self.about_dp, self.about_rp, True))
+		else:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором поста", ephemeral=True)
 
-	@discord.ui.button(label="Пингануть датапак мастеров", custom_id="starter_message:ping_dp")
+	@discord.ui.button(label="Пингануть датапак мастеров", emoji=Emojis.deta_rack, custom_id="starter_message:ping_dp")
 	async def ping_dp_masters(self, ctx: discord.Interaction, button: discord.ui.Button):
-		await ctx.response.send_message(f"<@&{DATAPACK_MASTER_ROLE}>")
+		await self.buttons_callback(ctx, f"<@&{DATAPACK_MASTER_ROLE}>")
 
-	@discord.ui.button(label="Пингануть ресурспак мастеров", custom_id="starter_message:ping_rp")
+	@discord.ui.button(label="Пингануть ресурспак мастеров", emoji=Emojis.resource_rack, custom_id="starter_message:ping_rp")
 	async def ping_rp_masters(self, ctx: discord.Interaction, button: discord.ui.Button):
-		await ctx.response.send_message(f"<@&{RESOURCEPACK_MASTER_ROLE}>")
+		await self.buttons_callback(ctx, f"<@&{RESOURCEPACK_MASTER_ROLE}>")
+	
+	@discord.ui.button(label="Пингануть всех мастеров", emoji=Emojis.deta_rack, custom_id="starter_message:ping_all")
+	async def ping_all_masters(self, ctx: discord.Interaction, button: discord.ui.Button):
+		await self.buttons_callback(ctx, f"<@&{DATAPACK_MASTER_ROLE}> <@&{RESOURCEPACK_MASTER_ROLE}>")
