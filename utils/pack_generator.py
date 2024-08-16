@@ -117,7 +117,7 @@ class PGenerator:
 
 	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver())):
 		# Validating stuff
-		version = PGenerator.validate_version(version, "dp")
+		version = PGenerator.validate_version(version, "data_pack")
 		legacy = version < 45
 		folders_include = PGenerator.validate_folders(folders_include, "dp", legacy)
 		folders_exclude = PGenerator.validate_folders(folders_exclude, "dp", legacy)
@@ -146,13 +146,13 @@ class PGenerator:
 		dp_f.seek(0)
 		return dp_f
 	
-	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver("rp"))):
+	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver("resource_pack"))):
 		# Validating stuff
 		all_folders = ["atlases", "blockstates", "font", "lang", "models", "particles", "shaders", "texts", "textures"]
 		folders_include = PGenerator.validate_folders(folders_include, "rp"); folders_include = folders_include if folders_include != [] else all_folders
 		folders_exclude = PGenerator.validate_folders(folders_exclude, "rp")
 		namespaces = PGenerator.validate_namespaces(namespaces)
-		version = PGenerator.validate_version(version, "rp")
+		version = PGenerator.validate_version(version, "resource_pack")
 		main_namespace = "namespace" if namespaces == [] else namespaces[0]
 		# Generating rp
 		rp_f = io.BytesIO()
@@ -257,7 +257,7 @@ class Modals:
 				self.namespaces.value.split(),
 				self.folders_include.value.split(), 
 				self.folders_exclude.value.split(), 
-				self.version.value if self.version.value != "" else str(get_mcmeta_ver("rp"))
+				self.version.value if self.version.value != "" else str(get_mcmeta_ver("resource_pack"))
 				)
 			await Interaction.response.send_message(f"## {Emojis.resource_rack} Кастомный шаблон ресурспака", 
 				file=discord.File(rp, filename="Custom_resourcepack_(UNZIP).zip"))
