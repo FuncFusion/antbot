@@ -29,6 +29,7 @@ class PGenerator:
 		"dimension_type": ["дименшон тайп", "тип измерения"],
 		"enchantment": ["энчантмент", "энчанты", "зачарования", "зачары"],
 		"enchantment_provider": ["энчантмент провайдер", "провайдер энчантов", "почставщик зачарования", "зачары"],
+		"functions": ["func", "функ", "функции"],
 		"jukebox_song": ["джукбокс сонг", "песня проигрователя", "диск", "пластинка"],
 		"loot_tables": ["лут тейблы", "таблицы лута", "таблицы добычи"],
 		"paintig_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
@@ -51,6 +52,7 @@ class PGenerator:
 		"dimension_type": ["дименшон тайп", "тип измерения"],
 		"enchantment": ["энчантмент", "энчанты", "зачарования", "зачары"],
 		"enchantment_provider": ["энчантмент провайдер", "провайдер энчантов", "почставщик зачарования", "зачары"],
+		"function": ["func", "функ", "функции"],
 		"jukebox_song": ["джукбокс сонг", "песня проигрователя", "диск", "пластинка"],
 		"loot_table": ["лут тейблы", "таблицы лута", "таблицы добычи"],
 		"paintig_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
@@ -76,7 +78,7 @@ class PGenerator:
 		"textures": ["тещурс", "текстуры"]
 	}
 
-	def validate_folders(folders, legacy):
+	def validate_folders(folders, type, legacy):
 		existing_fldrs = PGenerator.dp_folders if type == "dp" else PGenerator.rp_folders
 		existing_fldrs = PGenerator.legacy_dp_folders if legacy and type == "dp" else existing_fldrs
 		valid_folders = set()
@@ -113,7 +115,7 @@ class PGenerator:
 			version = get_mcmeta_ver(type, version)
 			return version
 
-	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version="32"):
+	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver())):
 		# Validating stuff
 		version = PGenerator.validate_version(version, "dp")
 		legacy = version < 45
@@ -144,7 +146,7 @@ class PGenerator:
 		dp_f.seek(0)
 		return dp_f
 	
-	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version="32"):
+	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver("rp"))):
 		# Validating stuff
 		all_folders = ["atlases", "blockstates", "font", "lang", "models", "particles", "shaders", "texts", "textures"]
 		folders_include = PGenerator.validate_folders(folders_include, "rp"); folders_include = folders_include if folders_include != [] else all_folders
@@ -209,9 +211,10 @@ class Modals:
 				self.namespaces.value.split(),
 				self.folders_include.value.split(), 
 				self.folders_exclude.value.split(), 
-				self.version.value if self.version.value != "" else "32"
+				self.version.value if self.version.value != "" else str(get_mcmeta_ver())
 				)
-			await Interaction.response.send_message(f"{Emojis.deta_rack} Кастомный шаблон датапака", file=discord.File(dp, filename="Custom datapack UNZIP.zip"))
+			await Interaction.response.send_message(f"## {Emojis.deta_rack} Кастомный шаблон датапака", 
+				file=discord.File(dp, filename="Custom_datapack_(UNZIP).zip"))
 	
 	class RP(discord.ui.Modal):
 		def __init__(self):
@@ -254,6 +257,7 @@ class Modals:
 				self.namespaces.value.split(),
 				self.folders_include.value.split(), 
 				self.folders_exclude.value.split(), 
-				self.version.value if self.version.value != "" else "32"
+				self.version.value if self.version.value != "" else str(get_mcmeta_ver("rp"))
 				)
-			await Interaction.response.send_message(f"{Emojis.resource_rack} Кастомный шаблон ресурспака", file=discord.File(rp, filename="Custom resourcepack UNZIP.zip"))
+			await Interaction.response.send_message(f"## {Emojis.resource_rack} Кастомный шаблон ресурспака", 
+				file=discord.File(rp, filename="Custom_resourcepack_(UNZIP).zip"))
