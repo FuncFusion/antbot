@@ -25,7 +25,7 @@ def all_valid(string, valid_strings, accuracy=2):
 					break
 	return matched_strings
 
-def closest_match(string, valid_dict, distance_limit=0):
+def closest_match(string, valid_dict, distance_limit=0, accuracy=0):
 	best_match = None
 	best_distance = float('inf')
 	string = string.lower()
@@ -44,6 +44,8 @@ def closest_match(string, valid_dict, distance_limit=0):
 			if alias_distance < best_distance:
 				best_match = key
 				best_distance = alias_distance
+	if accuracy > 0 and best_distance > len(best_match)/accuracy:
+		return None
 	if distance_limit > 0 and best_distance > distance_limit:
 		return None
 	return best_match
