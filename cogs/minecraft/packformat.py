@@ -31,7 +31,7 @@ class PackformatCommand(commands.Cog):
 
 	async def packformat(self, ctx, *, version: str=None):
 		def format_table(versions, pack):
-			return "\n".join([f"`{ver}` - `{versions[ver][pack]}`" for ver in versions])
+			return "\n".join([f"`{versions[ver][pack]}` - `{ver}`" for ver in versions])
 		#
 		version = None if not version else version.replace(" ", ".")
 		if version in ("all", "al", "a", "все", "вс", "в", "фдд", "фд", "ф"):
