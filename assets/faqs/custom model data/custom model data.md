@@ -1,4 +1,4 @@
-### {bbmodel} {id} CustomModelData
+## {bbmodel} {id} CustomModelData
 CustomModelData - ванильный метод, добавленный в 1.14, который позволяет менять модель предмету в зависимости от значения компонента `custom_model_data` (до 1.20.5 - нбт тега `CustomModelData`), то есть не задевая обычный предмет.
 
 ### Как же пользоваться этим методом?
