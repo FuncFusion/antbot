@@ -5,6 +5,7 @@ from discord.ext import commands, tasks
 from Levenshtein import distance
 from collections import OrderedDict as odict
 from json import dumps, loads
+from re import sub
 from pymongo import MongoClient
 
 from settings import MONGO_URI
@@ -30,18 +31,32 @@ class PackformatCommand(commands.Cog):
 	@app_commands.describe(version="Интересующая версия (так же можно указать 'все')")
 
 	async def packformat(self, ctx, *, version: str=None):
-		def format_table(versions, pack):
-			return "\n".join([f"`{ver}` - `{versions[ver][pack]}`" for ver in versions])
-		#
+		def transform_version_data(version_data, pack_type='data_pack'):
+			grouped_versions = {}
+			for version, data in version_data.items():
+				pack_value = data[pack_type]
+				if pack_value not in grouped_versions:
+					grouped_versions[pack_value] = [version]
+				else:
+					grouped_versions[pack_value].append(version)
+			result = []
+			for pack_value, versions in grouped_versions.items():
+				if len(versions) > 1:
+					result.append(f"`{pack_value}` ― `{versions[0]} - {versions[-1]}`")
+				else:
+					result.append(f"`{pack_value}` ― `{versions[0]}`")
+			return '\n'.join(result)
 		version = None if not version else version.replace(" ", ".")
 		if version in ("all", "al", "a", "все", "вс", "в", "фдд", "фд", "ф"):
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
+			versions_formatted_dp = transform_version_data(all_releases, "data_pack")
+			versions_formatted_rp = transform_version_data(all_releases, "resource_pack")
 			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Все версии пак формата", color=no_color)
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=format_table(all_releases, "data_pack"))
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=format_table(all_releases, "resource_pack"))
+			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
+			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		elif version:
-			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Пакформат для {version}", color=no_color)
+			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Пак формат для {version}", color=no_color)
 			try:
 				dp_ver = f"`{versions[version]["data_pack"]}`"
 			except:
@@ -51,10 +66,11 @@ class PackformatCommand(commands.Cog):
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		else:
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
-			latest_releases = dict(tuple(all_releases.items())[:5])
+			versions_formatted_dp = "\n".join(transform_version_data(all_releases, "data_pack").split("\n")[:5])
+			versions_formatted_rp = "\n".join(transform_version_data(all_releases, "resource_pack").split("\n")[:5])
 			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Последние версии пак формата", color=no_color)
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=format_table(latest_releases, "data_pack"))
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=format_table(latest_releases, "data_pack"))
+			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
+			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
