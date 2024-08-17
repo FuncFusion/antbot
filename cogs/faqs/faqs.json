@@ -29,5 +29,6 @@
 	"преимущества дп над кб": ["datapacks are better than command blocks","преимущества датапаков над кб","дп лучше чем кб","дп над кб","датапаки лучше чем кб","датапаки над кб","дп>кб","датапаки>командные блоки","datapacks>command blocks","datapacks over command blocks","dp over cb","dp>cb","datapack advantages over command blocks","dp advantages over cb","dp is better than cb"],
 	"оптимизация селекторов": ["selector optimization","optimize selectors","селекторы @e","оптимизировать селекторы","аргументы селекторов","оптимизировать аргументы селекторов","оптимизировать аргументы","оптиселектор"],
 	"оптимизация NBT": ["nbt optimization","optimize nbt","оптимизация NBT","оптимизировать NBT","нбт оптимизация","NBT оптимизация"],
-	"schedule луп функции": ["цикличные функции с использованием /schedule", "schedule луп функции","луп функции schedule","луп schedule","цикл через schedule","оптимизация функций через schedule","schedule function optimization","optimization with schedule","optischedule","оптискедюл","луп функций скедюл","оптимизация луп функций"]
+	"schedule луп функции": ["цикличные функции с использованием /schedule", "schedule луп функции","луп функции schedule","луп schedule","цикл через schedule","оптимизация функций через schedule","schedule function optimization","optimization with schedule","optischedule","оптискедюл","луп функций скедюл","оптимизация луп функций"],
+	"макросы": ["macros", "мкр", "макро", "функции с макросами","macro functions"]
 }

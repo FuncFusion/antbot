@@ -29,15 +29,21 @@ class LinkCommand(commands.Cog):
 	async def link(self, ctx, *, resource):
 		resource_link = closest_match(resource, links, 10)
 		if resource_link == None:
-			raise Exception("Not Found")
+			raise AttributeError("Not Found")
 		await ctx.reply(f"## {Emojis.link} [{links[resource_link][0]}]({resource_link})", allowed_mentions=no_ping)
 	
 	@link.error
 	async def link_error(self, ctx, error):
-		await handle_errors(ctx, error, [{
-			"contains": "Not Found",
-			"msg": "Ссылка по этому запросу не найдена"
-		}])
+		await handle_errors(ctx, error, [
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": "Пожалуйста, укажите название ресурса. Используйте **слэш** команду </link:1267188435492405359>, где в автокомплите будет видно список доступных ресурсов."
+			},
+			{
+				"contains": "Not Found",
+				"msg": "Ссылка по этому запросу не найдена"
+			}
+		])
 	
 	@link.autocomplete("resource")
 	async def link_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:

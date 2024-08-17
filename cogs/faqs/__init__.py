@@ -52,8 +52,9 @@ class FAQs(commands.Cog, name="FAQ команды"):
 	async def link_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		global offered_faqs
 		if curr != "":
-			offered_faqs = [app_commands.Choice(name=faq, value=faq) for faq in all_valid(curr, db)][:25]
-		return offered_faqs
+			return [app_commands.Choice(name=faq, value=faq) for faq in all_valid(curr, db)][:25]
+		else:
+			return offered_faqs
 	
 	@faqs.error
 	async def faqs_error(self, ctx, error):
@@ -83,6 +84,12 @@ class FAQs(commands.Cog, name="FAQ команды"):
 			faq_name = closest_match(arg, db, accuracy=3)
 			if faq_name != None:
 				faq = faq_name
+		if faq == None:
+			await handle_errors(msg, AttributeError("Not Found"), [{
+				"exception": AttributeError,
+				"msg": "Факьюшка не найдена"
+			}])
+			return
 		files = []
 		for filename in os.listdir(f"assets/faqs/{faq}"):
 			if not filename.endswith(".md"):
@@ -102,4 +109,4 @@ class FAQs(commands.Cog, name="FAQ команды"):
 				await msg.channel.send(answer, allowed_mentions=no_ping)
 			else:
 				await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
-						
+		
