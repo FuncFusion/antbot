@@ -42,7 +42,7 @@ class PackformatCommand(commands.Cog):
 			result = []
 			for pack_value, versions in grouped_versions.items():
 				if len(versions) > 1:
-					result.append(f"`{pack_value}` ― `{versions[0]} - {versions[-1]}`")
+					result.append(f"`{pack_value}` ― `{versions[-1]} - {versions[0]}`")
 				else:
 					result.append(f"`{pack_value}` ― `{versions[0]}`")
 			return '\n'.join(result)
@@ -76,6 +76,10 @@ class PackformatCommand(commands.Cog):
 
 	@packformat.error
 	async def packformat_error(self, ctx, error: Exception):
-		print(error)
-		await handle_errors(ctx, error, [])
+		await handle_errors(ctx, error, [
+			{
+				"contains": "KeyError",
+				"msg": "Пакформат для указанной версии не найден"
+			}
+		])
 
