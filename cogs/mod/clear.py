@@ -20,6 +20,8 @@ class ClearCommand(commands.Cog):
 
 	async def clear(self, ctx, count: int, channel: discord.TextChannel=None):
 		channel = channel if channel != None else ctx.channel
+		if count < 1:
+			raise Exception("count")
 		if ctx.interaction:
 			await ctx.message.delete()
 		await channel.purge(limit=count)
@@ -28,6 +30,10 @@ class ClearCommand(commands.Cog):
 	@clear.error
 	async def clear_error(self, ctx, error):
 		await handle_errors(ctx, error, [
+			{
+				"contains": "count",
+				"msg": "Количество сообщений должно быть больше или равно 1"
+			},
 			{
 				"exception": commands.MissingRequiredArgument,
 				"msg": "Пожалуйста, укажите количество сообщений которое будет удалено"

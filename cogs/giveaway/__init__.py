@@ -201,10 +201,10 @@ async def end_ga(msg_id, bot):
 class GAModerationCommands(commands.Cog):
 
 	@commands.hybrid_command(
-		aliases=["bl", "бл", "чс"],
+		aliases=["bl", "бл", "чс", "блэклист","черный-список"],
 		description="Оперирует блэклистом розыгрыша.",
 		usage="`/blacklist <add|remove> <пользователь(и)>`",
-		help="Команда должна быть отправлена в ветку розыгрыша его автором. При добавлении пользователя в блэклист он также исключается из списка участников.\n### Пример:\n`/blacklist add <@808665387142873108>`\n`/blacklist remove <@808665387142873108> <@511049889371783180>`")
+		help="Команда должна быть отправлена в ветку розыгрыша его автором. При добавлении пользователя в блэклист он также исключается из списка участников.\n### Пример:\n`/blacklist add <@808665387142873108>`\n`/blacklist remove <@808665387142873108>`")
 	@app_commands.describe(users="@Упоминания пользователей")
 	async def blacklist(self, ctx, operation: Literal["add", "remove"], users: str):
 		if not (isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == GIVEAWAYS_CHANNEL_ID):

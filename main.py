@@ -34,7 +34,7 @@ views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers]
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
-		super().__init__(intents=intents, command_prefix=command_prefix)
+		super().__init__(intents=intents, command_prefix=command_prefix, case_insensitive=True)
 
 	async def setup_hook(self):
 		self.remove_command("help")
@@ -45,7 +45,7 @@ class AntBot(commands.Bot):
 		self.add_view(JudgeGA(self))
 		await self.tree.sync()
 		HelpCog = self.get_cog("HelpCommand")
-		HelpCog.all_features.update({command.name: command.aliases for command in self.commands})
+		HelpCog.all_features.update({command.name: command.aliases for command in sorted(self.commands, key=lambda cmd: cmd.name)})
 		
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 		try:

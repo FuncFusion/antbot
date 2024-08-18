@@ -94,7 +94,7 @@ class IdeaCommands(commands.Cog):
 		aliases=["approve", "accept", "accept-idea", "одобрить-идею", "фззкщму-швуф", "фззкщму","фссузе"],
 		description="Одобряет идею.",
 		usage="`/approve-idea` (в ветке обсуждения идеи)",
-		help="После введения этой команды появиться окно для введения вердикта. Автор идеи получит сообщение в лс о том, что идея была одобрена.")
+		help="После введения этой команды появится окно для введения вердикта. Автор идеи получит сообщение в лс о том, что идея была одобрена.")
 	async def approve_idea_pointer(self, ctx):
 		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду </approve-idea:1263846916798681159>", allowed_mentions=no_ping)
 	
