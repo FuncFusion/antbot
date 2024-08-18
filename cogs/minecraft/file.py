@@ -25,10 +25,10 @@ class FileCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.hybrid_command(aliases=["f", "файл", "ашду"], 
-		description="Скидывает файл с ванильного датапака/ресурспака",
-		usage="`/file {название файла}`",
-		help="Слэш команда имеет автокомплит для файлов, что делает их поиск легче")
+	@commands.hybrid_command(aliases=["f", "asset", "mcasset", "файл", "ашду", "ассет", "эссет", "мсассет", "мсэссэт","фыыуе","ьсфыыуе"], 
+		description="Скидывает файл с ванильного датапака/ресурспака.",
+		usage="`/file <путь/название интересующего файл>`",
+		help="Слэш команда имеет автокомплит для файлов, что делает их поиск легче.\n### Пример:\n`/file colormap/grass`")
 	@app_commands.describe(path="Путь/название интересующего файла")
 
 	async def file(self, ctx, path: str):
