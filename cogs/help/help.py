@@ -16,8 +16,6 @@ class HelpCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.all_features = special_features.copy()
-		global offered_features
-		offered_features = [app_commands.Choice(name=feature, value=feature) for feature in list(self.all_features)][:25]
 	
 	@commands.hybrid_command(
 		aliases=["h", "?", "х", "хелп", "помощь", "рудз"], 
@@ -33,7 +31,7 @@ class HelpCommand(commands.Cog):
 					permed_cmd_list.append(command)
 				elif ctx.channel.permissions_for(ctx.author) >= command.default_member_permissions:
 					permed_cmd_list.append(command)
-			cmd_mentions = ", ".join([f"{command.mention}" for command in permed_cmd_list])
+			cmd_mentions = ", ".join([f"{command.mention}" for command in sorted(permed_cmd_list, key=lambda command: command.name)])
 			special_feature_list = "\n".join([f"**`{special_feature}`**" for special_feature in special_features])
 			thumbnail = discord.File("assets/antbot.png", filename="antbot.png")
 			embed = discord.Embed(color=no_color)
@@ -75,11 +73,10 @@ class HelpCommand(commands.Cog):
 	
 	@help.autocomplete("feature")
 	async def help_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
-		global offered_features
 		if curr != "":
 			return [app_commands.Choice(name=feature, value=feature) for feature in all_valid(curr, self.all_features)][:25]
 		else:
-			return offered_features
+			return [app_commands.Choice(name=feature, value=feature) for feature in list(self.all_features)][:25]
 
 	@help.error
 	async def help_error(self, ctx, error):
