@@ -34,6 +34,8 @@ class SyntaxCommand(commands.Cog):
 		for syntax in syntaxes.keys():
 			syntaxes_dict.update({syntax: []})
 		command = closest_match(command, syntaxes_dict, 10)
+		if command == None:
+			raise Exception("KeyError")
 		embed = discord.Embed(color=no_color)
 		embed.description=f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command]
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
