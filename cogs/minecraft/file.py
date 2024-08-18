@@ -1,6 +1,7 @@
 import discord
 from discord import app_commands
-from discord.ext import commands, tasks
+from discord.ext import commands
+from discord.utils import MISSING
 
 from requests import get
 from typing import List
@@ -31,20 +32,26 @@ class FileCommand(commands.Cog):
 	@app_commands.describe(path="Путь/название интересующего файла")
 
 	async def file(self, ctx, path: str):
-		global files
+		is_image = False
 		all_results = [value for key, value in files.items() if path in value]
 		path = all_results[0]
+		#
 		path_tree = ""
 		for idx, part in enumerate(path.split("/")):
 			path_tree += f"{' '*idx}{part}\n"
 		path_tree = generate_tree(path_tree)
 		#
-		main_embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]}\n{path_tree}",
+		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]}\n{path_tree}",
 			color=no_color)
 		file = discord.File(BytesIO(get(f"https://raw.githubusercontent.com/misode/mcmeta/{path.split('/')[0]}/{path}").content), 
 			filename=path.split("/")[-1])
-		await ctx.reply(embed=main_embed, allowed_mentions=no_ping)
-		await ctx.channel.send(file=file)
+		#
+		if path.endswith("png"):
+			embed.set_image(url=f"attachment://{file.filename}")
+			is_image = True
+		await ctx.reply(embed=embed, file=file if is_image else MISSING, allowed_mentions=no_ping)
+		if not is_image:
+			await ctx.channel.send(file=file)
 	
 	@file.error
 	async def file_error(self, ctx, error):
