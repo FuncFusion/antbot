@@ -16,15 +16,15 @@ async def handle_errors(ctx, error, errors):
 		#
 		if curr_score == case_cost:
 			emoji = Emojis.exclamation_mark if not case['msg'].startswith("<") else ''
-			if isinstance(ctx, discord.Interaction):
-				await ctx.response.send_message(f"{emoji}{case['msg']}", allowed_mentions=no_ping, ephemeral=True)
+			if ctx.interaction:
+				await ctx.interaction.response.send_message(f"{emoji}{case['msg']}", allowed_mentions=no_ping, ephemeral=True)
 			else:
 				await ctx.reply(f"{emoji}{case['msg']}", allowed_mentions=no_ping, delete_after=(None if ctx.channel.id == \
 				BOT_COMMANDS_CHANNEL_ID else 5))
 			break
 	else:
-		if isinstance(ctx, discord.Interaction):
-			await ctx.response.send_message(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
+		if ctx.interaction:
+			await ctx.interaction.response.send_message(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
 				<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`".replace("\t", ""),
 				allowed_mentions=no_ping, ephemeral=True)
 		else:
