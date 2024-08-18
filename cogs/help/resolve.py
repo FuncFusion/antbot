@@ -24,7 +24,12 @@ class ResolveCommand(commands.Cog):
 		helpers="Люди, которые помогли решить проблему")
 
 	async def resolve(self, ctx, solution: str=None, *, helpers: str="None"):
-		heleprs_ids = [int(helepr_id) for helepr_id in findall(r"(?<=<@)([0-9]+)(?=>)", helpers)]
+		# Args from reply
+		if ctx.message.reference and not solution:
+			reference = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+			solution = reference.jump_url
+			helpers = reference.author.mention
+		#
 		helpers_mentions = findall(r"<@[0-9]+>", helpers)
 		is_moderator = ctx.channel.permissions_for(ctx.author).manage_messages
 		# Error handling
@@ -32,8 +37,7 @@ class ResolveCommand(commands.Cog):
 			raise Exception("Channel is not help forum")
 		elif ctx.author != ctx.channel.owner and not is_moderator:
 			raise Exception("User not author/op")
-		elif solution == None:
-			# Building embed
+		elif solution == None and not ctx.message.refernce:
 			embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=no_color,
 				description=f"{Emojis.exclamation_mark} Вы не указали ни сообщение, ни людей которые помогли решить проблему, \
 				это заархивирует ветку без решения".replace("\t", ""))

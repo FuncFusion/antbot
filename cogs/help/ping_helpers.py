@@ -13,7 +13,7 @@ from utils.shortcuts import  no_color
 
 db = MongoClient(MONGO_URI).antbot.not_offered_help_threads
 
-DAY = 1
+DAY = 60 * 60 * 24
 
 
 class PingHelpers(commands.Cog):
