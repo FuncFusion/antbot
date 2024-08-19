@@ -65,13 +65,13 @@ class GAInfo(discord.ui.Modal):
 		label="Приз(ы)",
 		style=discord.TextStyle.long,
 		min_length=3,
-		max_length=1999
+		max_length=1024
 	)
 	description = discord.ui.TextInput(
 		label="Описание",
 		style=discord.TextStyle.long,
 		min_length=5,
-		max_length=1999
+		max_length=1024
 	)
 	end_date = discord.ui.TextInput(
 		label="Закончится через...",
@@ -80,7 +80,8 @@ class GAInfo(discord.ui.Modal):
 	)
 	winners_count = discord.ui.TextInput(
 		label="Количество победителей",
-		default="1"
+		default="1",
+		max_length=10
 	)
 	whitelist_only = discord.ui.TextInput(
 		label="Доступ по вайтлисту",
@@ -93,6 +94,9 @@ class GAInfo(discord.ui.Modal):
 		if end_date_secs < 60:
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Неправильно указано время.", ephemeral=True)
 			return
+		if not self.winners_count.value.isnumeric() or int(self.winners_count.value) < 1:
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Неправильно указано количество победителей.", ephemeral=True)
+			return
 		#
 		embed = discord.Embed(color=no_color)
 		embed.add_field(name=f"{Emojis.party_popper} Приз(ы)", value=self.prize.value)
@@ -102,9 +106,9 @@ class GAInfo(discord.ui.Modal):
 		#img
 		if self.image != None:
 			image_attachment = await self.image.to_file(filename=self.image.filename)
+			embed.set_image(url=f"attachment://{self.image.filename}")
 		else:
 			image_attachment = MISSING
-		embed.set_image(url=f"attachment://{self.image.filename}")
 		#
 		ga_judge_channel = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
