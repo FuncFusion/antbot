@@ -101,10 +101,10 @@ class GAInfo(discord.ui.Modal):
 		embed.set_author(name=ctx.user.name, icon_url=ctx.user.display_avatar.url)
 		#img
 		if self.image != None:
-			image_attachment = await self.image.to_file(filename="giveaway.png")
+			image_attachment = await self.image.to_file(filename=self.image.filename)
 		else:
 			image_attachment = MISSING
-		embed.set_image(url="attachment://giveaway.png")
+		embed.set_image(url=f"attachment://{self.image.filename}")
 		#
 		ga_judge_channel = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
 		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
