@@ -55,11 +55,17 @@ class FileCommand(commands.Cog):
 	
 	@file.error
 	async def file_error(self, ctx, error):
-		await handle_errors(ctx, error, [{
+		await handle_errors(ctx, error, [
+		{
+			"exception": commands.MissingRequiredArgument,
+			"msg": "Не указан путь/название файла"
+		},
+		{
 			"contains": "IndexError",
 			"msg": "Файл по данному запросу не найден. Попробуйте воспользоватся **слэш** \
 				командой </file:1274682569715355688> для более удобного поиска".replace("\t", "")
-		}])
+		}
+		])
 	
 	@file.autocomplete(name="path")
 	async def file_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:

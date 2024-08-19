@@ -46,6 +46,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 			aliases = ", ".join([f"`{alias}`" for alias in db[faq]])             
 			embed.title = f"{Emojis.txt} Список алиасов для \"{faq}\""
 			embed.add_field(name="", value=aliases, inline=False)
+			embed.set_footer(text="Смотрите /help FAQшки для получения большей информации о них.")
 			await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	
 	@faqs.autocomplete(name="name")
