@@ -32,7 +32,7 @@ class HelpCommand(commands.Cog):
 				elif ctx.channel.permissions_for(ctx.author) >= command.default_member_permissions:
 					permed_cmd_list.append(command)
 			cmd_mentions = ", ".join([f"{command.mention}" for command in sorted(permed_cmd_list, key=lambda command: command.name)])
-			special_feature_list = "\n".join([f"**`{special_feature}`**" for special_feature in special_features])
+			special_feature_list = "\n".join([f"- **`{special_feature}`**" for special_feature in special_features])
 			thumbnail = discord.File("assets/antbot.png", filename="antbot.png")
 			embed = discord.Embed(color=no_color)
 			embed.set_thumbnail(url="attachment://antbot.png")

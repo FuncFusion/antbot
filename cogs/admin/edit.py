@@ -22,6 +22,8 @@ class EditCommand(commands.Cog):
 	async def edit(self, ctx, message:str, *, text:str=""):
 		mentions = discord.AllowedMentions.none()
 		if ctx.message.reference == None:
+			if text == "":
+				raise Exception("MissingText")
 			msg = await get_msg_by_id_arg(self, ctx, self.bot, message)
 			if msg.mentions != []: mentions = discord.AllowedMentions.all()
 			await discord.Message.edit(self=msg, content=text[:2000], allowed_mentions=mentions)
@@ -36,6 +38,10 @@ class EditCommand(commands.Cog):
 	@edit.error
 	async def edit_error(self, ctx, error: Exception):
 		await handle_errors(ctx, error, [
+			{
+				"contains": "MissingText",
+				"msg": "Не указан текст для изменения"
+			},
 			{
 				"exception": commands.MissingRequiredArgument,
 				"msg": "Не хватает аргументов"

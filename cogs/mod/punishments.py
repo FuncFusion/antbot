@@ -31,7 +31,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		self.bot = bot
 
 	@commands.hybrid_command(
-		aliases=["ифт", "бан", "банчек", "заблокировать"],
+		aliases=["ифт", "бан", "банчек", "заблокировать","забанить","кастую-бан"],
 		description="**Модераторская команда.** Банит указанного пользователя.",
 		usage="`/ban <пользователь> [причина]`",
 		help="")
