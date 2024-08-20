@@ -103,11 +103,13 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		answers = content.split("\n---separator---\n")
 		for answer in answers:
 			if len(answers) == 1:
+				answer += "\n-# Источник: [AntBot](https://github.com/FuncFusion/antbot)"
 				await msg.channel.send(answer, files=files, reference=msg, allowed_mentions=no_ping)
 			elif answers.index(answer) == 0:
 				await msg.channel.send(answer, reference=msg, allowed_mentions=no_ping)
 			elif answer != answers[-1]:
 				await msg.channel.send(answer, allowed_mentions=no_ping)
 			else:
+				answer += "\n-# Источник: [AntBot](https://github.com/FuncFusion/antbot)"
 				await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
 		

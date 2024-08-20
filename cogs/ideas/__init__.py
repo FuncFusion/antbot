@@ -30,7 +30,7 @@ class IdeaCommands(commands.Cog):
 
 	@commands.hybrid_command(
 		aliases=["швуф", "идея", "suggest", "предложить", "ыгппуые"],
-		description="Позволяет предложить идею для сервера, публикуя её в канале `💡・идеи`.",
+		description="Публикует идею для сервера в https://discord.com/channels/914772142300749854/916959715869741086.",
 		usage="`/idea <идея>`",
 		help="### Пример:\n`/idea Добавить канал для сэйгексинга`")
 	@app_commands.describe(suggestion="Идея")
@@ -71,7 +71,12 @@ class IdeaCommands(commands.Cog):
 	async def vv_error(self, ctx, error):
 		await handle_errors(ctx, error, wrong_channel_errors)
 
-	@commands.command(name="view-voters", aliases=["vv", "вью-вотерс", "посмотреть-голоса", "мшуц-мщеукы", "мм","пг"],)
+	@commands.command(
+		name="view-voters",
+		description="Показывает список голосующих за идею.",
+		aliases=["vv", "вью-вотерс", "посмотреть-голоса", "мшуц-мщеукы", "мм","пг"],
+		usage="`/view-voters`",
+		help="")
 	async def view_voters_pointer(self, ctx):
 		await ctx.reply(f"{Emojis.exclamation_mark} Используй **слэш** команду </view-voters:1263846916798681158>", allowed_mentions=no_ping)
 	

@@ -65,7 +65,7 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		])
 	
 	@commands.hybrid_command(
-		aliases=["гтиат", "анбан", "разблокировать"],
+		aliases=["гтиат", "анбан", "разблокировать", "pardon", "разбанить", "пардон"],
 		description="**Модераторская команда.** Разбанивает указанного пользователя.",
 		usage="`/unban <пользователь>`",
 		help="")

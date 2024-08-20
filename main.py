@@ -46,6 +46,8 @@ class AntBot(commands.Bot):
 		await self.tree.sync()
 		HelpCog = self.get_cog("HelpCommand")
 		HelpCog.all_features.update({command.name: command.aliases for command in sorted(self.commands, key=lambda cmd: cmd.name)})
+		del HelpCog.all_features['debug']
+
 		
 		logger.info(f"User: {bot.user} (ID: {bot.user.id})")
 		try:
