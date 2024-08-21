@@ -6,7 +6,7 @@ import asyncio
 from cogs.admin import DebugCommand, EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
-from cogs.general import JoinAndLeaveMessage, ServerInfoCommand
+from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
@@ -23,7 +23,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		EnchantCommands, LookForCommand, RandomCommands,	
 		HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, StarterMessage, SyntaxCommand,
 		IdeaCommands,
-		JoinAndLeaveMessage, SayCommand, ServerInfoCommand,
+		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
 		Logs,
 		ClearCommand, PunishmentCommands,
@@ -34,7 +34,7 @@ views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers]
 
 class AntBot(commands.Bot):
 	def __init__(self, *, intents: discord.Intents, command_prefix: str):
-		super().__init__(intents=intents, command_prefix=command_prefix, case_insensitive=True)
+		super().__init__(intents=intents, command_prefix=commands.when_mentioned_or(command_prefix), case_insensitive=True)
 
 	async def setup_hook(self):
 		self.remove_command("help")
