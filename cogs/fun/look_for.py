@@ -10,7 +10,7 @@ from settings import LOOK_FOR_CHANNEL_ID, MONGO_URI
 from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
-from utils.validator import validate
+from utils.validator import validate, is_valid_image
 
 db = MongoClient(MONGO_URI).antbot.look_for
 
@@ -101,7 +101,7 @@ class LFInfo(discord.ui.Modal):
 
 	async def on_submit(self, ctx: discord.Interaction):
 		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {self.game.value}", color=no_color)
-		if not self.image:
+		if not self.image and not is_valid_image(self.image.filename):
 			banners_count = {"minecraft": 3, "terraria": 0, "gartic": 0}
 			games = {
 				"minecraft": ["майнкрафт", "mc", "кубы", "говнокрафт"],
@@ -116,7 +116,7 @@ class LFInfo(discord.ui.Modal):
 				filename="banner.png")
 				embed.set_image(url="attachment://banner.png")
 		else:
-			game_banner = await self.image.to_file(filename="banner.png")
+			game_banner = await self.image.to_file(filename=self.image.filename)
 			embed.set_image(url="attachment://banner.png")
 		embed.set_author(name=ctx.user.display_name, icon_url=ctx.user.display_avatar.url)
 		embed.add_field(name="Подробности", value=self.description.value, inline=False)

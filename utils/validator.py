@@ -49,3 +49,13 @@ def closest_match(string, valid_dict, distance_limit=0, accuracy=0):
 	if distance_limit > 0 and best_distance > distance_limit:
 		return None
 	return best_match
+
+def is_valid_image(filename):
+	if any(
+		filename.endswith(".gif"),
+		filename.endswith(".png"),
+		filename.endswith(".jpg"),
+		filename.endswith(".jpeg"),
+		filename.endswith(".webp")):
+		return True
+	return False

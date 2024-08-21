@@ -17,6 +17,7 @@ from utils.msg_utils import Emojis, user_from_embed
 from utils.shortcuts import no_color, no_ping
 from utils.time import get_secs
 from utils.users_db import DB as UDBUtils
+from utils.validator import is_valid_image
 
 users_db = MongoClient(MONGO_URI).antbot.users
 db = MongoClient(MONGO_URI).antbot.giveaways
@@ -92,7 +93,7 @@ class GAInfo(discord.ui.Modal):
 	async def on_submit(self, ctx: discord.Interaction):
 		end_date_secs = get_secs(self.end_date.value)
 		if end_date_secs < 60:
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Неправильно указано время.", ephemeral=True)
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Слишком мало времени", ephemeral=True)
 			return
 		if not self.winners_count.value.isnumeric() or int(self.winners_count.value) < 1:
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Неправильно указано количество победителей.", ephemeral=True)
@@ -101,21 +102,20 @@ class GAInfo(discord.ui.Modal):
 		embed = discord.Embed(color=no_color)
 		embed.add_field(name=f"{Emojis.party_popper} Приз(ы)", value=self.prize.value)
 		embed.add_field(name="Описание", value=self.description.value, inline=False)
-		embed.add_field(name="Конкурс закончится", value=f"<t:{int(time()) + end_date_secs}:R>", inline=False)
 		embed.set_author(name=ctx.user.name, icon_url=ctx.user.display_avatar.url)
 		#img
-		if self.image != None:
+		if self.image != None and is_valid_image(self.image.filename):
 			image_attachment = await self.image.to_file(filename=self.image.filename)
 			embed.set_image(url=f"attachment://{self.image.filename}")
 		else:
 			image_attachment = MISSING
 		#
 		ga_judge_channel = await self.bot.fetch_channel(GIVEAWAYS_REQUESTS_CHANNEL_ID)
-		ga_msg = await ga_judge_channel.send(embed=embed, file=image_attachment, view=JudgeGA(self.bot))
+		ga_msg = await ga_judge_channel.send(f"Закончится через {end_date_secs / 60} минут.", embed=embed, file=image_attachment, view=JudgeGA(self.bot))
 		ga_doc = {
 			"_id": ga_msg.id,
 			"author_id": ctx.user.id,
-			"end_date": end_date_secs,
+			"end_after": end_date_secs,
 			"winners_count": max(1, int(self.winners_count.value)),
 			"participants": [],
 			"blacklist": []
@@ -140,9 +140,12 @@ class JudgeGA(discord.ui.View):
 	
 	@discord.ui.button(label="Одобрить", emoji=Emojis.check, custom_id="ga:approve")
 	async def approve(self, ctx, button):
-		ga_author = await self.bot.fetch_user(db.find_one({"_id":ctx.message.id})["author_id"])
+		ga = db.find_one({"_id":ctx.message.id})
+		ga_author = await self.bot.fetch_user(ga["author_id"])
 		ga_channel = await self.bot.fetch_channel(GIVEAWAYS_CHANNEL_ID)
-		posted_ga = await ga_channel.send(embed=ctx.message.embeds[0], view=TakePart())
+		embed = ctx.message.embeds[0]
+		embed.add_field(name="Конкурс закончится", value=f"<t:{int(time()) + ga["end_after"]}:R>", inline=False)
+		posted_ga = await ga_channel.send(embed=embed, view=TakePart())
 		await posted_ga.create_thread(name=f"Розыгрыш {ga_author.name}")
 		db.update_one({"_id":ctx.message.id}, {"$set": {"message_id": posted_ga.id}})
 		await ctx.response.edit_message(view=JudgeGA(self.bot, "approved"))
@@ -159,6 +162,7 @@ class JudgeGA(discord.ui.View):
 		ga_author = await self.bot.fetch_user(user_from_embed(ctx.message))
 		await ga_author.send(f"{Emojis.cross} Ваш розыгрыш отклонён")
 
+
 class TakePart(discord.ui.View):
 	def __init__(self, particicpants_count="0", disable=False):
 		super().__init__(timeout=None)
@@ -170,7 +174,8 @@ class TakePart(discord.ui.View):
 	async def take_part(self, ctx, button):
 		ga = db.find_one({"message_id":ctx.message.id})
 		if ctx.user.id in ga["participants"]:
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы уже учавствуете в конкурсе", ephemeral=True)
+			db.update_one({"message_id":ctx.message.id}, {"$pull": {"participants": ctx.user.id}})
+			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы отказались от участия в конкурсе", ephemeral=True)
 		elif ctx.user.id in ga["blacklist"]:
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы в блэклисте", ephemeral=True)
 		elif "whitelist" in ga and ctx.user.id not in ga["whitelist"]:
