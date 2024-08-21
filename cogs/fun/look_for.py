@@ -96,7 +96,7 @@ class LFInfo(discord.ui.Modal):
 		label="Детали",
 		style=discord.TextStyle.long,
 		placeholder="Ищу тиммейта для игры на сервере\nАйпи сервера `play.originrealms.com`, только лицензия",
-		max_length=1999
+		max_length=1024
 	)
 
 	async def on_submit(self, ctx: discord.Interaction):
