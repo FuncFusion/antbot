@@ -46,6 +46,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 			aliases = ", ".join([f"`{alias}`" for alias in db[faq]])             
 			embed.title = f"{Emojis.txt} Список алиасов для \"{faq}\""
 			embed.add_field(name="", value=aliases, inline=False)
+			embed.set_footer(text="Смотрите /help FAQшки для получения большей информации о них.")
 			await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	
 	@faqs.autocomplete(name="name")
@@ -102,11 +103,13 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		answers = content.split("\n---separator---\n")
 		for answer in answers:
 			if len(answers) == 1:
+				answer += "\n-# Источник: [AntBot](https://github.com/FuncFusion/antbot)"
 				await msg.channel.send(answer, files=files, reference=msg, allowed_mentions=no_ping)
 			elif answers.index(answer) == 0:
 				await msg.channel.send(answer, reference=msg, allowed_mentions=no_ping)
 			elif answer != answers[-1]:
 				await msg.channel.send(answer, allowed_mentions=no_ping)
 			else:
+				answer += "\n-# Источник: [AntBot](https://github.com/FuncFusion/antbot)"
 				await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
 		

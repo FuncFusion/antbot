@@ -16,7 +16,6 @@ from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.misc
 
-
 class PackformatCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -28,7 +27,7 @@ class PackformatCommand(commands.Cog):
 		description="Выдаёт актуальные числа, которые соответствуют версиям в pack_format у дп и рп.",
 		usage="`/packformat [все|версия майна]`",
 		help="Если не вводить никаких аргументов, команда выдаст числа для последних нескольких версий игры. Если ввести определённую версию, выдаст именно для неё числа, а если `все` или `all`, то выдаст числа на все релизные версии.\n### Пример:\n`/packformat 1.21`")
-	@app_commands.describe(version="Интересующая версия (так же можно указать 'все')")
+	@app_commands.describe(version="Интересующая версия (также можно указать 'все')")
 
 	async def packformat(self, ctx, *, version: str=None):
 		def transform_version_data(version_data, pack_type='data_pack'):
@@ -56,6 +55,8 @@ class PackformatCommand(commands.Cog):
 			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		elif version:
+			if version in ("latest","последняя","последний"):
+				version = versions["latest"]["id"]
 			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Пак формат для {version}", color=no_color)
 			try:
 				dp_ver = f"`{versions[version]["data_pack"]}`"
