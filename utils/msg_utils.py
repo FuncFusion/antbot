@@ -231,3 +231,4 @@ class Emojis:
 	string = "<:string:1274090787205939314>"
 	ajmeta = "<:ajmeta:1259232304740438066>"
 	svelte = "<:svelte:1259210189282742355>"
+	github = "<:github:1276178127717924947>"

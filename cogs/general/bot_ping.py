@@ -25,7 +25,7 @@ class BotPingView(discord.ui.View):
 		super().__init__(timeout=None)
 		self.add_item(discord.ui.Button(
 			label="Исходный код",
-			emoji=f"{Emojis.link}",
+			emoji=f"{Emojis.github}",
 			url="https://github.com/FuncFusion/antbot"
 		))
 		self.add_item(discord.ui.Button(
