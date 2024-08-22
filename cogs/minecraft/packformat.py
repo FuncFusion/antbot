@@ -15,7 +15,7 @@ from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.misc
-offered_versions = (app_commands.Choice(name="Все", value="Все"), app_commands.Choice(name="Последние", value="Последние"))
+offered_versions = (app_commands.Choice(name="Все", value="все"), app_commands.Choice(name="Последняя", value="последняя"))
 
 
 class PackformatCommand(commands.Cog):
@@ -28,8 +28,8 @@ class PackformatCommand(commands.Cog):
 		"мсметаформат", "пакмсметаформат","пф", "зфслащкьфе", "за"], 
 		description="Выдаёт актуальные числа, которые соответствуют версиям в pack_format у дп и рп.",
 		usage="`/packformat [все|версия майна]`",
-		help="Если не вводить никаких аргументов, команда выдаст числа для последних нескольких версий игры. Если ввести определённую версию, выдаст именно для неё числа, а если `все` или `all`, то выдаст числа на все релизные версии.\n### Пример:\n`/packformat 1.21`")
-	@app_commands.describe(version="Интересующая версия (также можно указать 'все')")
+		help="Если не вводить никаких аргументов, команда выдаст числа для последних нескольких версий игры. Если ввести определённую версию, выдаст именно для неё числа, если `все`, то выдаст числа на все релизные версии, а если `последняя`, то выдаст числа для последней версии/снапшота.\n### Пример:\n`/packformat 1.21`")
+	@app_commands.describe(version="Интересующая версия")
 
 	async def packformat(self, ctx, *, version: str=None):
 		def transform_version_data(version_data, pack_type='data_pack'):
@@ -52,11 +52,11 @@ class PackformatCommand(commands.Cog):
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
 			versions_formatted_dp = transform_version_data(all_releases, "data_pack")
 			versions_formatted_rp = transform_version_data(all_releases, "resource_pack")
-			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Все версии пак формата", color=no_color)
+			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Все (релизные) версии пак формата", color=no_color)
 			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
 			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
-		elif version and version != "Последние":
+		elif version:
 			if version in ("latest","последняя","последний"):
 				version = versions["latest"]["id"]
 			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Пак формат для {version}", color=no_color)
