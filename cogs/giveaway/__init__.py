@@ -34,7 +34,8 @@ class GiveawayCommand(commands.Cog):
 	@tasks.loop(count=1, seconds=1)
 	async def check_giveaways(self):
 		for ga in db.find():
-			await end_ga(ga["message_id"], self.bot)
+			if ga["message_id"]:
+				await end_ga(ga["message_id"], self.bot)
 
 	@app_commands.command(name="giveaway", description="Создаёт пост о розыгрыше в #🎉・розыгрыши.")
 	async def ga(self, ctx, image: discord.Attachment=None):
@@ -175,7 +176,8 @@ class TakePart(discord.ui.View):
 		ga = db.find_one({"message_id":ctx.message.id})
 		if ctx.user.id in ga["participants"]:
 			db.update_one({"message_id":ctx.message.id}, {"$pull": {"participants": ctx.user.id}})
-			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы отказались от участия в конкурсе", ephemeral=True)
+			await ctx.message.edit(view=TakePart(str(int(self.take_part.label)-1)))
+			await ctx.response.send_message(f"{Emojis.check} Вы отказались от участия в конкурсе", ephemeral=True)
 		elif ctx.user.id in ga["blacklist"]:
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы в блэклисте", ephemeral=True)
 		elif "whitelist" in ga and ctx.user.id not in ga["whitelist"]:
@@ -198,10 +200,13 @@ async def end_ga(msg_id, bot):
 	winners = sample(ga["participants"], winners_count)
 	if len(winners) == 1:
 		edited_embed = msg.embeds[0].insert_field_at(1, name=f"{Emojis.trophy} Победитель",
-		value=f"<@{winners[0]}>")
+			value=f"<@{winners[0]}>")
+	elif len(winners) == 0:
+		edited_embed = msg.embeds[0].insert_field_at(1, name=f"{Emojis.trophy} Победители", value="Никто не победил")
 	else:
 		edited_embed = msg.embeds[0].insert_field_at(1, name=f"{Emojis.trophy} Победители",
-		value="\n".join([f"{i}. <@{winners[i]}>" for i in range(len(winners))]))
+			value="\n".join([f"{i}. <@{winners[i]}>" for i in range(len(winners))]))
+	edited_embed.set_field_at(3, name="Конкурс закончился", value=f"<t:{end_date}:R>")
 	await msg.edit(embed=edited_embed, view=TakePart(participants_count, True))
 	await msg.thread.send(f"# {edited_embed.fields[1].name}\n{edited_embed.fields[1].value}")
 	db.delete_one({"message_id": msg_id})
@@ -308,5 +313,30 @@ class GAModerationCommands(commands.Cog):
 			{
 				"contains": "NoneType",
 				"msg": f"Это не ветка розыгрыша"
+			}
+		])
+
+	@commands.hybrid_command(
+		name="view-participants",
+		aliases=["vp", "пу", "просмотреть участников"],
+		description="Показывает список участников розыгрыша",
+		usage="`/view-participants`",
+		help="### Пример\n`/view-participants`"
+	)
+	async def view_participants(self, ctx):
+		ga = db.find_one({"message_id": ctx.channel.starter_message.id})
+		embed = discord.Embed(description=f"## {Emojis.users} Участники\n"+
+			"\n".join(f"<@{participant}>" for participant in ga["participants"]), color=no_color)
+		await ctx.send(embed=embed, ephemeral=True)
+	@view_participants.error
+	async def view_participants_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"contains": "starter_message",
+				"msg": "Это не ветка розыгрыша"
+			},
+			{
+				"contains": "AttributeError",
+				"msg": "Конкурс уже закончен"
 			}
 		])
