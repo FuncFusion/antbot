@@ -336,7 +336,11 @@ class GAModerationCommands(commands.Cog):
 				"msg": "Это не ветка розыгрыша"
 			},
 			{
+				"contains": "TypeError",
+				"msg": "Никто пока не участвует в розыгрыше"
+			},
+			{
 				"contains": "AttributeError",
-				"msg": "Конкурс уже закончен"
+				"msg": "Розыгрыш уже закончен/Это не ветка розыгрыша"
 			}
 		])

@@ -6,7 +6,7 @@ import asyncio
 from cogs.admin import DebugCommand, EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
-from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing
+from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
@@ -29,7 +29,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		ClearCommand, PunishmentCommands,
 	    FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers]
+views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers, BotPingView]
 
 
 class AntBot(commands.Bot):
