@@ -318,7 +318,7 @@ class GAModerationCommands(commands.Cog):
 
 	@commands.hybrid_command(
 		name="view-participants",
-		aliases=["vp", "пу", "просмотреть участников"],
+		aliases=["vp", "пу", "просмотреть-участников"],
 		description="Показывает список участников розыгрыша",
 		usage="`/view-participants`",
 		help="### Пример\n`/view-participants`"
