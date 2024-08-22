@@ -23,8 +23,8 @@ class SnapshotScraper(commands.Cog):
 		.replace("rc", "release-candidate-")
 		if latest_version_id != last_known_version:
 			db.update_one({"_id": "latest_known_snapshot"}, {"$set": {"_": latest_version_id}})
-			snapshot_msg = await snapshot_channel.send(f"<@&{SNAPSHOT_PING_ROLE}>\nhttps://www.minecraft.net\
-				/en-us/article/minecraft-{'snapshot-' if latest_version == latest_version_id else ''}\
-				{'java-edition-' if data['versions'][0]['type'] == 'release' else ''}{latest_version}".replace("\t", ""))
+			snapshot_msg = await snapshot_channel.send(f"<@&{SNAPSHOT_PING_ROLE}>\nhttps://www.minecraft.net"
+				f"/en-us/article/minecraft-{'snapshot-' if latest_version == latest_version_id else ''}"
+				f"{'java-edition-' if data['versions'][0]['type'] == 'release' else ''}{latest_version}")
 			await snapshot_msg.pin()
 	
