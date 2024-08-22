@@ -319,9 +319,9 @@ class GAModerationCommands(commands.Cog):
 	@commands.hybrid_command(
 		name="view-participants",
 		aliases=["vp", "пу", "просмотреть-участников"],
-		description="Показывает список участников розыгрыша",
+		description="Показывает список участников розыгрыша.",
 		usage="`/view-participants`",
-		help="### Пример\n`/view-participants`"
+		help="Команда будет работать только если отправлена в самой ветке розыгрыша.\n### Пример:\n`/view-participants`"
 	)
 	async def view_participants(self, ctx):
 		ga = db.find_one({"message_id": ctx.channel.starter_message.id})
