@@ -24,11 +24,11 @@ async def handle_errors(ctx, error, errors):
 			break
 	else:
 		if ctx.interaction:
-			await ctx.interaction.response.send_message(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
-				<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`".replace("\t", ""),
+			await ctx.interaction.response.send_message(f"Произошла непредвиденная ошибка, пожалуйста, "
+				f"сообщите о ней <@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`",
 				allowed_mentions=no_ping, ephemeral=True)
 		else:
-			await ctx.reply(f"Произошла непредвиденная ошибка, пожалуйста, сообщите о ней \
-				<@536441049644793858> или <@567014541507035148>. Ошибка:\n`{type(error)}: {error}`".replace("\t", ""),
+			await ctx.reply(f"Произошла непредвиденная ошибка, пожалуйста, "
+				f"сообщите о ней <@536441049644793858> или <@567014541507035148>. Ошибка:\n`{error}`",
 				allowed_mentions=no_ping)
 		print(error_msg)

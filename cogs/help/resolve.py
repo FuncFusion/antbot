@@ -39,8 +39,8 @@ class ResolveCommand(commands.Cog):
 			raise Exception("User not author/op")
 		elif solution == None and not ctx.message.refernce:
 			embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=no_color,
-				description=f"{Emojis.exclamation_mark} Вы не указали ни сообщение, ни людей которые помогли решить проблему, \
-				это заархивирует ветку без решения".replace("\t", ""))
+				description=f"{Emojis.exclamation_mark} Вы не указали ни сообщение, ни "
+				"людей которые помогли решить проблему, это заархивирует ветку без решения")
 			await ctx.send(embed=embed, view=R_u_sure())
 			return
 		elif type((solution:=await get_msg_by_id_arg(self, ctx, self.bot, solution))) != discord.Message:
@@ -105,7 +105,8 @@ class R_u_sure(discord.ui.View):
 			await ctx.response.send_message(f"{Emojis.exclamation_mark} Вы не являетесь автором этой ветки либо модератором", ephemeral=True, allowed_mentions=no_ping)
 		else:
 			await ctx.message.delete()
-			await ctx.response.send_message(content=f"{Emojis.exclamation_mark} Пожалуйста, укажите в `soultion` команды </resolve:1250486582109274206> ссылку на сообщение которое помголо \
-				вам решить проблему, и @упомяните в `helpers` людей которые помогли вам её решить".replace("\t", ""), ephemeral=True)
+			await ctx.response.send_message(content=f"{Emojis.exclamation_mark} Пожалуйста, укажите в "
+				"`soultion` команды </resolve:1250486582109274206> ссылку на сообщение которое помголо "
+				"вам решить проблему, и @упомяните в `helpers` людей которые помогли вам её решить", ephemeral=True)
 			self.stop()
 		
