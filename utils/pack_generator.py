@@ -116,7 +116,7 @@ class PGenerator:
 			version = get_mcmeta_ver(type, version)
 			return version
 
-	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver())):
+	def datapack(name="детарак", namespaces=["namespace"], folders_include=[], folders_exclude=[], version="latest"):
 		# Validating stuff
 		version = PGenerator.validate_version(version, "data_pack")
 		legacy = version < 45
@@ -147,7 +147,7 @@ class PGenerator:
 		dp_f.seek(0)
 		return dp_f
 	
-	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version=str(get_mcmeta_ver("resource_pack"))):
+	def resourcepack(name="репуксрак", namespaces=[], folders_include=[], folders_exclude=[], version="latest"):
 		# Validating stuff
 		all_folders = ["atlases", "blockstates", "font", "lang", "models", "particles", "shaders", "texts", "textures"]
 		folders_include = PGenerator.validate_folders(folders_include, "rp"); folders_include = folders_include if folders_include != [] else all_folders

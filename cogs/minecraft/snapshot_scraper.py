@@ -2,25 +2,28 @@ from discord.ext import commands, tasks
 
 from settings import MONGO_URI, SNAPSHOT_PING_ROLE, SNAPSHOTS_CHANNEL_ID
 
-import requests
+from aiohttp import ClientSession
 from pymongo.mongo_client import MongoClient
 
-db = MongoClient(MONGO_URI).antbot.misc
+db = MongoClient(MONGO_URI).antbot.minecraft_data
+
 
 class SnapshotScraper(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.check_for_update.start()
 
-	@tasks.loop(minutes=30)
+	@tasks.loop(minutes=12)
 	async def check_for_update(self):
 		snapshot_channel = await self.bot.fetch_channel(SNAPSHOTS_CHANNEL_ID)
 		last_known_version = db.find_one({"_id": "latest_known_snapshot"})["_"]
-		response = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json")
-		data = response.json()
+		async with ClientSession() as session:
+			async with session.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", 
+				headers={"User-Agent": "AntBot discord bot"}) as response:
+				data = await response.json()
 		latest_version_id = data["versions"][0]["id"]
 		latest_version = latest_version_id.replace(".", "-").replace("pre", "pre-release-")\
-		.replace("rc", "release-candidate-")
+			.replace("rc", "release-candidate-")
 		if latest_version_id != last_known_version:
 			db.update_one({"_id": "latest_known_snapshot"}, {"$set": {"_": latest_version_id}})
 			snapshot_msg = await snapshot_channel.send(f"<@&{SNAPSHOT_PING_ROLE}>\nhttps://www.minecraft.net"

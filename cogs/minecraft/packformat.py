@@ -10,7 +10,7 @@ from pymongo import MongoClient
 
 from settings import MONGO_URI
 from utils.msg_utils import Emojis
-from utils.packmcmeta import versions
+from utils.packmcmeta import get_mcmeta_ver
 from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
@@ -32,21 +32,7 @@ class PackformatCommand(commands.Cog):
 	@app_commands.describe(version="Интересующая версия")
 
 	async def packformat(self, ctx, *, version: str=None):
-		def transform_version_data(version_data, pack_type='data_pack'):
-			grouped_versions = {}
-			for version, data in version_data.items():
-				pack_value = data[pack_type]
-				if pack_value not in grouped_versions:
-					grouped_versions[pack_value] = [version]
-				else:
-					grouped_versions[pack_value].append(version)
-			result = []
-			for pack_value, versions in grouped_versions.items():
-				if len(versions) > 1:
-					result.append(f"`{pack_value}` \u2500 `{versions[-1]} - {versions[0]}`")
-				else:
-					result.append(f"`{pack_value}` \u2500 `{versions[0]}`")
-			return '\n'.join(result)
+		versions = get_mcmeta_ver(requested_version="all")
 		version = None if not version else version.replace(" ", ".")
 		if version in ("all", "al", "a", "все", "вс", "в", "фдд", "фд", "ф"):
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
@@ -94,3 +80,18 @@ class PackformatCommand(commands.Cog):
 			}
 		])
 
+def transform_version_data(version_data, pack_type='data_pack'):
+	grouped_versions = {}
+	for version, data in version_data.items():
+		pack_value = data[pack_type]
+		if pack_value not in grouped_versions:
+			grouped_versions[pack_value] = [version]
+		else:
+			grouped_versions[pack_value].append(version)
+	result = []
+	for pack_value, versions in grouped_versions.items():
+		if len(versions) > 1:
+			result.append(f"`{pack_value}` \u2500 `{versions[-1]} - {versions[0]}`")
+		else:
+			result.append(f"`{pack_value}` \u2500 `{versions[0]}`")
+	return '\n'.join(result)

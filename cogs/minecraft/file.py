@@ -1,9 +1,9 @@
 import discord
 from discord import app_commands
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.utils import MISSING
 
-from requests import get
+from aiohttp import ClientSession
 from typing import List
 from io import BytesIO
 from pymongo import MongoClient
@@ -13,12 +13,23 @@ from utils.tree_gen import generate_tree
 from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
-db = MongoClient(MONGO_URI).antbot.misc
+db = MongoClient(MONGO_URI).antbot.minecraft_data
 files = {}
-for tree_name in ("data", "assets"):
-	tree = get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{tree_name}?recursive=1").json().get("tree", [])
-	files.update({"/".join(item["path"].split("/")[-2:]): item["path"] for item in tree if item["type"] == "blob"})
-files.pop(".gitattributes")
+latest_version = ""
+
+@tasks.loop(minutes=3)
+async def update_files_list():
+	global latest_version, files
+	if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
+		latest_version = newer_version
+		async with ClientSession() as session:
+			for tree_name in ("data", "assets"):
+				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{tree_name}?recursive=1", 
+					headers={"User-Agent": "AntBot discord bot"}) as response:
+					tree = await response.json()
+					tree = tree.get("tree", [])
+					files.update({"/".join(item["path"].split("/")[-2:]): item["path"] for item in tree if item["type"] == "blob"})
+			files.pop(".gitattributes")
 
 
 class FileCommand(commands.Cog):
@@ -43,8 +54,10 @@ class FileCommand(commands.Cog):
 		#
 		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]}\n{path_tree}",
 			color=no_color)
-		file = discord.File(BytesIO(get(f"https://raw.githubusercontent.com/misode/mcmeta/{path.split('/')[0]}/{path}").content), 
-			filename=path.split("/")[-1])
+		async with ClientSession() as session:
+			async with session.get(f"https://raw.githubusercontent.com/misode/mcmeta/{path.split('/')[0]}/{path}",
+				headers={"User-Agent": "AntBot discord bot"}) as response:
+				file = discord.File(BytesIO(await response.read()), filename=path.split("/")[-1])
 		#
 		if path.endswith("png"):
 			embed.set_image(url=f"attachment://{file.filename}")
