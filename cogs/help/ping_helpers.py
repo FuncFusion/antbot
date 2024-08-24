@@ -38,7 +38,6 @@ class PingHelpers(commands.Cog):
 		except:pass
 		left_before_offer = when_offer - int(time())
 		await sleep(left_before_offer)
-		trd = await self.bot.fetch_channel(trd.id)
 		if not trd.archived:
 			await trd.send(f"{trd.owner.mention}, не получили ответ? Можете позвать мастеров на помощь!", 
 				view=Ping_related_helpers(about_dp, about_rp))
@@ -53,8 +52,8 @@ class PingHelpers(commands.Cog):
 				about_dp = True
 			if any((tag in trd.applied_tags for tag in RESOURCEPACKS_TAGS)):
 				about_rp = True
-			if not (about_dp and about_rp):
-				pass
+			if not (about_dp or about_rp):
+				return
 			await self.offer_ping_helpers(about_dp, about_rp, trd, int(time())+DAY)
 
 
