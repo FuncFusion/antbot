@@ -1,6 +1,5 @@
 from discord.ext import tasks
 
-from json import dumps
 from settings import MONGO_URI
 from aiohttp import ClientSession
 from pymongo.mongo_client import MongoClient
@@ -17,7 +16,7 @@ async def update_mcmeta_info():
 		async with ClientSession() as session:
 			async with session.get("https://raw.githubusercontent.com/misode/mcmeta/summary/versions/data.json", 
 				headers={"User-Agent": "AntBot discord bot"}) as response:
-				versions_original = await response.json()
+				versions_original = await response.json(content_type=None)
 				versions = {ver["id"]: {
 					"type": ver["type"],
 					"data_pack": ver["data_pack_version"],
