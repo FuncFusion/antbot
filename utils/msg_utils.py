@@ -117,7 +117,7 @@ class Emojis:
 	beet = "<:beet:1143125070336774165>"
 	bolt = "<:bolt:1142918894571491429>"
 	dot_vscode = "<:dot_vscode:1186764449441402890>"
-	vsc = "<:vscode:1186764520715202590>"
+	vsc = "<:vsc:1277217993021194240>"
 	vscodeignore = "<:vscodeignore:1186765769149775903>"
 	python = "<:Python:542498804931362817>"
 	pycd = "<:python_compiled:1186764498091135087>"
@@ -228,3 +228,4 @@ class Emojis:
 	svelte = "<:svelte:1259210189282742355>"
 	github = "<:github:1276178127717924947>"
 	macro = "<:macro:1276929717227880563>"
+	dice = "<:dice:1277384663836528682>"

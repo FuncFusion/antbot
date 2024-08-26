@@ -26,7 +26,7 @@ class RandomCommands(commands.Cog):
 		if minimum > maximum:
 			minimum, maximum = maximum, minimum
 		result = randint(minimum, maximum)
-		embed = discord.Embed(color=no_color, title=f"Рандомное число между {minimum} и {maximum}:")
+		embed = discord.Embed(color=no_color, title=f"{Emojis.dice} Рандомное число между {minimum} и {maximum}:")
 		embed.add_field(name=result, value='', inline=True)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
@@ -53,7 +53,7 @@ class RandomCommands(commands.Cog):
 		title = re.split(pattern, text)[0]
 		result = choice(args)
 		embed = discord.Embed(title=title, color=no_color)
-		embed.add_field(name="Ответ:", value=result, inline=False)
+		embed.add_field(name=f"{Emojis.dice} Ответ:", value=result, inline=False)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@random.error
