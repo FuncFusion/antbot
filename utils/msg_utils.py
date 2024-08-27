@@ -229,3 +229,4 @@ class Emojis:
 	github = "<:github:1276178127717924947>"
 	macro = "<:macro:1276929717227880563>"
 	dice = "<:dice:1277384663836528682>"
+	packformat = "<:packformat:1277533907620991026>"

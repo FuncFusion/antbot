@@ -38,14 +38,14 @@ class PackformatCommand(commands.Cog):
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
 			versions_formatted_dp = transform_version_data(all_releases, "data_pack")
 			versions_formatted_rp = transform_version_data(all_releases, "resource_pack")
-			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Все (релизные) версии пак формата", color=no_color)
+			embed = discord.Embed(description=f"## {Emojis.packformat} Все (релизные) версии пак формата", color=no_color)
 			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
 			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		elif version:
 			if version in ("latest","последняя","последний"):
 				version = versions["latest"]["id"]
-			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Пак формат для {version}", color=no_color)
+			embed = discord.Embed(description=f"## {Emojis.packformat} Пак формат для {version}", color=no_color)
 			try:
 				dp_ver = f"`{versions[version]["data_pack"]}`"
 			except:
@@ -61,7 +61,7 @@ class PackformatCommand(commands.Cog):
 				versions_formatted_rp += f"`{versions['latest']['resource_pack']}` \u2500 `{versions['latest']['id']}`\n"
 			versions_formatted_dp += "\n".join(transform_version_data(all_releases, "data_pack").split("\n")[:5])
 			versions_formatted_rp += "\n".join(transform_version_data(all_releases, "resource_pack").split("\n")[:5])
-			embed = discord.Embed(description=f"## {Emojis.pack_mcmeta} Последние версии пак формата", color=no_color)
+			embed = discord.Embed(description=f"## {Emojis.packformat} Последние версии пак формата", color=no_color)
 			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
 			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
