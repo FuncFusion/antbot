@@ -230,3 +230,4 @@ class Emojis:
 	macro = "<:macro:1276929717227880563>"
 	dice = "<:dice:1277384663836528682>"
 	packformat = "<:packformat:1277533907620991026>"
+	missing = "<:missing:1278053472117194814>"
