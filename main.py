@@ -12,7 +12,7 @@ from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_h
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
-from cogs.minecraft import FileCommand, update_files_list, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
+from cogs.minecraft import FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 from utils.packmcmeta import update_mcmeta_info
 
@@ -38,7 +38,6 @@ class AntBot(commands.Bot):
 
 	async def setup_hook(self):
 		update_mcmeta_info.start()
-		update_files_list.start()
 		#
 		self.remove_command("help")
 		for cog in cogs:

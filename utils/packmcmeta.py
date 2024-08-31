@@ -1,6 +1,6 @@
 from discord.ext import tasks
 
-from settings import MONGO_URI
+from settings import MONGO_URI, GITHUB_HEADERS
 from aiohttp import ClientSession
 from pymongo.mongo_client import MongoClient
 
@@ -13,9 +13,9 @@ async def update_mcmeta_info():
 	global latest_version
 	if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
 		latest_version = newer_version
-		async with ClientSession() as session:
+		async with ClientSession(headers=GITHUB_HEADERS) as session:
 			async with session.get("https://raw.githubusercontent.com/misode/mcmeta/summary/versions/data.json", 
-				headers={"User-Agent": "AntBot discord bot"}) as response:
+				) as response:
 				versions_original = await response.json(content_type=None)
 				versions = {ver["id"]: {
 					"type": ver["type"],
