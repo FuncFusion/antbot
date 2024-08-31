@@ -79,7 +79,7 @@ class PGenerator:
 		"textures": ["тещурс", "текстуры"]
 	}
 
-	def validate_folders(folders, type, legacy):
+	def validate_folders(folders, type, legacy=False):
 		existing_fldrs = PGenerator.dp_folders if type == "dp" else PGenerator.rp_folders
 		existing_fldrs = PGenerator.legacy_dp_folders if legacy and type == "dp" else existing_fldrs
 		valid_folders = set()

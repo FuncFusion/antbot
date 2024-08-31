@@ -8,7 +8,7 @@ from typing import List
 from io import BytesIO
 from pymongo import MongoClient
 
-from settings import MONGO_URI
+from settings import MONGO_URI, GITHUB_HEADERS
 from utils.tree_gen import generate_tree
 from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
@@ -22,7 +22,7 @@ async def update_files_list():
 	global latest_version, files
 	if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
 		latest_version = newer_version
-		async with ClientSession() as session:
+		async with ClientSession(headers=GITHUB_HEADERS) as session:
 			for tree_name in ("data", "assets"):
 				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{tree_name}?recursive=1", 
 					headers={"User-Agent": "AntBot discord bot"}) as response:
@@ -54,9 +54,11 @@ class FileCommand(commands.Cog):
 		#
 		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]}\n{path_tree}",
 			color=no_color)
-		async with ClientSession() as session:
+		async with ClientSession(headers=GITHUB_HEADERS) as session:
 			async with session.get(f"https://raw.githubusercontent.com/misode/mcmeta/{path.split('/')[0]}/{path}",
-				headers={"User-Agent": "AntBot discord bot"}) as response:
+				) as response:
+				if response.status != 200:
+					raise Exception(f"Response error {response.status}")
 				file = discord.File(BytesIO(await response.read()), filename=path.split("/")[-1])
 		#
 		if path.endswith("png"):
@@ -69,6 +71,10 @@ class FileCommand(commands.Cog):
 	@file.error
 	async def file_error(self, ctx, error):
 		await handle_errors(ctx, error, [
+		{
+			"contains": "Response error",
+			"msg": "Файл не найден/Рейт лимит (попробуйте позже)"
+		},
 		{
 			"exception": commands.MissingRequiredArgument,
 			"msg": "Не указан путь/название файла"
