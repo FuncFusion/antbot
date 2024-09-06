@@ -31,5 +31,7 @@ jobs:
           script: |
             cd /home/antbot/
             source .venv/bin/activate
-            pkill -f 'python main.py'
-            nohup python main.py &
+            pkill -f 'python main.py' || true
+            nohup python main.py > bot.log 2>&1 &
+            sleep 5
+          script_stop: true
