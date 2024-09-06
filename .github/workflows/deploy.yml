@@ -23,14 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Stop and Restart Bot via SSH
-        uses: fifsky/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_IP }}
-          user: root
+          username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/antbot/
             source .venv/bin/activate
             pkill -f 'python main.py'
             nohup python main.py &
-
