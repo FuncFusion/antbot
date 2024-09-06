@@ -28,10 +28,4 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/antbot/
-            source .venv/bin/activate
-            pkill -f 'python main.py' || true
-            nohup python main.py > bot.log 2>&1 &
-            sleep 5
-          script_stop: true
+          script: whoami
