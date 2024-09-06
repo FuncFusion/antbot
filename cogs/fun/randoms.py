@@ -26,8 +26,8 @@ class RandomCommands(commands.Cog):
 		if minimum > maximum:
 			minimum, maximum = maximum, minimum
 		result = randint(minimum, maximum)
-		embed = discord.Embed(color=no_color, title=f"{Emojis.dice} Рандомное число между {minimum} и {maximum}:")
-		embed.add_field(name=result, value='', inline=True)
+		embed = discord.Embed(color=no_color)
+		embed.description = f"# {Emojis.dice} Рандомное число между {minimum} и {maximum}:\n## {result}"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@randomrange.error
@@ -35,7 +35,7 @@ class RandomCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "ValueError",
-				"msg": "Допускаются только целочисленные занчения"
+				"msg": "Допускаются только целочисленные занчения, между числами должен быть пробел"
 			}
 		])
 
