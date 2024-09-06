@@ -40,12 +40,13 @@ jobs:
             if [ -n "$BOT_PID" ]; then
               echo "Stopping existing bot process (PID: $BOT_PID)"
               kill -TERM $BOT_PID
+              sleep 5
             else
               echo "No existing bot process found"
             fi
             
             echo "Starting bot"
-            nohup python main.py &
+            nohup python main.py > /dev/null 2>&1 &
             
             echo "Workflow completed"
           script_stop: true
