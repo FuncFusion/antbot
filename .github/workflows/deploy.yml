@@ -28,4 +28,31 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: whoami
+          script: |
+            echo "Step 1: Checking current directory"
+            pwd
+            
+            echo "Step 2: Changing to /home/antbot/"
+            cd /home/antbot/ && echo "Changed directory successfully" || echo "Failed to change directory"
+            
+            echo "Step 3: Listing directory contents"
+            ls -la
+            
+            echo "Step 4: Activating virtual environment"
+            source .venv/bin/activate && echo "Virtual environment activated" || echo "Failed to activate virtual environment"
+            
+            echo "Step 5: Checking Python version"
+            python --version
+            
+            echo "Step 6: Killing existing bot process"
+            pkill -f 'python main.py' && echo "Killed existing process" || echo "No existing process found or failed to kill"
+            
+            echo "Step 7: Starting bot"
+            nohup python main.py > bot.log 2>&1 &
+            
+            echo "Step 8: Waiting for 5 seconds"
+            sleep 5
+            
+            echo "Step 9: Checking bot log"
+            tail -n 20 bot.log
+          script_stop: true
