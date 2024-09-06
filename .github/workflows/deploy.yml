@@ -29,25 +29,8 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Changing to /home/antbot/"
-            cd /home/antbot/
-            
-            echo "Activating virtual environment"
-            source .venv/bin/activate
-            
-            echo "Checking for existing bot process"
-            BOT_PID=$(pgrep -f 'python main.py')
-            if [ -n "$BOT_PID" ]; then
-              echo "Stopping existing bot process (PID: $BOT_PID)"
-              kill -TERM $BOT_PID
-              sleep 5
-            else
-              echo "No existing bot process found"
-            fi
-            
-            echo "Starting bot"
-            nohup python main.py > /dev/null 2>&1 &
-            
+            echo "Starting or restarting the Ant Bot service"
+            sudo systemctl restart antbot-watcher.service
             echo "Workflow completed"
           script_stop: true
           timeout: 60s
