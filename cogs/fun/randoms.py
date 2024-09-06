@@ -52,12 +52,12 @@ class RandomCommands(commands.Cog):
 		args = re.split(pattern, text)[1:]
 		title = re.split(pattern, text)[0]
 		result = choice(args)
-		embed = discord.Embed(title=title, color=no_color)
-		embed.add_field(name=f"{Emojis.dice} Ответ:", value=result, inline=False)
+		embed = discord.Embed(color=no_color)
+		embed.description = f"# {title}\n## {Emojis.dice} Ответ:\n{result}"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@random.error
 	async def random_error(self, ctx, error):
 		embed = discord.Embed(title=f"{Emojis.exclamation_mark} Не хватает аргументов?", color=no_color)
-		embed.add_field(name="Ответ:", value="Да")
+		embed.description = f"# {Emojis.exclamation_mark} Не хватает аргументов?\n## {Emojis.dice} Ответ:\nДа"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
