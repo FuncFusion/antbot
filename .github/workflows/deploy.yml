@@ -22,43 +22,30 @@ jobs:
     needs: [deploy-via-sftp]
     runs-on: ubuntu-latest
     steps:
-      - name: Debug and Restart Bot via SSH
+      - name: Restart Bot via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Step 1: Changing to /home/antbot/"
+            echo "Changing to /home/antbot/"
             cd /home/antbot/
             
-            echo "Step 2: Activating virtual environment"
+            echo "Activating virtual environment"
             source .venv/bin/activate
             
-            echo "Step 3: Checking Python version"
-            python --version
-            
-            echo "Step 4: Checking for existing bot process"
-            ps aux | grep 'python main.py' | grep -v grep || echo "No existing bot process found"
-            
-            echo "Step 5: Attempting to start bot"
-            python main.py &
-            echo $! > bot.pid
-            echo "Bot start attempted, PID saved to bot.pid"
-            
-            echo "Step 6: Waiting for 5 seconds"
-            sleep 5
-            
-            echo "Step 7: Checking if bot process is still running"
-            if ps -p $(cat bot.pid); then
-              echo "Bot is running with PID $(cat bot.pid)"
+            echo "Checking for existing bot process"
+            if pgrep -f 'python main.py'; then
+              echo "Stopping existing bot process"
+              pkill -f 'python main.py'
             else
-              echo "Bot is not running. Check logs for errors."
+              echo "No existing bot process found"
             fi
             
-            echo "Step 8: Checking bot log (last 20 lines)"
-            tail -n 20 bot.log || echo "Failed to read bot.log"
+            echo "Starting bot"
+            python main.py &
             
-            echo "Step 9: Checking for any Python errors in syslog"
-            grep python /var/log/syslog | tail -n 20 || echo "No recent Python errors in syslog"
+            echo "Workflow completed"
           script_stop: true
+          timeout: 60s
