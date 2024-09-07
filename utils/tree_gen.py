@@ -67,7 +67,10 @@ icons = {
 		"glsl": "<:glsl:1142347436740849745>",
 		"ogg": "<:ogg:1142918898157629620>",
 		"bbmodel": "<:bbmodel:1186764426376904714>",
-		"py": "<:python:1186764496270794893>"
+		"py": "<:python:1186764496270794893>",
+		"ttf": "<:font:1186764454789124147>",
+		"txt": "<:txt:1142918900166688798>",
+		"nbt": "<:nbt:1142345418949279753>"
 	},
 	"names": {
 		"...": "",
@@ -145,12 +148,15 @@ icons = {
 		"trim_material": "<:trim_material_file:1188838129495449671>",
 		"wolf_variant": "<:wolf:1246816990669312011>",
 		"lang": "<:lang_file:1188838193559257258>",
-		"models": "<:bbmodel:1186764426376904714>"
+		"models": "<:bbmodel:1186764426376904714>",
+		"atlases": "<:atlas:1188838144351682620>",
+		"blockstates": "<:blockstate:1188838141663125624>",
+		"particles": "<:particle:1188838146385911939>"
 	}
 }
 registries = ["advancement", "banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", 
 	"enchantment", "enchantment_provider", "jukebox_song", "painting_variant", "predicate", 
 	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "lang", "models",
-	
+	"atlases", "blockstates", "particles",
 	"advancements", "predicates", "item_modifiers", "recipes"
 	]
