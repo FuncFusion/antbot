@@ -17,24 +17,25 @@ db = MongoClient(MONGO_URI).antbot.minecraft_data
 files = {}
 latest_version = ""
 
-@tasks.loop(minutes=3)
-async def update_files_list():
-	global latest_version, files
-	if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
-		latest_version = newer_version
-		async with ClientSession(headers=GITHUB_HEADERS) as session:
-			for tree_name in ("data", "assets"):
-				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{tree_name}?recursive=1", 
-					headers={"User-Agent": "AntBot discord bot"}) as response:
-					tree = await response.json()
-					tree = tree.get("tree", [])
-					files.update({"/".join(item["path"].split("/")[-2:]): item["path"] for item in tree if item["type"] == "blob"})
-			files.pop(".gitattributes")
-
 
 class FileCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.update_files_list.start()
+
+	@tasks.loop(minutes=6)
+	async def update_files_list(self):
+		global latest_version, files
+		if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
+			latest_version = newer_version
+			async with ClientSession(headers=GITHUB_HEADERS) as session:
+				for tree_name in ("data", "assets"):
+					async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{tree_name}?recursive=1", 
+						headers={"User-Agent": "AntBot discord bot"}) as response:
+						tree = await response.json()
+						tree = tree.get("tree", [])
+						files.update({"/".join(item["path"].split("/")[-2:]): item["path"] for item in tree if item["type"] == "blob"})
+				files.pop(".gitattributes")
 
 	@commands.hybrid_command(aliases=["f", "asset", "mcasset", "файл", "ашду", "ассет", "эссет", "мсассет", "мсэссэт","фыыуе","ьсфыыуе"], 
 		description="Скидывает файл с ванильного датапака/ресурспака.",
