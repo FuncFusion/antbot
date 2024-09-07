@@ -1,0 +1,38 @@
+name: Update Bot
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy-via-sftp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: SFTP Deploy
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.1
+        with:
+          username: root
+          server: ${{ secrets.SERVER_IP }}
+          port: 22
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local_path: ./*
+          remote_path: /home/antbot/
+          args: '-o ConnectTimeout=5'
+
+  restart-bot:
+    needs: [deploy-via-sftp]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart Bot via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Starting or restarting the Antbot service"
+            sudo systemctl restart antbot-watcher.service
+            echo "Workflow completed"
+          script_stop: true
+          timeout: 60s

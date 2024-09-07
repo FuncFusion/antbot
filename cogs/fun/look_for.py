@@ -102,11 +102,16 @@ class LFInfo(discord.ui.Modal):
 	async def on_submit(self, ctx: discord.Interaction):
 		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {self.game.value}", color=no_color)
 		if not self.image and not is_valid_image(self.image.filename):
-			banners_count = {"minecraft": 3, "terraria": 0, "gartic": 0}
+			banners_count = {"minecraft": 3, "terraria": 2, "gartic": 0, "chess": 2, "checkers": 1, "tabletop": 0, "satisfactory": 2, "astroneer": 2}
 			games = {
 				"minecraft": ["майнкрафт", "mc", "кубы", "говнокрафт"],
 				"terraria": ["террария", "терка", "террка"],
-				"gartic": ["гартик", "gartic phone", "сломанный телефон"]
+				"gartic": ["гартик", "gartic phone", "сломанный телефон"],
+				"chess": ["шахматы", "шах и маты", "шахматы онлайн","chess.com","lichess"],
+				"checkers": ["шашки", "шашки онлайн", "шашечки"],
+				"tabletop": ["tabletop simulator","таблетоп", "таблетоп симулятор", "тейблтоп симулятор", "тейблтоп"],
+				"satisfactory": ["сатисфактори"],
+				"astroneer": ["астрониир"]
 			}
 			validated_game = validate(self.game.value, games)
 			if validated_game == None:

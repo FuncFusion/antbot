@@ -26,8 +26,8 @@ class RandomCommands(commands.Cog):
 		if minimum > maximum:
 			minimum, maximum = maximum, minimum
 		result = randint(minimum, maximum)
-		embed = discord.Embed(color=no_color, title=f"{Emojis.dice} Рандомное число между {minimum} и {maximum}:")
-		embed.add_field(name=result, value='', inline=True)
+		embed = discord.Embed(color=no_color)
+		embed.description = f"# {Emojis.dice} Рандомное число между {minimum} и {maximum}:\n## {result}"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@randomrange.error
@@ -35,7 +35,7 @@ class RandomCommands(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"contains": "ValueError",
-				"msg": "Допускаются только целочисленные занчения"
+				"msg": "Допускаются только целочисленные занчения, между числами должен быть пробел"
 			}
 		])
 
@@ -52,12 +52,12 @@ class RandomCommands(commands.Cog):
 		args = re.split(pattern, text)[1:]
 		title = re.split(pattern, text)[0]
 		result = choice(args)
-		embed = discord.Embed(title=title, color=no_color)
-		embed.add_field(name=f"{Emojis.dice} Ответ:", value=result, inline=False)
+		embed = discord.Embed(color=no_color)
+		embed.description = f"# {title}\n## {Emojis.dice} Ответ:\n{result}"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 
 	@random.error
 	async def random_error(self, ctx, error):
 		embed = discord.Embed(title=f"{Emojis.exclamation_mark} Не хватает аргументов?", color=no_color)
-		embed.add_field(name="Ответ:", value="Да")
+		embed.description = f"# {Emojis.exclamation_mark} Не хватает аргументов?\n## {Emojis.dice} Ответ:\nДа"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
