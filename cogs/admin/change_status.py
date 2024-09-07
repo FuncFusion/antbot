@@ -60,7 +60,7 @@ class StatusCommands(commands.Cog):
 		except:
 			can_change_avatar = "Но аватарку так быстро менять не могу."
 		await self.bot.change_presence(status=discord.Status(value=status))
-		await ctx.reply(f"{Emojis.check} Теперь мой статус - `{valid_statuses[status][1]}`. {can_change_avatar}", allowed_mentions=no_ping)
+		await ctx.reply(f"{Emojis.check} Теперь мой статус — `{valid_statuses[status][1]}`. {can_change_avatar}", allowed_mentions=no_ping)
 	@change_status.error
 	async def status_error(self, ctx, error):
 		await handle_errors(ctx, error, [

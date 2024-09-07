@@ -49,7 +49,7 @@ class PackformatCommand(commands.Cog):
 			try:
 				dp_ver = f"`{versions[version]["data_pack"]}`"
 			except:
-				dp_ver = f"`-`"
+				dp_ver = f"`—`"
 			embed.add_field(name=f"{Emojis.deta_rack} Датaпак", value=dp_ver)
 			embed.add_field(name=f"{Emojis.resource_rack} Ресурспак", value=f"`{versions[version]["resource_pack"]}`")
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
@@ -91,7 +91,7 @@ def transform_version_data(version_data, pack_type='data_pack'):
 	result = []
 	for pack_value, versions in grouped_versions.items():
 		if len(versions) > 1:
-			result.append(f"`{pack_value}` \u2500 `{versions[-1]} - {versions[0]}`")
+			result.append(f"`{pack_value}` \u2500 `{versions[-1]} – {versions[0]}`")
 		else:
 			result.append(f"`{pack_value}` \u2500 `{versions[0]}`")
 	return '\n'.join(result)
