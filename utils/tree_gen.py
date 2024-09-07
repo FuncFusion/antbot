@@ -151,12 +151,13 @@ icons = {
 		"models": "<:bbmodel:1186764426376904714>",
 		"atlases": "<:atlas:1188838144351682620>",
 		"blockstates": "<:blockstate:1188838141663125624>",
-		"particles": "<:particle:1188838146385911939>"
+		"particles": "<:particle:1188838146385911939>",
+		"loot_table": "<:loot_table:1281966368626835546>"
 	}
 }
 registries = ["advancement", "banner_pattern", "chat_type", "damage_type", "dimension", "dimension_type", 
 	"enchantment", "enchantment_provider", "jukebox_song", "painting_variant", "predicate", 
 	"item_modifier", "recipe", "trim_material", "trim_pattern", "wolf_variant", "lang", "models",
-	"atlases", "blockstates", "particles",
+	"atlases", "blockstates", "particles", "loot_table",
 	"advancements", "predicates", "item_modifiers", "recipes"
 	]
