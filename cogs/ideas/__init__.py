@@ -4,7 +4,7 @@ from discord import app_commands
 
 from pymongo.mongo_client import MongoClient
 
-from settings import IDEAS_CHANNEL_ID, MONGO_URI
+from settings import IDEAS_CHANNEL_ID, MONGO_URI, GUILD
 from utils.general import handle_errors
 from utils.msg_utils import Emojis, user_from_embed
 from utils.shortcuts import no_ping, no_color
@@ -39,7 +39,9 @@ class IdeaCommands(commands.Cog):
 		embed = discord.Embed(color=no_color)
 		embed.add_field(name=f"💡 Идея {ideas_count}", value=suggestion, inline=False)
 		embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-		idea_msg = await ctx.guild.get_channel(IDEAS_CHANNEL_ID).send(embed=embed, view=IdeaView())
+		server = await self.bot.fetch_guild(GUILD)
+		idea_chnl = await server.fetch_channel(IDEAS_CHANNEL_ID)
+		idea_msg = await idea_chnl.send(embed=embed, view=IdeaView())
 		await idea_msg.create_thread(name="Обсуждение")
 		Ideas.create(ideas_count, suggestion, idea_msg.id)
 		await ctx.reply(f"{Emojis.check} Идея опубликована", allowed_mentions=no_ping)

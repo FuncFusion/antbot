@@ -16,6 +16,8 @@ class ServerInfoCommand(commands.Cog):
 	async def serverinfo(self, ctx):
 		# setup vars
 		server = ctx.guild
+		if server is None:
+			raise Exception("dm")
 		member_count = 0
 		bot_count = 0
 		for member in server.members:
@@ -36,5 +38,10 @@ class ServerInfoCommand(commands.Cog):
 
 	@serverinfo.error
 	async def si_error(self, ctx, error):
-		await handle_errors(ctx, error, [])
+		await handle_errors(ctx, error, [
+			{
+				"contains": "dm",
+				"msg": "Эта команда работает только на серверах" 
+			}
+		])
 	
