@@ -1,10 +1,13 @@
 import discord
+from discord.ext import commands
 
 from settings import BOT_COMMANDS_CHANNEL_ID
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping
 
 async def handle_errors(ctx, error, errors):
+	if isinstance(ctx, discord.Interaction):
+		ctx = await commands.Context.from_interaction(ctx)
 	error_msg = str(error)
 	for case in errors:
 		case_cost = len(case) - 1
@@ -14,7 +17,7 @@ async def handle_errors(ctx, error, errors):
 		if "contains" in case and case["contains"] in error_msg:
 			curr_score += 1
 		#
-		if curr_score == case_cost:
+		if curr_score >= case_cost:
 			emoji = Emojis.exclamation_mark if not case['msg'].startswith("<") else ''
 			if ctx.interaction:
 				await ctx.interaction.response.send_message(f"{emoji}{case['msg']}", allowed_mentions=no_ping, ephemeral=True)

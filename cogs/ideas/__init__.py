@@ -15,11 +15,11 @@ db = MongoClient(MONGO_URI).antbot.ideas
 wrong_channel_errors = [
 	{
 		"contains": "AttributeError",
-		"msg": "Не тот канал"
+		"msg": "Это не ветка обсуждения идеи"
 	},
 	{
 		"contains": "Wrong channel",
-		"msg": "Не тот канал"
+		"msg": "Это не ветка обсуждения идеи"
 	}
 ]
 
