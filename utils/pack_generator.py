@@ -21,7 +21,7 @@ class Templates:
 
 class PGenerator:
 	legacy_dp_folders = {
-		"advancements": ["адванцмент", "ачивки", "достижения"],
+		"advancements": ["адвансмент", "ачивки", "достижения"],
 		"banner_pattern": ["баннер паттерн", "шаблон флага", "шаблон баннера"],
 		"chat_type": ["чат тайп", "тип чата"],
 		"damage_type": ["дэмедж тайп", "тип урона"],
@@ -32,15 +32,15 @@ class PGenerator:
 		"functions": ["func", "функ", "функции"],
 		"jukebox_song": ["джукбокс сонг", "песня проигрователя", "диск", "пластинка"],
 		"loot_tables": ["лут тейблы", "таблицы лута", "таблицы добычи"],
-		"paintig_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
-		"predicates": ["предикейтс", "предикаты"],
-		"item_modifiers": ["айтем модифиерс", "модификаторы предметов"],
+		"painting_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
+		"predicates": ["предикетс", "предикаты"],
+		"item_modifiers": ["айтем модифаеры", "модификаторы предметов"],
 		"recipes": ["ресипис", "рецепты", "рецепты крафта"],
 		"structures": ["стракчерс", "структуры", "данжи"],
 		"tags": ["тэгс", "теги", "ярлыки"],
 		"trim_material": ["трим материал", "материал шаблона"],
 		"trim_pattern": ["трим паттерн", "кузнечный шаблон", "отделка брони"],
-		"wolf_variant": ["волф враинат", "вариант волка"],
+		"wolf_variant": ["волф вариант", "вариант волка"],
 		"worldgen": ["ворлдген", "генерация", "генерация мира"]
 		}
 	dp_folders = {
@@ -56,7 +56,7 @@ class PGenerator:
 		"jukebox_song": ["джукбокс сонг", "песня проигрователя", "диск", "пластинка"],
 		"instrument": ["музыкальные инструменты", "инструменты", "штыекгьуте"],
 		"loot_table": ["лут тейблы", "таблицы лута", "таблицы добычи"],
-		"paintig_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
+		"painting_variant": ["пейнтинг вариант", "варианты картин", "вариации картин", "картины"],
 		"predicate": ["предикейтс", "предикаты"],
 		"item_modifier": ["айтем модифиерс", "модификаторы предметов"],
 		"recipe": ["ресипис", "рецепты", "рецепты крафта"],
@@ -208,7 +208,7 @@ class Modals:
 		)
 		async def on_submit(self, Interaction: discord.Interaction):
 			dp = PGenerator.datapack(
-				self.name.value if self.name.value != "" else "datapak", 
+				self.name.value if self.name.value != "" else "detarack", 
 				self.namespaces.value.split(),
 				self.folders_include.value.split(), 
 				self.folders_exclude.value.split(), 
@@ -237,13 +237,13 @@ class Modals:
 		folders_include = discord.ui.TextInput(
 			required=False,
 			label="Включить папки",
-			placeholder="models, шейдеры, enviroment, ...",
+			placeholder="models, шейдеры, environment, ...",
 			max_length=512
 		)
 		folders_exclude = discord.ui.TextInput(
 			required=False,
 			label="Исключить папки",
-			placeholder="models, шейдеры, enviroment, ...",
+			placeholder="models, шейдеры, environment, ...",
 			max_length=512
 		)
 		version = discord.ui.TextInput(
