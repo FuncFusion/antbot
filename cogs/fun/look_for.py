@@ -101,7 +101,7 @@ class LFInfo(discord.ui.Modal):
 
 	async def on_submit(self, ctx: discord.Interaction):
 		embed = discord.Embed(title=f"{Emojis.spyglass} Ищу тиммейта для {self.game.value}", color=no_color)
-		if not self.image and not is_valid_image(self.image.filename):
+		if not self.image:
 			banners_count = {"minecraft": 3, "terraria": 2, "gartic": 0, "chess": 2, "checkers": 1, "tabletop": 0, "satisfactory": 2, "astroneer": 2}
 			games = {
 				"minecraft": ["майнкрафт", "mc", "кубы", "говнокрафт"],
