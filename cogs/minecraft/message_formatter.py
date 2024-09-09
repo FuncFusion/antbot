@@ -7,6 +7,7 @@ from utils.highlighter.main import Hl as hl
 from utils.fake_user import fake_send
 from utils.tree_gen import generate_tree
 from utils.msg_utils import split_msg
+from utils.shortcuts import no_ping
 
 
 class MessageFormatter(commands.Cog):
@@ -20,5 +21,8 @@ class MessageFormatter(commands.Cog):
 					formatted = formatted.replace(block[0], generate_tree(block[2]))
 				else:
 					formatted = formatted.replace(block[0], f"```ansi\n{hl.highlight(block[2])}```")
+			if msg.guild is None:
+				await msg.channel.send(formatted, reference=msg, allowed_mentions=no_ping)
+				return
 			await msg.delete()
 			await fake_send(msg.author, msg.channel, split_msg(formatted), msg.attachments)
