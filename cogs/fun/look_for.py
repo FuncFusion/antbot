@@ -122,7 +122,7 @@ class LFInfo(discord.ui.Modal):
 				embed.set_image(url="attachment://banner.png")
 		else:
 			game_banner = await self.image.to_file(filename=self.image.filename)
-			embed.set_image(url="attachment://banner.png")
+			embed.set_image(url=f"attachment://{self.image.filename}")
 		embed.set_author(name=ctx.user.display_name, icon_url=ctx.user.display_avatar.url)
 		embed.add_field(name="Подробности", value=self.description.value, inline=False)
 		embed.add_field(name=f"{Emojis.check} Присоединились", value="")
