@@ -12,8 +12,8 @@ from Levenshtein import distance
 
 class Templates:
 	mcmeta = '{{\n\t"pack": {{\n\t\t"pack_format": {0},\n\t\t"description": "https://discord.gg/anthill-914772142300749854"\n\t}}\n}}'
-	load_json = {"values": ["namespace:load"]}
-	tick_json = {"values": ["namespace:tick"]}
+	load_json = '{{\n\t"values": [\n\t\t"{0}:load"\n\t]\n}}'
+	tick_json = '{{\n\t"values": [\n\t\t"{0}:tick"\n\t]\n}}'
 	load = "say Это лоад функция"
 	tick = "# Это тик функция"
 	custom_model_data = '{{\n\t"parent": "item/generated",\n\t"textures": {{\n\t\t"layer0": "<путь к текстуре>"\n\t}},\n\t"overrides": [\n\t\t{{ "predicate": {{ "custom_model_data": {0} }}, "model": "item/cosmetics/eye_patch"}},\n\t]}}'
@@ -90,13 +90,11 @@ class PGenerator:
 		return list(valid_folders)
 	
 	def validate_namespaces(namespaces):
-		valid_chars = ascii_lowercase + digits + "_-" 
+		valid_chars = ascii_lowercase + digits + "._-" 
 		valid_namespaces = set()
 		curr_nspc = ""
 		for nspc in namespaces:
-			for char in nspc:
-				if char in valid_chars:
-					curr_nspc += char
+			curr_nspc = ''.join([char for char in nspc.lower() if char in valid_chars])
 			if curr_nspc != "":
 				valid_namespaces.add(curr_nspc)
 		return list(valid_namespaces)
@@ -131,8 +129,8 @@ class PGenerator:
 		with ZipFile(dp_f, "w") as dp:
 			function = "functions" if legacy else "function"
 			dp.writestr(f"{name}/pack.mcmeta", Templates.mcmeta.format(version))
-			dp.writestr(f"{name}/data/minecraft/tags/{function}/load.json", dumps(Templates.load_json, indent="\t"))
-			dp.writestr(f"{name}/data/minecraft/tags/{function}/tick.json", dumps(Templates.tick_json, indent="\t"))
+			dp.writestr(f"{name}/data/minecraft/tags/{function}/load.json", Templates.load_json.format(main_namespace))
+			dp.writestr(f"{name}/data/minecraft/tags/{function}/tick.json", Templates.tick_json.format(main_namespace))
 			dp.writestr(f"{name}/data/{main_namespace}/{function}/load.mcfunction", Templates.load)
 			dp.writestr(f"{name}/data/{main_namespace}/{function}/tick.mcfunction", Templates.tick)
 			for namespace in namespaces:
@@ -159,8 +157,6 @@ class PGenerator:
 		rp_f = io.BytesIO()
 		with ZipFile(rp_f, "w") as rp:
 			rp.writestr(f"{name}/pack.mcmeta", Templates.mcmeta.format(version))
-			if "models" in folders_include:
-				rp.writestr(f"{name}/assets/minecraft/models/item/custom_model_data.json", Templates.custom_model_data.format(str(version)))
 			for namespace in namespaces:
 				rp.mkdir(f"{name}/assets/{namespace}")
 			if folders_exclude == []:
@@ -184,8 +180,8 @@ class Modals:
 		)
 		namespaces = discord.ui.TextInput(
 			required=False,
-			label="Пространства имён",
-			placeholder="my_dp, raycasts, ...",
+			label="Пространства имён (разделять пробелом)",
+			placeholder="my_dp raycasts ...",
 			max_length=512
 		)
 		folders_include = discord.ui.TextInput(
