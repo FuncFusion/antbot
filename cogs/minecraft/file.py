@@ -100,7 +100,7 @@ class FileCommand(commands.Cog):
 		#
 		branch = path.split("/")[0]
 		if version != "latest":
-			versions_hashes[branch][version]
+			branch = versions_hashes[branch][version]
 		async with ClientSession(headers=GITHUB_HEADERS) as session:
 			async with session.get(f"https://raw.githubusercontent.com/misode/mcmeta/{branch}/{path}") as response:
 				if response.status != 200:

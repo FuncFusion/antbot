@@ -45,7 +45,7 @@ class TemplateCommand(commands.Cog):
 				allowed_mentions=no_ping)
 		elif type == "basic":
 			await ctx.reply(f"## {pack_ctx[pack]["emoji"]} Базовый шаблон {pack_ctx[pack]["accusative"]}", 
-				file=discord.File(pack_ctx[pack]["function"](folders_include=["function"]), 
+				file=discord.File(pack_ctx[pack]["function"](folders_include=["function", "textures"]), 
 				filename=f"Basic_{pack}_(UNZIP).zip"), allowed_mentions=no_ping)
 	
 	@template.autocomplete(name="pack")
