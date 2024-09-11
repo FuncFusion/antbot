@@ -18,7 +18,7 @@ for filename in os.listdir("assets/syntaxes"):
 		with open(f"assets/syntaxes/{filename}", "r", encoding="utf-8") as file:
 			syntaxes[filename.replace(".md", "")] = file.read()
 
-offered_commands = [app_commands.Choice(name=command, value=command) for command in list(syntaxes)[:25]]
+offered_commands = [app_commands.Choice(name=command, value=command) for command in sorted(list(syntaxes))[:25]]
 
 class SyntaxCommand(commands.Cog):
 
@@ -45,7 +45,7 @@ class SyntaxCommand(commands.Cog):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
-				"msg": "Пожалуйста, укажите команду. Испльзуйте **слэш** команду </syntax:1250486582109274207>, где в автокомплите будет видно список команд."
+				"msg": "Пожалуйста, укажите команду. Используйте **слэш** команду </syntax:1250486582109274207>, где в автокомплите будет видно список команд."
 			},
 			{
 				"exception": commands.CommandInvokeError,
