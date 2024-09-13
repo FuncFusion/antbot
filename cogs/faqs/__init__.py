@@ -36,9 +36,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		embed = discord.Embed(color=no_color)
 		if name == None:
 			faqs_str = ", ".join([f"`{faq}`" for faq in faq_names])
-			embed.title = f"{Emojis.question_mark} Список всех факьюшек ({len(faq_names)}):"
-			embed.add_field(name="", value=faqs_str, inline=False)
-			embed.add_field(name="", value="", inline=False)
+			embed.description = f"## {Emojis.question_mark} Список всех факьюшек ({len(faq_names)}):\n{faqs_str}"
 			embed.add_field(name="Как использовать факьюшки?", value="Чтобы вызвать ответ на какую либо факьюшку, напишите вопросительный знак и после него название факьюшки. Вы также можете вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. Примеры:\n`?логи`\n`Тебе стоит открыть **?**логи, потому что в них полезная инфа`")
 			await ctx.reply(embed=embed, allowed_mentions=no_ping)
 		else:

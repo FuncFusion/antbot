@@ -113,7 +113,7 @@ class FileCommand(commands.Cog):
 					raise Exception(f"Response error {response.status}")
 				file = discord.File(BytesIO(await response.read()), filename=path.split("/")[-1])
 		#
-		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]}\n{path_tree}",
+		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]} ({version})\n{path_tree}",
 			color=no_color)
 		if path.endswith("png"):
 			embed.set_image(url=f"attachment://{file.filename}")
