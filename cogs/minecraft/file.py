@@ -44,6 +44,7 @@ class FileCommand(commands.Cog):
 		if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
 			latest_version = newer_version
 			files = await self.get_files_list()
+			db.update_one({"_id": "versions_pathes"}, {"$set": {latest_version: files}}, upsert=True)
 			await self.update_versions_hashes()
 
 	async def update_versions_hashes(self):
@@ -78,7 +79,6 @@ class FileCommand(commands.Cog):
 	@app_commands.describe(path="Путь/название интересующего файла")
 
 	async def file(self, ctx, path: str, version: str="latest"):
-		global files
 		is_image = False
 		if version == "latest":
 			current_files = files
@@ -86,10 +86,16 @@ class FileCommand(commands.Cog):
 			versions_hashes = db.find_one({"_id": "versions_hashes"})["_"]
 			if version not in versions_hashes["data"]:
 				raise Exception("Wrong version")
-			current_files = await self.get_files_list((
-				versions_hashes["data"][version],
-				versions_hashes["assets"][version]
-			))
+			#
+			versions_pathes = db.find_one({"_id": "versions_pathes"})["_"]
+			if version in versions_pathes:
+				current_files = versions_pathes[version]
+			else:
+				current_files = await self.get_files_list((
+					versions_hashes["data"][version],
+					versions_hashes["assets"][version]
+				))
+				db.update_one({"_id": "versions_pathes"}, {"$set": {f"_.{version.replace('.', '\\.')}": current_files}})
 		all_results = [value for key, value in current_files.items() if path in value]
 		path = all_results[0]
 		#
@@ -140,4 +146,18 @@ class FileCommand(commands.Cog):
 	
 	@file.autocomplete(name="path")
 	async def file_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
-		return [app_commands.Choice(name=key, value=value[-100:]) for key, value in files.items() if curr in value][:25]
+		if (version:=ctx.namespace.version) != None:
+			versions_pathes = db.find_one({"_id": "versions_pathes"})["_"]
+			if version in versions_pathes:
+				current_files = versions_pathes[version]
+				print("gex")
+			else:
+				versions_hashes = db.find_one({"_id": "versions_hashes"})["_"]
+				current_files = await self.get_files_list((
+					versions_hashes["data"][version],
+					versions_hashes["assets"][version]
+				))
+				db.update_one({"_id": "versions_pathes"}, {"$set": {f"_.{version.replace('.', '\\.')}": current_files}})
+		else:
+			current_files = files.copy()
+		return [app_commands.Choice(name=key, value=value[-100:]) for key, value in current_files.items() if curr in value][:25]
