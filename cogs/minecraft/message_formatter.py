@@ -22,7 +22,7 @@ class MessageFormatter(commands.Cog):
 				else:
 					formatted = formatted.replace(block[0], f"```ansi\n{hl.highlight(block[2])}```")
 			if msg.guild is None:
-				await msg.channel.send(formatted, reference=msg, allowed_mentions=no_ping)
+				await msg.reply(formatted, allowed_mentions=no_ping)
 				return
 			await msg.delete()
 			await fake_send(msg.author, msg.channel, split_msg(formatted), msg.attachments)
