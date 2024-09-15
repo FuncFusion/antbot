@@ -71,7 +71,7 @@ class PackformatCommand(commands.Cog):
 	async def file_autocomplete(self, ctx: discord.Interaction, curr: str):
 		return offered_versions
 
-	# @packformat.error
+	@packformat.error
 	async def packformat_error(self, ctx, error: Exception):
 		await handle_errors(ctx, error, [
 			{
