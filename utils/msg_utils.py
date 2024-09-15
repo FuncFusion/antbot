@@ -232,3 +232,4 @@ class Emojis:
 	dice = "<:dice:1277384663836528682>"
 	packformat = "<:packformat:1277533907620991026>"
 	missing = "<:missing:1278053472117194814>"
+	typing = "<a:typing:1284598739025268910>"

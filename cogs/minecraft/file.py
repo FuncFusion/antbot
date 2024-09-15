@@ -14,6 +14,7 @@ from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
+versions_pathes = MongoClient(MONGO_URI).antbot.versons_pathes
 files = {}
 latest_version = ""
 
@@ -25,27 +26,31 @@ class FileCommand(commands.Cog):
 	
 	async def get_files_list(self, branches=("data", "assets")):
 		async with ClientSession(headers=GITHUB_HEADERS) as session:
+			current_files = {}
 			for branch in branches:
 				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{branch}?recursive=1") as response:
 					tree = await response.json()
 					tree = tree.get("tree", [])
-					files.update({
+					current_files.update({
 						"/".join(item["path"].split("/")[-2:]): item["path"] 
 						for item in tree if item["type"] == "blob"
 					})
 			try:
-				files.pop(".gitattributes")
+				current_files.pop(".gitattributes")
 			except:pass
-		return files
+		return current_files
 
 	@tasks.loop(minutes=6)
 	async def update_files_list(self):
 		global latest_version, files
 		if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
-			latest_version = newer_version
-			files = await self.get_files_list()
-			db.update_one({"_id": "versions_pathes"}, {"$set": {latest_version: files}}, upsert=True)
-			await self.update_versions_hashes()
+			if (latest_files := versions_pathes.find_one({"_id": newer_version.replace('.', '_')})):
+				files = latest_files["_"]
+			else:
+				latest_version = newer_version
+				files = await self.get_files_list()
+				versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
+				await self.update_versions_hashes()
 
 	async def update_versions_hashes(self):
 		versions_hashes = db.find_one({"_id": "versions_hashes"})
@@ -64,7 +69,7 @@ class FileCommand(commands.Cog):
 							if not data:
 								break
 							for commit in data:
-								version = commit["commit"]["message"].split(" ")[-1]
+								version = commit["commit"]["message"].split(" ")[-1].replace(".", "_")
 								versions_hashes[branch][version] = commit["sha"]
 						else:
 							print(f"Failed to fetch commits. Status code: {response.status}")
@@ -83,20 +88,19 @@ class FileCommand(commands.Cog):
 		if version == "latest":
 			current_files = files
 		else:
+			version_for_mongo = version.replace(".", "_")
 			versions_hashes = db.find_one({"_id": "versions_hashes"})["_"]
-			if version not in versions_hashes["data"]:
+			if version_for_mongo not in versions_hashes["data"]:
 				raise Exception("Wrong version")
-			#
-			versions_pathes = db.find_one({"_id": "versions_pathes"})["_"]
-			if version in versions_pathes:
-				current_files = versions_pathes[version]
+			if (files_for_version:=versions_pathes.find_one({"_id": version_for_mongo})):
+				current_files = files_for_version["_"]
 			else:
 				current_files = await self.get_files_list((
-					versions_hashes["data"][version],
-					versions_hashes["assets"][version]
+					versions_hashes["data"][version_for_mongo],
+					versions_hashes["assets"][version_for_mongo]
 				))
-				db.update_one({"_id": "versions_pathes"}, {"$set": {f"_.{version.replace('.', '\\.')}": current_files}})
-		all_results = [value for key, value in current_files.items() if path in value]
+				versions_pathes.insert_one({"_id": version, "_": current_files})
+		all_results = [value for _, value in current_files.items() if path in value]
 		path = all_results[0]
 		#
 		path_tree = ""
@@ -147,17 +151,19 @@ class FileCommand(commands.Cog):
 	@file.autocomplete(name="path")
 	async def file_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:
 		if (version:=ctx.namespace.version) != None:
-			versions_pathes = db.find_one({"_id": "versions_pathes"})["_"]
-			if version in versions_pathes:
-				current_files = versions_pathes[version]
-				print("gex")
+			version = version.replace('.', '_')
+			if (files_for_version:=versions_pathes.find_one({"_id": version})):
+				current_files = files_for_version["_"]
 			else:
 				versions_hashes = db.find_one({"_id": "versions_hashes"})["_"]
-				current_files = await self.get_files_list((
-					versions_hashes["data"][version],
-					versions_hashes["assets"][version]
-				))
-				db.update_one({"_id": "versions_pathes"}, {"$set": {f"_.{version.replace('.', '\\.')}": current_files}})
+				if version not in versions_hashes["data"]:
+					current_files = files
+				else:
+					current_files = await self.get_files_list((
+						versions_hashes["data"][version],
+						versions_hashes["assets"][version]
+					))
+					versions_pathes.insert_one({"_id": version, "_": current_files})
 		else:
-			current_files = files.copy()
+			current_files = files
 		return [app_commands.Choice(name=key, value=value[-100:]) for key, value in current_files.items() if curr in value][:25]
