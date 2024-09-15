@@ -92,14 +92,14 @@ class FileCommand(commands.Cog):
 			versions_hashes = db.find_one({"_id": "versions_hashes"})["_"]
 			if version_for_mongo not in versions_hashes["data"]:
 				raise Exception("Wrong version")
-			if (files_for_version:=versions_pathes.find_one({"_id": version_for_mongo})):
+			if (files_for_version:=versions_pathes.find_one({"_id": version_for_mongo})) != None:
 				current_files = files_for_version["_"]
 			else:
 				current_files = await self.get_files_list((
 					versions_hashes["data"][version_for_mongo],
 					versions_hashes["assets"][version_for_mongo]
 				))
-				versions_pathes.insert_one({"_id": version, "_": current_files})
+				versions_pathes.insert_one({"_id": version_for_mongo, "_": current_files})
 		all_results = [value for _, value in current_files.items() if path in value]
 		path = all_results[0]
 		#
