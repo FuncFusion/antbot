@@ -29,6 +29,7 @@ async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING)
 		user_copy_webhook = await channel.create_webhook(name=".")
 		db.insert_one({"_id": channel.id, "webhook_id": user_copy_webhook.id})
 	#
+	content.replace("@", "")
 	if isinstance(content, list):
 		for text in content:
 			if text == content[-1]:
