@@ -4,7 +4,7 @@ from discord.utils import MISSING
 from pymongo.mongo_client import MongoClient
 
 from settings import MONGO_URI, DISCORD_API_SECRET
-
+from utils.shortcuts import no_ping
 
 db = MongoClient(MONGO_URI).antbot.webhook_channels
 
@@ -29,14 +29,13 @@ async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING)
 		user_copy_webhook = await channel.create_webhook(name=".")
 		db.insert_one({"_id": channel.id, "webhook_id": user_copy_webhook.id})
 	#
-	content.replace("@", "")
 	if isinstance(content, list):
 		for text in content:
 			if text == content[-1]:
 				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, 
-				files=files, thread=thread)
+				files=files, thread=thread, allowed_mentions=no_ping)
 			else:
-				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread)	
+				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread, allowed_mentions=no_ping)	
 	else:
 		await user_copy_webhook.send(content=content, avatar_url=user.display_avatar.url, username=user.display_name, 
-		thread=thread, files=files)
+		thread=thread, files=files, allowed_mentions=no_ping)
