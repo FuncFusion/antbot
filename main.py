@@ -12,7 +12,7 @@ from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_h
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
-from cogs.minecraft import FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
+from cogs.minecraft import ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 from utils.packmcmeta import update_mcmeta_info
 
@@ -27,7 +27,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		GiveawayCommand, GAModerationCommands,
 		Logs,
 		ClearCommand, PunishmentCommands,
-	    FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand,
+	    ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers, BotPingView]
 
