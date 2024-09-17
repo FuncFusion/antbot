@@ -142,6 +142,10 @@ class ColorCommand(commands.Cog):
 	async def color_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": "Не указан цвет"
+			},
+			{
 				"contains": "Wrong type",
 				"msg": "Неверный тип цвета"
 			}
