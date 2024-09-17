@@ -33,7 +33,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 	@commands.Cog.listener(name="on_voice_state_update")
 	async def voice_event(self, member, before, after):
 		if member.guild.id == GUILD:
-			if after.channel and after.channel.id != CREATE_VC_CHANNEL_ID:
+			if before.channel != after.channel and after.channel != None and after.channel.id != CREATE_VC_CHANNEL_ID:
 				embed = discord.Embed(title=f"{Emojis.vc_joined} Участник зашёл в гк", color=no_color)
 				embed.set_author(name=member.name, icon_url=member.display_avatar.url)
 				embed.add_field(name="Канал", value=f"{after.channel.name} ({after.channel.mention})")

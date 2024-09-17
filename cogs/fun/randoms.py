@@ -58,6 +58,6 @@ class RandomCommands(commands.Cog):
 
 	@random.error
 	async def random_error(self, ctx, error):
-		embed = discord.Embed(title=f"{Emojis.exclamation_mark} Не хватает аргументов?", color=no_color)
+		embed = discord.Embed(color=no_color)
 		embed.description = f"## {Emojis.exclamation_mark} Не хватает аргументов?\n{Emojis.dice} **Ответ:**\nДа"
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)

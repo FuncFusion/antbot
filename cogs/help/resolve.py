@@ -53,6 +53,8 @@ class ResolveCommand(commands.Cog):
 		embed.add_field(name="Люди, которые помогли" if len(helpers_mentions) >= 2 else "Человек, который помог", 
 			value=f"{Emojis.user if len(helpers_mentions) < 2 else Emojis.users} {" ".join(helpers_mentions)}")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		if len(ctx.channel.applied_tags) == 5:
+			await ctx.channel.remove_tags(ctx.channel.applied_tags[-1])
 		await ctx.channel.add_tags(SOLVED_TAG)
 		await ctx.channel.edit(archived=True)
 

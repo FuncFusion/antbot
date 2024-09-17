@@ -110,7 +110,7 @@ class EnchantCommands(commands.Cog):
 	@app_commands.describe(text="Текст, который нужно перевести на язык стола зачарований")
 
 	async def enchant(self, ctx, *, text: str):
-		enchanted = text
+		enchanted = text.lower()
 		for char in normal2sga_table:
 			enchanted = enchanted.replace(char, normal2sga_table[char]+"\u200b")
 		messages = [enchanted[i:i + 2000] for i in range(0, len(enchanted), 2000)]
