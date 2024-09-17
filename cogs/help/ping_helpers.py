@@ -7,7 +7,7 @@ from time import time
 from pymongo.mongo_client import MongoClient
 
 from settings import HELP_FORUM_ID, MONGO_URI, DATAPACKS_TAG, RESOURCEPACKS_TAGS, DATAPACK_MASTER_ROLE, \
-	RESOURCEPACK_MASTER_ROLE
+	RESOURCEPACK_MASTER_ROLE, SOLVED_TAG
 from utils.msg_utils import Emojis
 from utils.shortcuts import  no_color
 
@@ -38,7 +38,7 @@ class PingHelpers(commands.Cog):
 		except:pass
 		left_before_offer = when_offer - int(time())
 		await sleep(left_before_offer)
-		if not trd.archived:
+		if SOLVED_TAG not in trd.applied_tags:
 			await trd.send(f"{trd.owner.mention}, не получили ответ? Можете позвать мастеров на помощь!", 
 				view=Ping_related_helpers(about_dp, about_rp))
 		db.delete_one({"_id": trd.id})
