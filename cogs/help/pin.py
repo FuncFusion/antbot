@@ -5,11 +5,8 @@ from settings import HELP_FORUM_ID, CREATIONS_FORUM_ID
 
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping
-from utils.validator import validate
 
-valid_pin = {
-	"pin": ["пин", "закреп", "закрепи", "закрепить", ":pushpin:", "pushpin", "📌", "📍", "<:pushpin:1270666437496799254>"]
-}
+pin_aliases = ["пин", "закреп", "закрепи", "закрепить", ":pushpin:", "pushpin", "📌", "📍", "<:pushpin:1270666437496799254>"]
 
 
 class Pin(commands.Cog):
@@ -31,7 +28,7 @@ class Pin(commands.Cog):
 	async def message_pin(self, msg):
 		if isinstance(msg.channel, discord.Thread) and msg.channel.parent_id in (HELP_FORUM_ID, CREATIONS_FORUM_ID) \
 		and (msg.author == msg.channel.owner or msg.author.guild_permissions.manage_messages):
-			if validate(msg.content, valid_pin, 3):
+			if msg.content.strip().lower() in pin_aliases:
 				try:
 					replied_msg = await msg.channel.fetch_message(msg.reference.message_id)
 					if replied_msg.pinned:
