@@ -31,7 +31,7 @@ class Pin(commands.Cog):
 	async def message_pin(self, msg):
 		if isinstance(msg.channel, discord.Thread) and msg.channel.parent_id in (HELP_FORUM_ID, CREATIONS_FORUM_ID) \
 		and (msg.author == msg.channel.owner or msg.author.guild_permissions.manage_messages):
-			if validate(msg.content, valid_pin):
+			if validate(msg.content, valid_pin, 3):
 				try:
 					replied_msg = await msg.channel.fetch_message(msg.reference.message_id)
 					if replied_msg.pinned:
