@@ -29,12 +29,15 @@ class FileCommand(commands.Cog):
 			current_files = {}
 			for branch in branches:
 				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{branch}?recursive=1") as response:
-					tree = await response.json()
-					tree = tree.get("tree", [])
-					current_files.update({
-						"/".join(item["path"].split("/")[-2:]): item["path"] 
-						for item in tree if item["type"] == "blob"
-					})
+					if response.status == 200:
+						tree = await response.json()
+						tree = tree.get("tree", [])
+						current_files.update({
+							"/".join(item["path"].split("/")[-2:]): item["path"] 
+							for item in tree if item["type"] == "blob"
+						})
+					else:
+						raise Exception(f"Response error")
 			try:
 				current_files.pop(".gitattributes")
 			except:pass
@@ -47,8 +50,8 @@ class FileCommand(commands.Cog):
 			if (latest_files := versions_pathes.find_one({"_id": newer_version.replace('.', '_')})):
 				files = latest_files["_"]
 			else:
-				latest_version = newer_version
 				files = await self.get_files_list()
+				latest_version = newer_version
 				versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
 				await self.update_versions_hashes()
 
