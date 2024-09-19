@@ -27,7 +27,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		GiveawayCommand, GAModerationCommands,
 		Logs,
 		ClearCommand, PunishmentCommands,
-	    ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand,
+	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers, BotPingView]
 
