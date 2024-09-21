@@ -41,6 +41,7 @@ class FileCommand(commands.Cog):
 			try:
 				current_files.pop(".gitattributes")
 			except:pass
+		if latest_version
 		return current_files
 
 	@tasks.loop(minutes=6)
@@ -51,11 +52,11 @@ class FileCommand(commands.Cog):
 				files = latest_files["_"]
 			else:
 				files = await self.get_files_list()
+				await self.update_versions_hashes(newer_version)
 				latest_version = newer_version
 				versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
-				await self.update_versions_hashes()
 
-	async def update_versions_hashes(self):
+	async def update_versions_hashes(self, newer_version=None):
 		versions_hashes = db.find_one({"_id": "versions_hashes"})
 		if versions_hashes:
 			versions_hashes = versions_hashes["_"]
@@ -69,6 +70,7 @@ class FileCommand(commands.Cog):
 					async with session.get(url) as response:
 						if response.status == 200:
 							data = await response.json()
+							print(data)
 							if not data:
 								break
 							for commit in data:
@@ -78,6 +80,8 @@ class FileCommand(commands.Cog):
 							print(f"Failed to fetch commits. Status code: {response.status}")
 							break
 				page += 1
+		if newer_version and not (newer_version in versions_hashes["data"]):
+			raise Exception("Mcmeta not updated")
 		db.update_one({"_id": "versions_hashes"}, {"$set": {"_": versions_hashes}}, upsert=True)
 
 	@commands.hybrid_command(aliases=["f", "asset", "mcasset", "файл", "ашду", "ассет", "эссет", "мсассет", "мсэссэт","фыыуе","ьсфыыуе"], 
