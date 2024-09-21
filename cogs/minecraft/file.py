@@ -19,6 +19,7 @@ files = {}
 latest_version = ""
 
 
+
 class FileCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
