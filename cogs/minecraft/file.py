@@ -19,7 +19,6 @@ files = {}
 latest_version = ""
 
 
-
 class FileCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -42,7 +41,6 @@ class FileCommand(commands.Cog):
 			try:
 				current_files.pop(".gitattributes")
 			except:pass
-		if latest_version
 		return current_files
 
 	@tasks.loop(minutes=6)
