@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 from random import choice
 import io
 
-from settings import LEAVES_CHANNEL_ID, JOINS_CHANNEL_ID
+from settings import LEAVES_CHANNEL_ID, JOINS_CHANNEL_ID, GUILD
 
 
 async def generate_banner(user):
@@ -42,7 +42,9 @@ class JoinAndLeaveMessage(commands.Cog):
 		self.bot = bot
 
 	@commands.Cog.listener("on_member_join")
-	async def on_member_join(self, user):
+	async def on_member_join(self, member):
+		if member.guild_id != GUILD:
+			return
 		greeting_msg = choice([
 			"Добро пожаловать, {0}. Мы надеемся, что ты принёс пиццу",
 			"Добро пожаловать, {0}!",
@@ -55,12 +57,14 @@ class JoinAndLeaveMessage(commands.Cog):
 			"О найс, {0} присоединился",
 			"Привет, {0}! У тебя есть датапаки? 😏"
 		])
-		greeting_image = await generate_banner(user)
+		greeting_image = await generate_banner(member)
 		JOINS_CHANNEL = await self.bot.fetch_channel(JOINS_CHANNEL_ID)
-		await JOINS_CHANNEL.send(greeting_msg.format(user.mention), file=greeting_image)
+		await JOINS_CHANNEL.send(greeting_msg.format(member.mention), file=greeting_image)
 	
 	@commands.Cog.listener("on_raw_member_remove")
 	async def on_raw_member_remove(self, payload):
+		if payload.guild_id != GUILD:
+			return
 		user = payload.user
 		leaving_msg = choice([
 			"{0} кудааа",

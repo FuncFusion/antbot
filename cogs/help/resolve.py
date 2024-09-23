@@ -37,7 +37,7 @@ class ResolveCommand(commands.Cog):
 			raise Exception("Channel is not help forum")
 		elif ctx.author != ctx.channel.owner and not is_moderator:
 			raise Exception("User not author/op")
-		elif solution == None and not ctx.message.refernce:
+		elif solution == None and not ctx.message.reference:
 			embed = discord.Embed(title="🤨 Погодите, вы уверены?", color=no_color,
 				description=f"{Emojis.exclamation_mark} Вы не указали ни сообщение, ни "
 				"людей которые помогли решить проблему, это заархивирует ветку без решения")
