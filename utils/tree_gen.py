@@ -6,7 +6,7 @@ def generate_tree(folders: str):
 	for idx, item in enumerate(folders):
 		name = item.lstrip()
 		if idx == len(folders)-1:
-			indent_difference == 0
+			indent_difference = 0
 			if item == "":break
 		else:
 			indent_difference = (len(next_item:=folders[idx+1]) - len(next_item.lstrip())) - (len(item.replace(name, "")))
