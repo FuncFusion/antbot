@@ -43,7 +43,7 @@ class JoinAndLeaveMessage(commands.Cog):
 
 	@commands.Cog.listener("on_member_join")
 	async def on_member_join(self, member):
-		if member.guild_id != GUILD:
+		if member.guild.id != GUILD:
 			return
 		greeting_msg = choice([
 			"Добро пожаловать, {0}. Мы надеемся, что ты принёс пиццу",
@@ -63,7 +63,7 @@ class JoinAndLeaveMessage(commands.Cog):
 	
 	@commands.Cog.listener("on_raw_member_remove")
 	async def on_raw_member_remove(self, payload):
-		if payload.guild_id != GUILD:
+		if payload.guild.id != GUILD:
 			return
 		user = payload.user
 		leaving_msg = choice([
