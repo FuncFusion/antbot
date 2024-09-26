@@ -11,6 +11,7 @@ from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_ping, no_color
 from utils.time import get_secs
+from time import time
 
 
 def generate_stupid_reason():
@@ -105,9 +106,9 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		#
 		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
 		embed.set_thumbnail(url=user.display_avatar.url)
-		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-		embed.add_field(name="Причина", value=reason)
-		embed.add_field(name="Замученый участник", value=user.mention, inline=False)
+		embed.add_field(name="Замученый участник", value=user.mention)
+		embed.add_field(name="Срок наказания", value=f"<t:{int(time()) + get_secs(term)}:R>")
+		embed.add_field(name="Причина", value=reason,inline=False)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@mute.error
 	async def mute_error(self, ctx, error):
