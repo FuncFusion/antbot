@@ -23,6 +23,7 @@
 ```ansi
 [35mscoreboard [34mobjectives modify [33m<[0mскорборд[33m> [34mdisplayautoupdate [33m<[0mзначение[33m>
 ```
+---separator---
 Изменяет отображаемое имя скорборда в слотах отображения.
 ```ansi
 [35mscoreboard [34mobjectives modify [33m<[0mскорборд[33m> [34mdisplayname [33m<[0mjson текст[33m>

@@ -13,6 +13,9 @@
   - [34mmodify [33m<[0mскорборд[33m> [34mnumberformat fixed [33m<[0mjson текст[33m>[0m
   - [34mmodify [33m<[0mскорборд[33m> [34mnumberformat style [33m<[0mстиль[33m>[0m
   - [34mmodify [33m<[0mскорборд[33m> [34mrendertype [33m([34mhearts[33m|[34minteger[33m)[0m
+```
+---separator---
+```ansi
  - [34mplayers[0m
   - [34mlist [33m[[35m<[36mселектор[35m>[33m][0m
   - [34mget [33m<[36mселектор[33m> <[0mскорборд[33m>[0m
