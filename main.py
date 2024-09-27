@@ -9,7 +9,6 @@ from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForVie
 from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
-from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
 from cogs.minecraft import ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
@@ -22,14 +21,13 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
 		HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, StarterMessage, SyntaxCommand,
-		IdeaCommands,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
 		Logs,
 		ClearCommand, PunishmentCommands,
 	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers, BotPingView]
+views = [LookForView, R_u_sure, Ping_related_helpers, BotPingView]
 
 
 class AntBot(commands.Bot):

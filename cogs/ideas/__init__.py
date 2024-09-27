@@ -23,7 +23,7 @@ wrong_channel_errors = [
 	}
 ]
 
-
+# Deprecated
 class IdeaCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
