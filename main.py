@@ -9,6 +9,7 @@ from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForVie
 from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
+from cogs.ideas import IdeaVoteReactions
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
 from cogs.minecraft import ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
@@ -23,7 +24,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, StarterMessage, SyntaxCommand,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
-		Logs,
+		Logs, IdeaVoteReactions,
 		ClearCommand, PunishmentCommands,
 	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
