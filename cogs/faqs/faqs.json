@@ -42,5 +42,6 @@
 	"inlay hints": ["inlay hint", "hint", "inlay", "инлэй", "инлайн","инлайн подсказки","подсказки инлайн","подсказки внутри команд","inlay hints","hints","инлайны подсказки","подсказки инлайновые","подсказки"],
 	"ПКМ детект": ["right click detect", "rc detect", "rc", "пкм", "пкм детект в дп", "детект пкм", "детект правой кнопки мыши", "дп пкм", "правая кнопка мыши детект", "кс вуеусе", "датапак пкм детект", "методы определения пкм", "райт клик"],
 	"pack.mcmeta фильтры": ["пак мсмета фильтры","фильтры пак мсмета","mcmeta filters","pack.mcmeta filters","мсмета фильтры","фильтры мсметы","фильтры","filters"],
-	"pack.mcmeta оверлеи": ["pack.mcmeta overlays","mcmeta overlays","pack.mcmeta оверлеи","mcmeta оверлеи","оверлеи пак мсмета","overlays","оверлеи","пакмсмета оверлеи"]
+	"pack.mcmeta оверлеи": ["pack.mcmeta overlays","mcmeta overlays","pack.mcmeta оверлеи","mcmeta оверлеи","оверлеи пак мсмета","overlays","оверлеи","пакмсмета оверлеи"],
+	"cardinal direction align": ["выровнять по сторонам света","стороны света","выровнять по кардинальным направлениям","кардинальные направления","align cardinal directions","align cardinal","align directions","directions align","directions align to cardinals","округление поворота к сторонам света","rounding rotation to cardinal directions","rounding rotation to cardinal","rounding rotation to directions","rotation align","rotation align to cardinals"]
 }
