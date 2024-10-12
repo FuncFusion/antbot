@@ -11,7 +11,7 @@ from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
 from cogs.ideas import IdeaVoteReactions
 from cogs.logs import Logs
-from cogs.mod import ClearCommand, PunishmentCommands, MediaModeration
+from cogs.mod import ClearCommand, PunishmentCommands, AutoThreads
 from cogs.minecraft import ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
 from cogs.voice_channels import CustomVoiceChannels
 from utils.packmcmeta import update_mcmeta_info
@@ -25,7 +25,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
 		Logs, IdeaVoteReactions,
-		ClearCommand, PunishmentCommands, MediaModeration,
+		ClearCommand, PunishmentCommands, AutoThreads,
 	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
 views = [LookForView, R_u_sure, BotPingView]
