@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from settings import MEDIA_CHANNEL_ID, FB_IDEAS_CHANNEL_ID
+from re import sub
 
 class AutoThreads(commands.Cog):
 	def __init__(self, bot):
@@ -24,7 +25,13 @@ class AutoThreads(commands.Cog):
 			await msg.channel.send(f"{msg.author.mention} Обсуждайте в ветках!", delete_after=3)
 	
 async def create_auto_thread(msg):
-	thread_name = msg.content[:97] if msg.content != "" else f"Обсуждение медиа {msg.author.display_name}"
-	if len(msg.content) >= 100:
+	content = sub(r"https?:\/\/\S+", "", msg.content)
+	thread_name = content[:97]
+	if len(thread_name) == 97:
 		thread_name += "..."
-	await msg.create_thread(name=thread_name)
+	try:
+		await msg.create_thread(name=thread_name)
+	except discord.errors.HTTPException:
+		channel_name = sub(r"[^\w-]*", "", msg.channel.name)
+		await msg.create_thread(name=f"Обсуждение {channel_name} {msg.author.display_name}")
+		
