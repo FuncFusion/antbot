@@ -63,7 +63,7 @@ class JoinAndLeaveMessage(commands.Cog):
 	
 	@commands.Cog.listener("on_raw_member_remove")
 	async def on_raw_member_remove(self, payload):
-		if payload.guild.id != GUILD:
+		if payload.guild_id != GUILD:
 			return
 		user = payload.user
 		leaving_msg = choice([
