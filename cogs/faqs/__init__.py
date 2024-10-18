@@ -66,7 +66,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 
 	@commands.Cog.listener("on_message")
 	async def main(self, msg):
-		if msg.author == self.bot.user:
+		if msg.author.bot:
 			return
 		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID:
 			return
@@ -101,13 +101,13 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		answers = content.split("\n---separator---\n")
 		for answer in answers:
 			if len(answers) == 1:
-				answer += "\n-# Источник: [AntBot](<https://github.com/FuncFusion/antbot>)"
+				#answer += "\n-# Источник: [AntBot](<https://github.com/FuncFusion/antbot>)"
 				await msg.reply(answer, files=files, allowed_mentions=no_ping)
 			elif answers.index(answer) == 0:
 				await msg.reply(answer, allowed_mentions=no_ping)
 			elif answer != answers[-1]:
 				await msg.channel.send(answer, allowed_mentions=no_ping)
 			else:
-				answer += "\n-# Источник: [AntBot](<https://github.com/FuncFusion/antbot>)"
+				#answer += "\n-# Источник: [AntBot](<https://github.com/FuncFusion/antbot>)"
 				await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
 		
