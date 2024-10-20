@@ -16,14 +16,14 @@ class StarterMessage(commands.Cog):
 	async def new_help_post(self, trd):
 		await sleep(0.5)
 		if trd.parent_id == HELP_FORUM_ID:
-			embed = discord.Embed(title=f"{Emojis.pin} Ознакомтесь с правилами получения помощи!", color=no_color, 
+			embed = discord.Embed(title=f"{Emojis.pin} Ознакомьтесь с правилами получения помощи!", color=no_color, 
 				description=f"Если ещё не читали, прочитайте в закреп ветке "
 				"(https://discord.com/channels/914772142300749854/1021488153909018704) рекомендации к веткам помощи, "
 				"и о том, как работают некоторые её аспекты. Следование всем рекомендациям (особенно 4 пункту) поможет "
 				"получить наиболее эффективную помощь. Когда проблема решится, используйте команду </resolve:1250486582109274206>.")
 			await trd.send(embed=embed, view=StarterView())
 		elif trd.parent_id == CREATIONS_FORUM_ID:
-			embed = discord.Embed(title=f"{Emojis.pin} Ознакомтесь с правилами творчества!", color=no_color, 
+			embed = discord.Embed(title=f"{Emojis.pin} Ознакомьтесь с правилами творчества!", color=no_color, 
 				description=f"Надеемся, что вы уже прочитали правила творчества "
 				"(https://discord.com/channels/914772142300749854/1142473873200267314/1142473873200267314). "
 				"Если вы хотите поменять картинку на обложке вашего поста, вы **можете это сделать**. Вы можете вставитьпрямую "

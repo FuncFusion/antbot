@@ -21,15 +21,14 @@ logger = settings.logging.getLogger("bot")
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
-		HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, StarterMessage, SyntaxCommand,
-		IdeaCommands,
+		HelpCommand, LinkCommand, Pin, ResolveCommand, StarterMessage, SyntaxCommand,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
 		Logs, IdeaVoteReactions,
 		ClearCommand, PunishmentCommands, AutoThreads,
 	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers, BotPingView]
+views = [LookForView, R_u_sure, BotPingView]
 
 
 class AntBot(commands.Bot):
