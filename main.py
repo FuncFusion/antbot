@@ -8,7 +8,7 @@ from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import HelpCommand, LinkCommand, Pin, ResolveCommand, R_u_sure, StarterMessage, StarterView, SyntaxCommand
+from cogs.help import HelpCommand, LinkCommand, Pin, R_u_sure, StarterMessage, StarterView, SyntaxCommand
 from cogs.ideas import IdeaVoteReactions
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands, AutoThreads
@@ -21,7 +21,7 @@ logger = settings.logging.getLogger("bot")
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
-		HelpCommand, LinkCommand, Pin, ResolveCommand, StarterMessage, SyntaxCommand,
+		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
 		Logs, IdeaVoteReactions,
