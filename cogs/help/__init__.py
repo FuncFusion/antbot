@@ -3,5 +3,5 @@ from cogs.help.link import LinkCommand
 from cogs.help.pin import Pin
 from cogs.help.ping_helpers import PingHelpers, Ping_related_helpers
 from cogs.help.resolve import ResolveCommand, R_u_sure
-from cogs.help.start_message import StarterMessage
+from cogs.help.starter_message import StarterMessage, StarterView
 from cogs.help.syntax import SyntaxCommand

@@ -8,7 +8,7 @@ from cogs.faqs import FAQs
 from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
 from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import HelpCommand, LinkCommand, Pin, PingHelpers, Ping_related_helpers, ResolveCommand, R_u_sure, StarterMessage, SyntaxCommand
+from cogs.help import HelpCommand, LinkCommand, Pin, ResolveCommand, R_u_sure, StarterMessage, StarterView, SyntaxCommand
 from cogs.ideas import IdeaCommands, IdeaView
 from cogs.logs import Logs
 from cogs.mod import ClearCommand, PunishmentCommands
@@ -21,7 +21,7 @@ logger = settings.logging.getLogger("bot")
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands,	
-		HelpCommand, LinkCommand, Pin, PingHelpers, ResolveCommand, StarterMessage, SyntaxCommand,
+		HelpCommand, LinkCommand, Pin, ResolveCommand, StarterMessage, SyntaxCommand,
 		IdeaCommands,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
@@ -29,7 +29,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		ClearCommand, PunishmentCommands,
 	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, IdeaView, R_u_sure, Ping_related_helpers, BotPingView]
+views = [LookForView, IdeaView, StarterView, R_u_sure, BotPingView]
 
 
 class AntBot(commands.Bot):
