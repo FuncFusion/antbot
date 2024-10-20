@@ -234,3 +234,5 @@ class Emojis:
 	missing = "<:missing:1278053472117194814>"
 	typing = "<a:typing:1284598739025268910>"
 	shader_triangle = "<:shader_triangle:1285663956496810048>"
+	antvote = "<:antvote:1042075029040545922>"
+	downtvote = "<:downtvote:1042076436363751434>"

@@ -7,7 +7,7 @@ from typing import List
 import os
 
 from utils.general import handle_errors
-from utils.msg_utils import Emojis
+from utils.msg_utils import Emojis, split_msg
 from utils.shortcuts import no_color, no_ping
 from utils.validator import all_valid, closest_match
 
@@ -36,9 +36,13 @@ class SyntaxCommand(commands.Cog):
 		command = closest_match(command, syntaxes_dict, 10)
 		if command == None:
 			raise Exception("KeyError")
-		embed = discord.Embed(color=no_color)
-		embed.description=f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command]
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		msg = f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command]
+		parts = msg.split("\n---separator---\n")
+		for part in parts:
+			if parts.index(part) == 0:
+				await ctx.reply(part, allowed_mentions=no_ping)
+			else:
+				await ctx.channel.send(part, allowed_mentions=no_ping)
 
 	@syntax.error
 	async def syntax_error(self, ctx, error):

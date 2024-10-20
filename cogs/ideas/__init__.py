@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+from cogs.ideas.vote_reactions import IdeaVoteReactions
 
 from pymongo.mongo_client import MongoClient
-
 from settings import IDEAS_CHANNEL_ID, MONGO_URI, GUILD
 from utils.general import handle_errors
 from utils.msg_utils import Emojis, user_from_embed
@@ -23,7 +23,7 @@ wrong_channel_errors = [
 	}
 ]
 
-
+# Deprecated
 class IdeaCommands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
