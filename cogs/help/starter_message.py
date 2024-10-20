@@ -60,7 +60,9 @@ class StarterView(discord.ui.View):
 				ephemeral=True,
 				allowed_mentions=no_ping)
 			return
-		embed = discord.Embed(color=no_color, title=f"{Emojis.check} Проблема решена!", description=f"### Любое новое сообщение или реакция снова откроет эту ветку.")
+		embed = discord.Embed(color=no_color,
+				description=f"# {Emojis.check} Проблема решена!\n"
+				"### Любое новое сообщение или реакция снова откроет эту ветку.")
 		await ctx.response.send_message(embed=embed,allowed_mentions=no_ping)
 		if len(ctx.channel.applied_tags) == 5:
 			await ctx.channel.remove_tags(ctx.channel.applied_tags[-1])
