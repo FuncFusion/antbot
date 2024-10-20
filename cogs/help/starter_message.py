@@ -30,6 +30,7 @@ class StarterMessage(commands.Cog):
 				"ссылку на картинку или ссылку на тот сайт, что уже имеет картинку в своём эмбеде. Также не забывайте, что вы можете "
 				"закреплять сообщения в своей ветке, отреагировав с помощью эмодзи :pushpin:.")
 			await trd.send(embed=embed)
+		else:return
 		await trd.starter_message.pin()
 
 
