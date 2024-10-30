@@ -1,7 +1,7 @@
 {
 	"https://marketplace.visualstudio.com/items?itemName=amandin.dpc-pack": ["Datapack essentials","dpe","dpec","datapack ass entials","dp essentials","datapack extension collection","датапак эссентиалс","датапак экстешон коллекшон","амандин колекшон","вфефзфсл уыыутешфды"],
 	"https://misode.github.io/": ["Misode","Datapack generators","dp generators","ьшыщву","мисод","датапак генераторы","дп генераторы"],
-	"https://mcasset.cloud/": ["mcasset.cloud","mcac","mcassetcloaud","ьсфыыуесдщгв","asset cloud","облако ассетов","мцассетклауд"],
+	"https://mcasset.cloud/": ["mcasset.cloud","mcac","mcassetcloud","ьсфыыуесдщгв","asset cloud","облако ассетов","мцассетклауд","mcassets","mcasset","мцассет"],
 	"https://maven.blamejared.com/foundry/veil": ["Veil","мушд","веил"],
 	"https://github.com/McTsts/Minecraft-Shaders-Wiki": ["Core shaders wiki","mctsts","shader wiki","ырфвукы цшлш","шейдер вики"],
 	"https://github.com/Dominexis/Atlas-Logger": ["Atlas logger","федфы дщппук","атлас логгер"],
@@ -53,5 +53,6 @@
 	"https://github.com/StickyPiston-Hosting/Easy-Map-Updater": ["Easy map updater", "EMU","апдейтер карт","апдейтер дп","изи мап апдейтер"],
 	"https://discord.gg/minecraftfeedback": ["Minecraft Feedback Discord Server","minecraft feedback discord","feedback discord","feedback server","mc feedback discord","mc feedback server","feedback дискорд","feedback сервер","фидбек дс","фидбек сервер","minecraft feedback"],
 	"https://gist.github.com/misode/77ee37217a69a3c74032679d8084d6c6#file-tick_order-md": ["Tick order","order","очередь тика","тик очередь","порядок тика","порядок исполнения вещей в тике"],
+	"https://discord.gg/aEXsdjjdu4": ["Datapack Hub Discord Server","datapack hub discord","datapack hub server","dp hub discord","dp hub server","дп хаб дискорд","дп хаб сервер","дп хаб","datapack hub","дп хаб дискорд сервер"],
 	"https://midwut.github.io/website/": ["MIDWUT","мидвут","ьшвцге"]
 } 
