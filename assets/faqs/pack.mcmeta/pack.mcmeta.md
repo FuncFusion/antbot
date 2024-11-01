@@ -3,8 +3,8 @@
 ```json
 {
     "pack": {
-        "pack_format": 15,
-        "description": "Описание ресурспака"
+        "pack_format": 57,
+        "description": "Описание"
     }
 }
 ```
