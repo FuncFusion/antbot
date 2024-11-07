@@ -12,7 +12,7 @@
 	"типы нбт": ["nbt types", "nbt formats", "нбт типы", "нбт форматы", "тие ензуы", "тие ащкьфеы"],
 	"execute run execute": ["ere", "run execute", "ран экзекьют", "ран экзекьют", "эрэ", "кгт учусгеу", "учусгеу кгт учусгеу", "уку"],
 	"оптифайн пивоты": ["optifine pivots", "of pivots", "оф пивоты", "щзешашту зшмщеы"],
-	"папки мобов": ["mob bones", "mob folders", "cem folders", "of folders", "папки мобов", "кости мобов", "оф папки мобов", "сем папки", "оф папки", "ьщи ащдвукы", "суь ащдвукы", "ьщи ищтуы"],
+	"папки мобов": ["mob bones", "mob folders", "cem folders", "of folders", "папки мобов", "кости мобов", "оф папки мобов", "сем папки", "оф папки", "ьщи ащдвукы", "суь ащдвукы", "ьщи ищтуы","корневые папки"],
 	"расширения имён файлов": ["file extensions", "file formats", "расширения", "форматы файлов", "ашду учеутышщты", "ашду ащкьфеы", "риф", "fe", "ау"],
 	"отрицательный размер": ["негативный размер", "отрицательный размер кубов", "отриц размер", "negative size", "neg size", "тупфешму ышяу", "туп ышяу"],
 	"демонстрация функций": ["демка функций", "предоставление функций", "распространение функций", "обмен функциями", "дф", "шеринг функций", "sharing functions", "function demonstration", "fd", "ырфкштп агтсешщты", "агтсешщт вуьщтыекфешщт", "ав"],
@@ -46,5 +46,7 @@
 	"pack.mcmeta оверлеи": ["pack.mcmeta overlays","mcmeta overlays","pack.mcmeta оверлеи","mcmeta оверлеи","оверлеи пак мсмета","overlays","оверлеи","пакмсмета оверлеи"],
 	"cardinal direction align": ["выровнять по сторонам света","стороны света","выровнять по кардинальным направлениям","кардинальные направления","align cardinal directions","align cardinal","align directions","directions align","directions align to cardinals","округление поворота к сторонам света","rounding rotation to cardinal directions","rounding rotation to cardinal","rounding rotation to directions","rotation align","rotation align to cardinals"],
 	"interaction сущность": ["interaction","interaction entity","интеракшн","интеракшн сущность","сущность интеракшн","интеракция","сущность интеракция","интеракция сущность","пкм детект интеракшн","пкм детект интеракция","лкм пкм детект сущность","entity interaction", "right left click detection entity","сущность взаимодействия","взаимодействие сущность","интерактивная сущность"],
-	"item_model": ["айтем модел","айтем модел компонент","компонент айтем модел","item model","item model component","компонент модели предмета","модель предмета компонент","component item model"]
+	"item_model": ["айтем модел","айтем модел компонент","компонент айтем модел","item model","item model component","компонент модели предмета","модель предмета компонент","component item model"],
+	"все селекторы": ["all selectors","все селекторы","селекторы","селекторы все","селекторы всех","селекторы всех типов","селекторы типов","селекторы аргументов","все аргументы селекторов","все аргументы","аргументы селекторов","аргументы","arguments","arguments selectors","arguments all","arguments all selectors","arguments selectors all","arguments selectors types","arguments types selectors","arguments types","types arguments","types","types selectors","selectors types","selectors","selectors all","selectors all types"],
+	"lang": ["language","lang","язык","язык рп","lang resourcepacks","язык в ресурспаках","ланг в ресурспаке","ланг","как работать с лангом"]
 }
