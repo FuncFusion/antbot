@@ -24,5 +24,5 @@ class MessageFormatter(commands.Cog):
 			if msg.guild is None:
 				await msg.reply(formatted, allowed_mentions=no_ping)
 				return
-			await msg.delete()
 			await fake_send(msg.author, msg.channel, split_msg(formatted), msg.attachments)
+			await msg.delete()
