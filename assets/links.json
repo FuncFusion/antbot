@@ -6,10 +6,10 @@
 	"https://github.com/McTsts/Minecraft-Shaders-Wiki": ["Core shaders wiki","mctsts","shader wiki","ырфвукы цшлш","шейдер вики"],
 	"https://github.com/Dominexis/Atlas-Logger": ["Atlas logger","федфы дщппук","атлас логгер"],
 	"https://github.com/DartCat25/CEM-S": ["DartCat25's CEM-S","cems","цемс","суьы"],
-	"http://www.javadecompilers.com/": ["Java Decompilers online","jdo","джава декмопайлер","джава декомпилятор","офмф вусщьзшдук"],
+	"http://www.javadecompilers.com/": ["Java Decompilers online","jdo","джава декмопайлер","джава декомпилятор","fernflower","javadecompilers","офмф вусщьзшдук","фэрнфлауэр","javadecomp"],
 	"https://mcstacker.net/": ["mcstacker.net","mcstacker","mcs","command generator","cmd gen","мсстакер","мцстакер","генераторы команд","кмд ген","ьсыефслук.туе","ьсыефслук","ьсы"],
 	"https://github.com/Triton365/BlockState": ["BlockState","get states","block to nbt converter","bst","блокстейт","получить блокстейты","идщслыефеу"],
-	"https://github.com/MulverineX/player_motion": ["Player Motion","Delta new","pm","Моушн игрока","игрока моушн","плеер моушн","новая дельта","пм","Здфнук Ьщешщт","зь"],
+	"https://modrinth.com/datapack/player_motion": ["Player Motion","Delta new","pm","Моушн игрока","игрока моушн","плеер моушн","новая дельта","пм","Здфнук Ьщешщт","зь"],
 	"https://github.com/BigPapi13/Delta": ["Delta (legacy)","Delta old","старая дельта","старый моушн игрока"],
 	"https://github.com/bradleyq/stable_player_display": ["Stable Player Display","stable-player-display","spd","стейбл плеер дисплей","плеер дисплей","сбд","стейбл","stable","stable player","player stable","player display stable","display stable","display stable"],
 	"https://github.com/Godlander/objmc": ["OBJMC","object mc","обджмс","обджект мс"],
@@ -55,6 +55,7 @@
 	"https://gist.github.com/misode/77ee37217a69a3c74032679d8084d6c6#file-tick_order-md": ["Tick order","order","очередь тика","тик очередь","порядок тика","порядок исполнения вещей в тике"],
 	"https://discord.gg/aEXsdjjdu4": ["Datapack Hub Discord Server","datapack hub discord","datapack hub server","dp hub discord","dp hub server","дп хаб дискорд","дп хаб сервер","дп хаб","datapack hub","дп хаб дискорд сервер"],
 	"https://dontasktoask.com/ru/": ["Don't ask to ask","dontasktoask","донтасктуаск","не спрашивайте чтобы спросить, просто спросите","не спрашивайте чтобы спросить","сразу спрашивайте то что надо","сразу спросите то что надо"],
+	"https://nohello.net/ru": ["No hello","nohello","просто задайте вопрос","без привета","без приветствия"],
 	"https://tryitands.ee": ["Try it and see","tryitandsee","трайитэндсии","попробуй и посмотри","попробуй и увидишь","попробуй и узнай","попробуй и узнаешь","попробуй и узнаешь","а ты попробуй и увидишь"],
 	"https://midwut.github.io/website/": ["MIDWUT","мидвут","ьшвцге"]
 } 
