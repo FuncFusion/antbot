@@ -47,7 +47,7 @@ class SnapshotScraper(commands.Cog):
 		#
 		if latest_version_id != last_known_version:
 			db.update_one({"_id": "latest_known_snapshot"}, {"$set": {"_": latest_version_id}})
-			snapshot_msg = await snapshot_channel.send(f"<@&{SNAPSHOT_PING_ROLE}>\nhttps://www.minecraft.net"
+			snapshot_msg = await snapshot_channel.send(f"# {latest_version}\n<@&{SNAPSHOT_PING_ROLE}>\nhttps://www.minecraft.net"
 				f"/en-us/article/minecraft-{'snapshot-' if latest_version == latest_version_id else ''}"
 				f"{'java-edition-' if data['versions'][0]['type'] == 'release' else ''}{latest_version}")
 			await snapshot_msg.pin()
