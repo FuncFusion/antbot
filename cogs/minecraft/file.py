@@ -14,7 +14,7 @@ from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
-versions_pathes = MongoClient(MONGO_URI).antbot.versons_pathes
+versions_pathes = MongoClient(MONGO_URI).antbot.versions_pathes
 files = {}
 latest_version = ""
 logs_channel = None
@@ -61,8 +61,8 @@ class FileCommand(commands.Cog):
 				await logs_channel.send("files already exist")
 			else:
 				await logs_channel.send("files are not exist rn")
-				await self.update_versions_hashes(newer_version)
 				files = await self.get_files_list()
+				await self.update_versions_hashes(newer_version)
 				latest_version = newer_version
 				await logs_channel.send("all the stuff finished yeaa")
 				versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
