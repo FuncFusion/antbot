@@ -14,7 +14,7 @@ from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
-versions_pathes = MongoClient(MONGO_URI).antbot.versions_pathes
+versions_pathes = MongoClient(MONGO_URI).antbot.versons_pathes
 files = {}
 latest_version = ""
 logs_channel = None
