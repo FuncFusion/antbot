@@ -53,8 +53,9 @@ class FileCommand(commands.Cog):
 	@tasks.loop(minutes=6)
 	async def update_files_list(self):
 		global latest_version, files, logs_channel
+		logs_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
+		await logs_channel.send(f'latest_known_snapshot: `{db.find_one({"_id": "latest_known_snapshot"})["_"]}`, latest_version: `{latest_version}`')
 		if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
-			logs_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
 			await logs_channel.send(f"`newer_version`({newer_version}) != `latest_version`({latest_version})")
 			if (latest_files := versions_pathes.find_one({"_id": newer_version.replace('.', '_')})):
 				files = latest_files["_"]
