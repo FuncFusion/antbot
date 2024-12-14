@@ -8,15 +8,16 @@ from typing import List
 from io import BytesIO
 from pymongo import MongoClient
 
-from settings import MONGO_URI, GITHUB_HEADERS
+from settings import MONGO_URI, GITHUB_HEADERS, LOGS_CHANNEL_ID
 from utils.tree_gen import generate_tree
 from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
-versions_pathes = MongoClient(MONGO_URI).antbot.versons_pathes
+versions_pathes = MongoClient(MONGO_URI).antbot.versions_pathes
 files = {}
 latest_version = ""
+logs_channel = None
 
 
 class FileCommand(commands.Cog):
@@ -25,8 +26,11 @@ class FileCommand(commands.Cog):
 		self.update_files_list.start()
 	
 	async def get_files_list(self, branches=("data", "assets")):
+		global logs_channel
+		await logs_channel.send("getting files...")
 		async with ClientSession(headers=GITHUB_HEADERS) as session:
 			current_files = {}
+			await logs_channel.send("Client session started")
 			for branch in branches:
 				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{branch}?recursive=1") as response:
 					if response.status == 200:
@@ -37,25 +41,35 @@ class FileCommand(commands.Cog):
 							for item in tree if item["type"] == "blob"
 						})
 					else:
+						await logs_channel.send(f"Resoponse error idk {response.status} {response}")
 						raise Exception(f"Response error")
+			await logs_channel.send("`for branch in bracnhes` finished")
 			try:
 				current_files.pop(".gitattributes")
 			except:pass
+		await logs_channel.send("returning the files")
 		return current_files
 
 	@tasks.loop(minutes=6)
 	async def update_files_list(self):
-		global latest_version, files
+		global latest_version, files, logs_channel
+		logs_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
+		await logs_channel.send(f'latest_known_snapshot: `{db.find_one({"_id": "latest_known_snapshot"})["_"]}`, latest_version: `{latest_version}`')
 		if (newer_version:=db.find_one({"_id": "latest_known_snapshot"})["_"]) != latest_version:
+			await logs_channel.send(f"`newer_version`({newer_version}) != `latest_version`({latest_version})")
 			if (latest_files := versions_pathes.find_one({"_id": newer_version.replace('.', '_')})):
 				files = latest_files["_"]
+				await logs_channel.send("files already exist")
 			else:
+				await logs_channel.send("files are not exist rn")
 				files = await self.get_files_list()
 				await self.update_versions_hashes(newer_version)
 				latest_version = newer_version
+				await logs_channel.send("all the stuff finished yeaa")
 				versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
 
 	async def update_versions_hashes(self, newer_version=None):
+		await logs_channel.send("started updating versions hashes")
 		versions_hashes = db.find_one({"_id": "versions_hashes"})
 		if versions_hashes:
 			versions_hashes = versions_hashes["_"]
@@ -66,20 +80,22 @@ class FileCommand(commands.Cog):
 			while True:
 				url = f"https://api.github.com/repos/misode/mcmeta/commits?sha={branch}&per_page=100&page={page}"
 				async with ClientSession(headers=GITHUB_HEADERS) as session:
+					await logs_channel.send(f"client session started, curr page is `{page}`")
 					async with session.get(url) as response:
 						if response.status == 200:
 							data = await response.json()
-							print(data)
 							if not data:
 								break
 							for commit in data:
 								version = commit["commit"]["message"].split(" ")[-1].replace(".", "_")
 								versions_hashes[branch][version] = commit["sha"]
 						else:
+							await logs_channel.send(f"Failed to fetch commits. Status code: {response.status}")
 							print(f"Failed to fetch commits. Status code: {response.status}")
 							break
 				page += 1
 		if newer_version and not (newer_version in versions_hashes["data"]):
+			await logs_channel.send("Mcmeta not updated")
 			raise Exception("Mcmeta not updated")
 		db.update_one({"_id": "versions_hashes"}, {"$set": {"_": versions_hashes}}, upsert=True)
 
