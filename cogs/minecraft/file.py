@@ -62,11 +62,13 @@ class FileCommand(commands.Cog):
 				await logs_channel.send("files already exist")
 			else:
 				await logs_channel.send("files are not exist rn")
-				files = await self.get_files_list()
-				await self.update_versions_hashes(newer_version)
-				latest_version = newer_version
-				await logs_channel.send("all the stuff finished yeaa")
-				versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
+				try:
+					files = await self.get_files_list()
+					await self.update_versions_hashes(newer_version)
+					latest_version = newer_version
+					await logs_channel.send("all the stuff finished yeaa")
+					versions_pathes.insert_one({"_id": latest_version.replace('.', '_'), "_": files})
+				except:pass
 
 	async def update_versions_hashes(self, newer_version=None):
 		await logs_channel.send("started updating versions hashes")
