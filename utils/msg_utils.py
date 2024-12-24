@@ -100,14 +100,17 @@ class Emojis:
 
 	atlases_open = "<:atlases:1142347325436612619>"
 	blockstates_open = "<:blockstates:1142346756953231451>"
+	equipment_open = "<:equipment:1319409526704832553>"
 	font_open = "<:font:1142346540392927262>"
-	models_open = "<:models:1142346673469800479>"
+	items_open = "<:items:1319409532858007563>"
 	lang_open = "<:lang:1142346828206047325>"
+	models_open = "<:models:1142346673469800479>"
 	particles_open = "<:particles:1142346351879925862>"
+	post_effects_open = "<:shaders:1142346604028899429>"
 	sounds_open = "<:sounds:1142347049568837742>"
 	shaders_open = "<:shaders:1142346604028899429>"
-	textures_open = "<:textures:1142347361893494876>"
 	texts_open = "<:texts:1142919111236665485>"
+	textures_open = "<:textures:1142347361893494876>"
 
 
 	advancements_json = "<:advancement:1319409155756527716>"
@@ -132,7 +135,10 @@ class Emojis:
 
 	atlas_json = "<:atlas:1188838144351682620>"
 	blockstates_json = "<:blockstate:1188838141663125624>"
+	equipment_json = "<:equipment_file:1319409197108170752>"
+	items_json = "<:items_file:1319409214614929478>"
 	particles_json = "<:particle:1188838146385911939>"
+	post_effects_json = "<:shader_triangle:1285663956496810048>"
 
 
 	beet = "<:beet:1143125070336774165>"
