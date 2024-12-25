@@ -166,7 +166,7 @@ icons = {
 		"equipment": e.equipment_file,
 		"items": e.items_file,
 		"lang": e.lang_file,
-		"models": e.bbmodel_file,
+		"models": e.bbmodel,
 		"particles": e.particles_file,
 		"post_effects": e.shader_triangle,
 		"shaders": e.shader_triangle,
