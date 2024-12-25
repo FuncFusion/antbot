@@ -30,7 +30,7 @@ class ServerInfoCommand(commands.Cog):
 		embed.add_field(name="Владелец", value=f"{Emojis.crown} <@{server.owner_id}>", inline=False)
 		embed.add_field(name="Сервер создан", value=f"{Emojis.calendar} <t:{int(server.created_at.timestamp())}>", inline=False)
 		embed.add_field(name="Участники", value=f"{Emojis.users} {member_count} • {Emojis.bot} {bot_count}", inline=False)
-		embed.add_field(name="Каналы", value=f"{Emojis.text_channel} {len(server.text_channels)} • {Emojis.speaker} {len(server.voice_channels)} • {Emojis.chat_type} {len(server.forums)}", inline=False)
+		embed.add_field(name="Каналы", value=f"{Emojis.text_channel} {len(server.text_channels)} • {Emojis.speaker} {len(server.voice_channels)} • {Emojis.chat_type_file} {len(server.forums)}", inline=False)
 		embed.add_field(name="Роли", value=f"{Emojis.role} {len(server.roles)}", inline=False)
 		embed.add_field(name="Приглашение", value=f"{Emojis.link} https://discord.gg/anthill-914772142300749854")
 		embed.set_footer(text=f"🆔 {server.id}")
