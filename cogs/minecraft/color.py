@@ -119,18 +119,17 @@ class ColorCommand(commands.Cog):
 			rgba_color = to_rgb_int(rgba_float_color, "rgb_float")
 		elif color.group("decimal"):
 			rgba_color = to_rgb_int(int(color.group("color")), "decimal")
-		colors = list([func(rgba_color) for func in (to_hex, to_rgb_float, to_decimal)])
-		colors.append(rgba_color)
+		hex_color = to_hex(rgba_color)
+		rgba_float_color = to_rgb_float(rgba_color)
+		decimal_color = to_decimal(rgba_color)
 		#
-		color_hex = colors[0]
-		colorize_rgb = lambda color: "\u001b[37m, ".join(f"\u001b[3{i}m{c}" for c, i in zip(color, ('1', '2', '4', '7')))
 		embed = discord.Embed(
 			color=no_color,
 			description=f"## {Emojis.shader_triangle} Форматы цвета\n"
-				f"**Hex** ```ansi\n#\u001b[31m{color_hex[1:3]}\u001b[32m{color_hex[3:5]}\u001b[34m{color_hex[5:7]}```\n"
-				f"**RGB float** ```ansi\n{colorize_rgb(colors[1])}```\n"
-				f"**RGB int** ```ansi\n{colorize_rgb(colors[3])}```\n"
-				f"**Decimal** ```\n{colors[2]}```"
+				f"**Hex** ```css\n{hex_color}```\n"
+				f"**RGB float** ```c\n{str(rgba_float_color)[1:-1]}```\n"
+				f"**RGB int** ```c\n{str(rgba_color)[1:-1]}```\n"
+				f"**Decimal** ```c\n{decimal_color}```"
 		)
 		#
 		showcase = generate_showcase(rgba_color)
