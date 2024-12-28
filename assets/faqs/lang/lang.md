@@ -3,10 +3,10 @@
 
 ### Как изменить какой то определённый текст в игре?
 1. Создайте в вашем ресурспаке такую структуру файлов:
-<:assets_open:1142346941599064086>`assets`
-⎿<:namespace_open:1188839157829742723>`minecraft`
-　⎿<:lang:1142346828206047325>`lang`
-　　⎿<:lang_file:1188838193559257258>`ru_ru.json`
-　　⎿<:lang_file:1188838193559257258>`en_us.json`
+{assets_open}`assets`
+⎿{namespace_open}`minecraft`
+　⎿{lang}`lang`
+　　⎿{lang_file}`ru_ru.json`
+　　⎿{lang_file}`en_us.json`
 
 не дописал дальше пока что
