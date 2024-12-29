@@ -52,7 +52,7 @@ def user_from_embed(message):
 
 class Emojis:
 
-	ajmeta = "<:ajmeta:1259232304740438066>"
+	ajmeta = "<:ajmeta:1319409157648154738>"
 	mcf = "<:mcfunction:1142345406106312754>"
 	mcf_tick = "<:mcfunction_tick:1142345408459321425>"
 	mcf_load = "<:mcfunction_load:1142345404403425341>"
