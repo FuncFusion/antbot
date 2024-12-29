@@ -5,7 +5,7 @@ import asyncio
 
 from cogs.admin import DebugCommand, EditCommand, PingCommand, StatusCommands, SayCommand
 from cogs.faqs import FAQs
-from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView
+from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView, DeadChat
 from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
 from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
 from cogs.help import HelpCommand, LinkCommand, Pin, R_u_sure, StarterMessage, StarterView, SyntaxCommand
@@ -20,7 +20,7 @@ logger = settings.logging.getLogger("bot")
 
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
-		EnchantCommands, LookForCommand, RandomCommands,	
+		EnchantCommands, LookForCommand, RandomCommands, DeadChat,	
 		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
