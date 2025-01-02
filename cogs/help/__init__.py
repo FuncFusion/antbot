@@ -4,3 +4,4 @@ from cogs.help.pin import Pin
 from cogs.help.resolve import R_u_sure
 from cogs.help.starter_message import StarterMessage, StarterView
 from cogs.help.syntax import SyntaxCommand
+from cogs.help.ask_to_resolve import AskToResolve
