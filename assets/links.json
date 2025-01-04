@@ -35,7 +35,7 @@
 	"https://modrinth.com/mod/datamancer": ["Datamancer","dtmncr","dm","датамансер","датамансер","дм","вфефьфтсук"],
 	"https://modrinth.com/mod/datapack-debugger": ["Datapack Debugger mod","dp debugger","breakpoint mod","датапак дебаггер мод","дебаггер датапаков","брейкпоинт мод","дпдбг","вфефзфсл вуигппук"],
 	"https://www.blockbench.net/": ["Blockbench website", "bb site","сайт блокбенча","сайт бб"],
-	"https://discord.gg/QAFXFtZ": ["Minecraft Commands discord server","minecraft commands server","minecraft commands discord","mcc discord","mcc server","майнкрафт коммандс дискорд сервер","майнкрафт коммандс дискорд","майнкрафт коммандс сервер","мкк сервер","мкк дискорд"],
+	"https://discord.gg/QAFXFtZ": ["Minecraft Commands discord server","minecraft commands server","minecraft commands discord","mcc discord","mcc server","майнкрафт коммандс дискорд сервер","майнкрафт коммандс дискорд","майнкрафт коммандс сервер","мкк сервер","мкк дискорд","mcc","мкк","мкк дискорд сервер"],
 	"https://discord.gg/blockbench": ["Blockbench discord server","Blockbench server","bb server","bb discord","блокбенч дискорд","бб дискорд сервер","бб дс","бб сервер","блокбенч сервер"],
 	"https://animated-java.dev/": ["Animated Java Website","animated java site","aj site","сайт анимейтейд джава","адж сайт","фтшьфеув офмф цуиышеу"],
 	"https://discord.gg/SQ6tTXbmUJ": ["Animated Java discord server","Animated Java server","aj server","animated java discord","aj discord","адж дискорд сервер","адж дс","адж сервер, aj сервер","animated java сервер"],
@@ -53,10 +53,10 @@
 	"https://github.com/StickyPiston-Hosting/Easy-Map-Updater": ["Easy map updater", "EMU","апдейтер карт","апдейтер дп","изи мап апдейтер"],
 	"https://discord.gg/minecraftfeedback": ["Minecraft Feedback Discord Server","minecraft feedback discord","feedback discord","feedback server","mc feedback discord","mc feedback server","feedback дискорд","feedback сервер","фидбек дс","фидбек сервер","minecraft feedback"],
 	"https://gist.github.com/misode/77ee37217a69a3c74032679d8084d6c6#file-tick_order-md": ["Tick order","order","очередь тика","тик очередь","порядок тика","порядок исполнения вещей в тике"],
-	"https://discord.gg/aEXsdjjdu4": ["Datapack Hub Discord Server","datapack hub discord","datapack hub server","dp hub discord","dp hub server","дп хаб дискорд","дп хаб сервер","дп хаб","datapack hub","дп хаб дискорд сервер"],
+	"https://discord.gg/aEXsdjjdu4": ["Datapack Hub Discord Server","datapack hub discord","datapack hub server","dp hub discord","dp hub server","дп хаб дискорд","дп хаб сервер","дп хаб","datapack hub","дп хаб дискорд сервер","дп хаб дискорд сервер","датапак хаб","дп хаб"],
 	"https://dontasktoask.com/ru/": ["Don't ask to ask","dontasktoask","донтасктуаск","не спрашивайте чтобы спросить, просто спросите","не спрашивайте чтобы спросить","сразу спрашивайте то что надо","сразу спросите то что надо"],
 	"https://nohello.net/ru": ["No hello","nohello","просто задайте вопрос","без привета","без приветствия"],
 	"https://tryitands.ee": ["Try it and see","tryitandsee","трайитэндсии","попробуй и посмотри","попробуй и увидишь","попробуй и узнай","попробуй и узнаешь","попробуй и узнаешь","а ты попробуй и увидишь"],
-	"https://discord.gg/tVHkA5hNge": ["Godlands discord server","godlands","Godlander's discord server","Godlands discord","godlands server","годлендс дискорд","годлендс","годлендс дискорд сервер","годлендс дс","годлендс сервер"],
+	"https://discord.gg/tVHkA5hNge": ["Godlands discord server","godlands","Godlander's discord server","Godlands discord","godlands server","годлендс дискорд","годлендс","годлендс дискорд сервер","годлендс дс","годлендс сервер","godlander"],
 	"https://midwut.github.io/website/": ["MIDWUT","мидвут","ьшвцге"]
 } 
