@@ -48,5 +48,6 @@
 	"item_model": ["айтем модел","айтем модел компонент","компонент айтем модел","item model","item model component","компонент модели предмета","модель предмета компонент","component item model"],
 	"все селекторы": ["all selectors","все селекторы","селекторы","селекторы все","селекторы всех","селекторы всех типов","селекторы типов","селекторы аргументов","все аргументы селекторов","все аргументы","аргументы селекторов","аргументы","arguments","arguments selectors","arguments all","arguments all selectors","arguments selectors all","arguments selectors types","arguments types selectors","arguments types","types arguments","types","types selectors","selectors types","selectors","selectors all","selectors all types"],
 	"lang": ["language","lang","язык","язык рп","lang resourcepacks","язык в ресурспаках","ланг в ресурспаке","ланг","как работать с лангом"],
-	"рейкаст": ["raycast","рейкастинг","рк","ray"]
+	"рейкаст": ["raycast","рейкастинг","рк","ray"],
+	"команда плавного поворота": ["smooth rotation command","smooth rotation","smooth rot","smooth rot command","smooth rot cmd","плавный поворот","плавный поворот команда","rotation smooth","поворот плавный"]
 }
