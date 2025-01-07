@@ -33,6 +33,7 @@ class SyntaxCommand(commands.Cog):
 		syntaxes_dict = {}
 		for syntax in syntaxes.keys():
 			syntaxes_dict.update({syntax: []})
+		command = " ".join(command.split()[:2])
 		command = closest_match(command, syntaxes_dict, 10)
 		if command == None:
 			raise Exception("KeyError")
