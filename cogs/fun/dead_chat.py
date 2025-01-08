@@ -24,7 +24,8 @@ class DeadChat(commands.Cog):
             return
         if msg.author.bot:
             return
-        if msg.created_at.hour >= 0 and msg.created_at.hour < 5:
+        current_time = msg.created_at.replace(hour=(msg.created_at.hour + 4) % 24)
+        if current_time.hour >= 0 and current_time.hour < 5:
             return
         new_message_id = msg.id
         if "https://tenor.com/view/ultra-dead-chat-dead-chat-gif-27600164" in msg.content.lower():
