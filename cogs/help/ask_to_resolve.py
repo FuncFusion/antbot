@@ -16,10 +16,8 @@ class AskToResolve(commands.Cog):
 		valid_strings = {
 			"решено": ["решил", "решила", "решили", "решилось"],
 			"спасибо": ["спс", "благодарю", "спасибки", "пасиб", "благодарствую", "благодарен"],
-			"работает": ["сработало", "заработало", "получилось"],
 			"помогло": ["помог", "помогла", "помогли"],
-			"разобрался": ["разобралась", "разобрались", "понял", "поняла"],
-			"получилось": ["вышло", "удалось", "справился", "справилась"]
+			"разобрался": ["разобралась", "разобрались", "понял", "поняла"]
 		}
 		msg_words = msg.content.strip().lower().split()
 		if "не" not in msg.content.lower() and any(validate(word, valid_strings, 4) for word in msg_words):
@@ -47,5 +45,5 @@ class AskToResolve(commands.Cog):
 		first_msg = first_msgs[0]
 		existing_ask_msgs = [msg async for msg in msg.channel.history() 
 						if msg.author.bot and "если ваша проблема решена" in msg.content]
-		if len(existing_ask_msgs) < 3:
+		if len(existing_ask_msgs) < 2:
 			await first_msg.reply(f"{msg.author.mention}, если ваша проблема решена, нажмите на соответствующую кнопку у того сообщения. Если вы думаете, что будете ещё задавать связанные с этой темой вопросы в этой ветке, то можете пока не нажимать.")
