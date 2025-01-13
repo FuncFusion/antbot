@@ -25,6 +25,24 @@ class FileCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.update_files_list.start()
+
+	def search_files(self, query, files):
+		matches = [file for file in files if query in file]
+		if not matches:
+			matches = []
+			for file in files:
+				match_count = 0
+				query_items_backwards = query.split("/")[::-1]
+				query_size = len(query_items_backwards)
+				for i in query_items_backwards:
+					for j in file.split("/")[::-1]:
+						if distance(i, j) <= min(len(i)/3, 2.7):
+							match_count += 1
+							break
+					if match_count >= query_size:
+						matches.append(file)
+						break
+		return matches
 	
 	async def get_files_list(self, branches=("data", "assets")):
 		async with ClientSession(headers=GITHUB_HEADERS) as session:
@@ -95,24 +113,6 @@ class FileCommand(commands.Cog):
 	@app_commands.describe(path="Путь/название интересующего файла")
 
 	async def file(self, ctx, path: str, version: str="latest"):
-		def search_files(query, files):
-			matches = []
-			for file in files:
-				if query in file:
-					matches.append(file)
-				else:
-					match_count = 0
-					query_items_backwards = query.split("/")[::-1]
-					query_size = len(query_items_backwards)
-					for i in query_items_backwards:
-						for j in file.split("/")[::-1]:
-							if distance(i, j) <= len(i)/3:
-								match_count += 1
-								break
-						if match_count >= query_size:
-							matches.append(file)
-							break
-			return matches
 		is_image = False
 		if version == "latest":
 			current_files = files
@@ -129,7 +129,7 @@ class FileCommand(commands.Cog):
 					versions_hashes["assets"][version_for_mongo]
 				))
 				versions_pathes.insert_one({"_id": version_for_mongo, "_": current_files})
-		all_results = search_files(path, current_files)
+		all_results = self.search_files(path, current_files)
 		path = all_results[0]
 		#
 		path_tree = ""
@@ -197,5 +197,5 @@ class FileCommand(commands.Cog):
 			current_files = files
 		return [
 			app_commands.Choice(name=file[-100:], value=file[-100:]) 
-			for file in current_files if curr in file
+			for file in self.search_files(curr, current_files)
 		][:25]
