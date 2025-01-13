@@ -3,6 +3,7 @@ from discord import app_commands
 from discord.ext import commands, tasks
 from discord.utils import MISSING
 
+from Levenshtein import distance
 from aiohttp import ClientSession
 from typing import List
 from io import BytesIO
@@ -15,7 +16,7 @@ from utils.shortcuts import no_color, no_ping
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
 versions_pathes = MongoClient(MONGO_URI).antbot.versions_pathes
-files = {}
+files = []
 latest_version = ""
 logs_channel = None
 
@@ -27,20 +28,20 @@ class FileCommand(commands.Cog):
 	
 	async def get_files_list(self, branches=("data", "assets")):
 		async with ClientSession(headers=GITHUB_HEADERS) as session:
-			current_files = {}
+			current_files = []
 			for branch in branches:
 				async with session.get(f"https://api.github.com/repos/misode/mcmeta/git/trees/{branch}?recursive=1") as response:
 					if response.status == 200:
 						tree = await response.json()
 						tree = tree.get("tree", [])
-						current_files.update({
-							"/".join(item["path"].split("/")[-2:]): item["path"] 
+						current_files += [
+							item["path"] 
 							for item in tree if item["type"] == "blob"
-						})
+						]
 					else:
 						raise Exception(f"Response error")
 			try:
-				current_files.pop(".gitattributes")
+				current_files.remove(".gitattributes")
 			except:pass
 		return current_files
 
@@ -85,13 +86,33 @@ class FileCommand(commands.Cog):
 			raise Exception("Mcmeta not updated")
 		db.update_one({"_id": "versions_hashes"}, {"$set": {"_": versions_hashes}}, upsert=True)
 
-	@commands.hybrid_command(aliases=["f", "asset", "mcasset", "файл", "ашду", "ассет", "эссет", "мсассет", "мсэссэт","фыыуе","ьсфыыуе"], 
+
+	@commands.hybrid_command(
+		aliases=["f", "asset", "mcasset", "файл", "ашду", "ассет", "эссет", "мсассет", "мсэссэт","фыыуе","ьсфыыуе"], 
 		description="Скидывает файл с ванильного датапака/ресурспака.",
 		usage="`/file <путь/название интересующего файл>`",
 		help="Структура файлов обновляется в течении 6 минут сразу после выхода новой версии/снапшота. Слэш команда имеет автокомплит для файлов, что делает их поиск легче.\n### Пример:\n`/file colormap/grass`") 
 	@app_commands.describe(path="Путь/название интересующего файла")
 
 	async def file(self, ctx, path: str, version: str="latest"):
+		def search_files(query, files):
+			matches = []
+			for file in files:
+				if query in file:
+					matches.append(file)
+				else:
+					match_count = 0
+					query_items_backwards = query.split("/")[::-1]
+					query_size = len(query_items_backwards)
+					for i in query_items_backwards:
+						for j in file.split("/")[::-1]:
+							if distance(i, j) <= len(i)/3:
+								match_count += 1
+								break
+						if match_count >= query_size:
+							matches.append(file)
+							break
+			return matches
 		is_image = False
 		if version == "latest":
 			current_files = files
@@ -108,7 +129,7 @@ class FileCommand(commands.Cog):
 					versions_hashes["assets"][version_for_mongo]
 				))
 				versions_pathes.insert_one({"_id": version_for_mongo, "_": current_files})
-		all_results = [value for _, value in current_files.items() if path in value]
+		all_results = search_files(path, current_files)
 		path = all_results[0]
 		#
 		path_tree = ""
@@ -125,7 +146,7 @@ class FileCommand(commands.Cog):
 					raise Exception(f"Response error {response.status}")
 				file = discord.File(BytesIO(await response.read()), filename=path.split("/")[-1])
 		#
-		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].split(">")[0]}> {path.split('/')[-1]} ({version})\n{path_tree}",
+		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].replace("`","")} ({version})\n{path_tree}",
 			color=no_color)
 		if path.endswith("png"):
 			embed.set_image(url=f"attachment://{file.filename}")
@@ -174,4 +195,7 @@ class FileCommand(commands.Cog):
 					versions_pathes.insert_one({"_id": version, "_": current_files})
 		else:
 			current_files = files
-		return [app_commands.Choice(name=key, value=value[-100:]) for key, value in current_files.items() if curr in value][:25]
+		return [
+			app_commands.Choice(name=file[-100:], value=file[-100:]) 
+			for file in current_files if curr in file
+		][:25]
