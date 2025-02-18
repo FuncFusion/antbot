@@ -13,7 +13,7 @@ async def get_msg_by_id_arg(self, ctx, bot, arg:str):
 	except Exception as e:
 		return e
 
-# Thx bing/copilot 😘
+
 def split_msg(s):
 	MAX_LENGTH = 2000
 	blocks = split(r'(```.*?```)', s, flags=DOTALL)
