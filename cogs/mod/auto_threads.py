@@ -18,7 +18,8 @@ class AutoThreads(commands.Cog):
 		if msg.author.bot:
 			return
 		if msg.channel.id == FB_IDEAS_CHANNEL_ID and "https://discord.com/channels/1138536747932864532" in msg.content:
-			await create_auto_thread(msg) 
+			await create_auto_thread(msg)
+			return
 		if msg.channel.id == MEDIA_CHANNEL_ID:
 			if (msg.attachments != [] or "https://" in msg.content or "http://" in msg.content):
 				await create_auto_thread(msg)
