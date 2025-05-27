@@ -29,7 +29,7 @@
 	"преимущества дп над кб (полная версия)": ["преимущества полная версия"],
 	"оптимизация селекторов": ["selector optimization","optimize selectors","оптимизировать селекторы","оптимизировать аргументы селекторов","оптимизировать аргументы","оптиселектор"],
 	"оптимизация NBT": ["nbt optimization","optimize nbt","оптимизация NBT","оптимизировать NBT","нбт оптимизация","NBT оптимизация"],
-	"schedule луп функции": ["цикличные функции с использованием /schedule", "schedule луп функции","луп функции schedule","луп schedule","цикл через schedule","оптимизация функций через schedule","schedule function optimization","optimization with schedule","optischedule","оптискедюл","луп функций скедюл","оптимизация луп функций","скедюл луп"],
+	"schedule луп функции": ["цикличные функции с использованием /schedule", "schedule луп функции","луп функции schedule","луп schedule","цикл через schedule","оптимизация функций через schedule","schedule function optimization","optimization with schedule","optischedule","оптискедюл","луп функций скедюл","оптимизация луп функций","скедюл луп","schedule loop function","schedule recursive","schedule loop func","скедюл рекурсивная функция","скедюл рекурсив"],
 	"макросы": ["macros", "мкр", "макро", "функции с макросами","macro functions"],
 	"блокбенч бекапы": ["blockbench backups", "bb backups", "бекапы блокбенча", "бекапы бб", "бекапы", "бб бекапы", "bb backup", "бб бвосстановить"],
 	"distance vs dx dy dz": ["distance","dxdydz","аргументы селекторов дистанции","разница между distance и dx dy dz","вшыефтсу мы вч вн вя","difference between distance and dx dy dz"],
@@ -49,5 +49,7 @@
 	"все селекторы": ["all selectors","все селекторы","селекторы","селекторы все","селекторы всех","селекторы всех типов","селекторы типов","селекторы аргументов","все аргументы селекторов","все аргументы","аргументы селекторов","аргументы","arguments","arguments selectors","arguments all","arguments all selectors","arguments selectors all","arguments selectors types","arguments types selectors","arguments types","types arguments","types","types selectors","selectors types","selectors","selectors all","selectors all types"],
 	"lang": ["language","lang","язык","язык рп","lang resourcepacks","язык в ресурспаках","ланг в ресурспаке","ланг","как работать с лангом"],
 	"рейкаст": ["raycast","рейкастинг","рк","ray"],
-	"команда плавного поворота": ["smooth rotation command","smooth rotation","smooth rot","smooth rot command","smooth rot cmd","плавный поворот","плавный поворот команда","rotation smooth","поворот плавный"]
+	"команда плавного поворота": ["smooth rotation command","smooth rotation","smooth rot","smooth rot command","smooth rot cmd","плавный поворот","плавный поворот команда","rotation smooth","поворот плавный"],
+	"vertex snap": ["vert snap","вершинная привязка","верш прив","вертекс снап","привязать вершины","привязка углов","инструмент привязки вершин","vertex snap tool"],
+	"arm model": ["elbow","модель руки","локоть","рука модель","руки","бб руки"]
 }

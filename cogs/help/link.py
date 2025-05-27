@@ -9,6 +9,8 @@ from utils.general import handle_errors
 from utils.msg_utils import Emojis
 from utils.shortcuts import no_color, no_ping
 from utils.validator import closest_match, all_valid
+from settings import DMS_LOGS_GUILD_ID
+import re
 
 
 with open("assets/links.json", "r", encoding="utf-8") as f:
@@ -31,6 +33,34 @@ class LinkCommand(commands.Cog):
 		if resource_link == None:
 			raise AttributeError("Not Found")
 		await ctx.reply(f"## {Emojis.link} [{links[resource_link][0]}]({resource_link})", allowed_mentions=no_ping)
+
+	@commands.Cog.listener("on_message")
+	async def link_msg(self, msg):
+		if msg.author.bot:
+			return
+		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID:
+			return
+		segments = re.findall(r'(?:\*\*[Llлл]\*\*)([^?*]+)(?:\*\*[Llлл]\*\*)*?', msg.content)
+		if segments == []:
+			return
+		args = []
+		for segment in segments:
+			words = re.findall(r'\S+', segment)
+			for i in range(len(words)):
+				args.append(' '.join(words[:i+1]))
+		resource_links = []
+		for arg in args:
+			resource_name = closest_match(arg, links, accuracy=12)
+			if resource_name != None and resource_name not in resource_links:
+				print(arg, resource_name)
+				resource_links.append(resource_name)
+		if resource_links == []:
+			await handle_errors(msg, AttributeError("Not Found"), [{
+				"exception": AttributeError,
+				"msg": "Ссылка по этому запросу не найдена"
+			}])
+		for resource_link in resource_links[:3]:
+			await msg.reply(f"## {Emojis.link} [{links[resource_link][0]}]({resource_link})", allowed_mentions=no_ping)
 	
 	@link.error
 	async def link_error(self, ctx, error):
