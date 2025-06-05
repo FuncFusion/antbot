@@ -3,24 +3,26 @@ import discord
 from discord.ext import commands
 import asyncio
 
-from cogs.admin import DebugCommand, EditCommand, PingCommand, StatusCommands, SayCommand
-from cogs.faqs import FAQs
-from cogs.fun import EnchantCommands, LookForCommand, RandomCommands, LookForView, DeadChat
-from cogs.general import JoinAndLeaveMessage, ServerInfoCommand, BotPing, BotPingView
-from cogs.giveaway import GiveawayCommand, GAModerationCommands, JudgeGA
-from cogs.help import HelpCommand, LinkCommand, Pin, R_u_sure, StarterMessage, StarterView, SyntaxCommand, AskToResolve
-from cogs.ideas import IdeaVoteReactions
-from cogs.logs import Logs
-from cogs.mod import ClearCommand, PunishmentCommands, AutoThreads
-from cogs.minecraft import ColorCommand, FileCommand, MessageFormatter, PackformatCommand, SnapshotScraper, TemplateCommand
-from cogs.voice_channels import CustomVoiceChannels
+from cogs.admin import *
+from cogs.faqs import *
+from cogs.fun import *
+from cogs.memes import *
+from cogs.general import *
+from cogs.giveaway import *
+from cogs.help import *
+from cogs.ideas import *
+from cogs.logs import *
+from cogs.mod import *
+from cogs.minecraft import *
+from cogs.voice_channels import *
 from utils.packmcmeta import update_mcmeta_info
 
 logger = settings.logging.getLogger("bot")
 
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
-		EnchantCommands, LookForCommand, RandomCommands, DeadChat,	
+		EnchantCommands, LookForCommand, RandomCommands, DeadChat,
+		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand,
 		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
