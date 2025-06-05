@@ -6,7 +6,7 @@ from typing import Callable
 def edit_image(image: Image.Image, extension: str, edit_func: Callable[..., Image.Image], **kwargs):
     byteslike = BytesIO()
 
-    if extension != "gif":
+    if not getattr(image, 'is_animated', False):
         edited = edit_func(image, **kwargs)
         edited.save(byteslike, format=extension)
 
