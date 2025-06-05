@@ -6,6 +6,11 @@ from typing import Callable
 def edit_image(image: Image.Image, extension: str, edit_func: Callable[..., Image.Image], **kwargs):
     byteslike = BytesIO()
 
+    # NO JPEGs ALLOWED
+    if extension == "jpeg":
+        extension = "PNG"
+        image = image.convert(mode="RGBA")
+
     if not getattr(image, 'is_animated', False):
         edited = edit_func(image, **kwargs)
         edited.save(byteslike, format=extension)

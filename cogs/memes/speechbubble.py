@@ -14,17 +14,16 @@ sb_original = Image.open("assets/memes/speechbubble.png").convert("RGBA")
 class SpeechbubbleCommand(commands.Cog):
 	@commands.hybrid_command(
 		aliases=["ызуусригииду", "спичбабл", "спичбаббл", "сб", "sb"],
-		description="Вставляет на изображение удивленных сойджаков",
+		description="💬",
 		usage="`/speechbubble <изображение>`",
 		help="### Пример:\n`/speechbubble image.png`"
 	)
-
 	async def speechbubble(self, ctx: commands.Context, image: discord.Attachment):
 		if "image" not in image.content_type:
 			raise Exception("Not image")
 		speechbubbled = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			image.content_type.split("/")[-1],
 			speechbubble
 		)
 		speechbubbled_discorded = discord.File(speechbubbled, filename=image.filename)
@@ -43,9 +42,9 @@ class SpeechbubbleCommand(commands.Cog):
 def speechbubble(image: Image.Image):
 	sb_image = sb_original.copy()
 	sb_image = sb_image.resize((image.width, image.height))
-	
+
 	sb_arr = np.array(sb_image).astype(int)
-	image_arr = np.array(image.convert(mode="RGBA")).astype(int)
+	image_arr = np.array(image).astype(int)
 
 	diff = image_arr - sb_arr
 	diff[diff < 0] = 0

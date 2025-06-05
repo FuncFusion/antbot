@@ -27,7 +27,7 @@ class DemotivatorCommand(commands.Cog):
 			raise Exception("Not image")
 		demotivated = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			image.content_type.split("/")[-1],
 			demotivator,
 			huge_text=title,
 			normal_text=description

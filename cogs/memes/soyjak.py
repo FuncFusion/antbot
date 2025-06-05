@@ -23,7 +23,7 @@ class SoyjakCommand(commands.Cog):
 			raise Exception("Not image")
 		soyjaked = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			image.content_type.split("/")[-1],
 			soyjak
 		)
 		soyjaked_discorded = discord.File(soyjaked, filename=image.filename)
