@@ -21,6 +21,7 @@ class SoyjakCommand(commands.Cog):
 	async def soyjak(self, ctx: commands.Context, image: discord.Attachment):
 		if "image" not in image.content_type:
 			raise Exception("Not image")
+		await ctx.defer()
 		soyjaked = edit_image(
 			Image.open(BytesIO(await image.read())),
 			image.content_type.split("/")[-1],

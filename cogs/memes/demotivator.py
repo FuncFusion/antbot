@@ -13,7 +13,7 @@ class DemotivatorCommand(commands.Cog):
 		aliases=["вуьщешмфещк", "демотиватор", "дем", "dem"],
 		description="Вставляет изображение в черную рамку с текстом",
 		usage="`/demotivator <изображение> <большой текст> [маленький текст]`",
-		help="### Пример:\n`/demotivator` image.png` `SAY GEX` `pay gorn`"
+		help="### Пример:\n`/demotivator` `image.png` `SAY GEX` `pay gorn`"
 	)
 
 	async def demotivator(
@@ -25,6 +25,7 @@ class DemotivatorCommand(commands.Cog):
 	):
 		if "image" not in image.content_type:
 			raise Exception("Not image")
+		await ctx.defer()
 		demotivated = edit_image(
 			Image.open(BytesIO(await image.read())),
 			image.content_type.split("/")[-1],
