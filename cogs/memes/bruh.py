@@ -20,7 +20,7 @@ class BruhCommand(commands.Cog):
 		ctx: commands.Context, 
 		image: discord.Attachment,
 		*,
-		text
+		text: str
 	):
 		if "image" not in image.content_type:
 			raise Exception("Not image")

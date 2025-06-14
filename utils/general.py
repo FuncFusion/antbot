@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import hybrid
 
 from typing import Union
 
@@ -26,7 +25,7 @@ async def handle_errors(
 		ctx = await commands.Context.from_interaction(ctx)
 
 	async def send(msg):
-		emoji = Emojis.exclamation_mark if not case['msg'].startswith("<") else ''
+		emoji = Emojis.exclamation_mark if not msg.startswith("<") else ''
 		if ctx.interaction:
 			await ctx.interaction.response.send_message(f"{emoji}{msg}", allowed_mentions=no_ping, ephemeral=True)
 		else:
