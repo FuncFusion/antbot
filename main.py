@@ -22,7 +22,7 @@ logger = settings.logging.getLogger("bot")
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands, DeadChat,
-		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand,
+		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand,
 		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
