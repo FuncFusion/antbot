@@ -60,9 +60,9 @@ class GifCommand(commands.Cog):
 
 		if media_extension in image_types:
 			gifed = edit_image(
-				Image.open(media_bytes),
+				Image.open(BytesIO(media_bytes)),
 				"gif",
-				image2gif
+				lambda image: image.convert(mode="RGBA")
 			)
 			discorded_gifed = discord.File(gifed, filename=gifed_name)
 			await ctx.reply(file=discorded_gifed, allowed_mentions=no_ping)
@@ -107,12 +107,8 @@ class GifCommand(commands.Cog):
 		])
 
 
-def image2gif(file: bytes):
-	gifed_bytes = BytesIO()
-	with Image.open(BytesIO(file)) as img:
-		img.save(gifed_bytes, format="GIF")
-	gifed_bytes.seek(0)
-	return gifed_bytes
+def image2gif(file: Image.Image):
+	return
 	
 
 async def video2webp(file: bytes, msg: discord.Message):
