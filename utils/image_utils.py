@@ -39,11 +39,13 @@ def edit_image(image: Image.Image, extension: str, edit_func: Callable[..., Imag
 
 
 class ImageText(object):
-    def __init__(self, image, mode='RGBA', anchor="la"):
+    def __init__(self, image, mode='RGBA', anchor="la", stroke_width=0, stroke_fill=None):
         self.image = image
         self.size = self.image.size
         self.draw = ImageDraw.Draw(self.image)
         self.anchor = anchor
+        self.stroke_width = stroke_width
+        self.stroke_fill = stroke_fill
 
     def get_font_size(self, text, font, max_width=None, max_height=None):
         if max_width is None and max_height is None:
@@ -74,7 +76,8 @@ class ImageText(object):
         if y == 'center':
             y = (self.size[1] - text_size[1]) / 2
     
-        self.draw.text((x, y), text, font=font, fill=color, anchor=self.anchor)
+        self.draw.text((x, y), text, font=font, fill=color, anchor=self.anchor, 
+                       stroke_width=self.stroke_width, stroke_fill=self.stroke_fill)
         return text_size
 
     def get_text_size(self, font_path, font_size, text):

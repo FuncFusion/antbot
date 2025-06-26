@@ -22,8 +22,9 @@ logger = settings.logging.getLogger("bot")
 cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		FAQs,
 		EnchantCommands, LookForCommand, RandomCommands, DeadChat,
-		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand,
-		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve,
+		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
+		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, 
+		# AskToResolve,
 		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 		GiveawayCommand, GAModerationCommands,
 		Logs, IdeaVoteReactions,
@@ -61,11 +62,8 @@ class AntBot(commands.Bot):
 
 intents = discord.Intents.all()
 bot = AntBot(command_prefix="!", intents=intents)
-
 # @bot.tree.command()
 # async def saygex(Interaction: discord.Interaction):
 # 	await Interaction.response.send_message("say gex")
 
-
-	
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)
