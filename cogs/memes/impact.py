@@ -1,12 +1,12 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord.app_commands import Choice
 
 from PIL import Image
 from io import BytesIO
 from utils import handle_errors, ImageText, edit_image, closest_match
 
-default_positions = [app_commands.Choice(name="Верх", value="up"), app_commands.Choice(name="Низ", value="down")]
+positions = [Choice(name="Верх", value="up"), Choice(name="Низ", value="down")]
 positions_aliases = {
 	"up": ["верх", "в"],
 	"down": ["низ", "н"]
@@ -44,8 +44,8 @@ class ImpactCommand(commands.Cog):
 		await ctx.send(file=impacted_discorded)
 	
 	@impact.autocomplete(name="position")
-	async def position_default_choices(self, ctx: discord.Interaction, _: str):
-		return default_positions
+	async def position_default_choices(self, ctx, curr):
+		return positions
 
 	@impact.error
 	async def impact_error(self, ctx, error):

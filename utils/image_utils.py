@@ -19,6 +19,7 @@ def edit_image(image: Image.Image, extension: str, edit_func: Callable[..., Imag
         frames: list[Image.Image] = []
         durations = []
         for frame in ImageSequence.Iterator(image):
+            print("FRAME")
             edited_frame = edit_func(frame, **kwargs)
             frames.append(edited_frame)
             durations.append(frame.info.get("duration", 40))
