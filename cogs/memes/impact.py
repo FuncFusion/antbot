@@ -28,14 +28,14 @@ class ImpactCommand(commands.Cog):
 		text: str,
 		position: str="down"
 	):
-		if "image" not in image.content_type:
+		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
 
 		position = closest_match(position, positions_aliases)
 		impacted = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.content_type.split("/")[-1],
+			image.filename.split(".")[-1],
 			impact,
 			text=text,
 			position=position
@@ -60,7 +60,7 @@ class ImpactCommand(commands.Cog):
 
 def impact(image: Image.Image, text: str, position: str):
 	font = "assets/memes/impact.ttf"
-	size = int(max(image.size)/8)
+	size = int(image.width/8)
 	color = (255, 255, 255)
 	width = image.size[0]
 	height = image.size[1]

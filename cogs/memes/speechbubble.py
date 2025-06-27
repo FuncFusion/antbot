@@ -53,7 +53,7 @@ class SpeechbubbleCommand(commands.Cog):
 		transparent2: str = None,
 		direction2: str = None,
 	):
-		if "image" not in image.content_type:
+		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
 
@@ -72,7 +72,7 @@ class SpeechbubbleCommand(commands.Cog):
 
 		speechbubbled = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.content_type.split("/")[-1],
+			image.filename.split(".")[-1],
 			speechbubble,
 			transparent1=transparent,
 			direction1=direction,
