@@ -45,7 +45,7 @@ class ImpactCommand(commands.Cog):
 	
 	@impact.autocomplete(name="position")
 	async def position_default_choices(self, ctx: discord.Interaction, _: str):
-		return []
+		return default_positions
 
 	@impact.error
 	async def impact_error(self, ctx, error):

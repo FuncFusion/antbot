@@ -105,10 +105,6 @@ class GifCommand(commands.Cog):
 				"msg": "Изображение повреждено"
 			}
 		])
-
-
-def image2gif(file: Image.Image):
-	return
 	
 
 async def video2webp(file: bytes, msg: discord.Message):
