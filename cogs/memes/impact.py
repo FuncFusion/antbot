@@ -23,6 +23,9 @@ class ImpactCommand(commands.Cog):
 		usage="`/impact <изображение> <текст> <позиция>`",
 		help="### Пример:\n`/impact image.png пей горн Низ`"
 	)
+	@app_commands.describe(
+		text="Текст (до 500 символов)"
+	)
 
 	async def impact(
 		self, 
@@ -31,6 +34,8 @@ class ImpactCommand(commands.Cog):
 		text: str,
 		position: str="down"
 	):
+		text = text[:500]
+
 		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
@@ -67,43 +72,30 @@ class ImpactCommand(commands.Cog):
 
 def impact(image: Image.Image, text: str, position: str):
 	font = "assets/memes/impact.ttf"
-	size = int(image.width/10)
+	size = int((((image.width+image.height)/2)/10) / max(1, (len(text)/25)*0.5))
 	color = (255, 255, 255)
 	width = image.size[0]
 	height = image.size[1]
+	padding = int(height/12)
+	text_width = width - padding * 2
 	
 	image = image.convert(mode="RGBA")
 	
 	# Calculate required heights first
 	impact_text = ImageText(image, anchor="ma")
-	padding = int(height/12)
-
-	# if (taken_space:=impact_text.get_height((int(width/2), 0), text, width, font, size)) > (free_space:=image.height - padding*2):
-	# 	size = (size / taken_space) * free_space
-	while impact_text.get_height(
-		(int(width/2), 0), text, width, font, size, stroke_width=int(size/16), stroke_fill=(0, 0, 0, 255)
-	) > image.height / 3 and size > 11:
-		size -= 10
 
 	if position == "down":
 		text_height = impact_text.get_height(
-			(int(width/2), 0), 
-			text, 
-			width, 
-			font, 
-			size, 
+			(int(width/2), 0), text, 
+			text_width, font, size, 
 			stroke_width=int(size/16), 
 			stroke_fill=(0, 0, 0, 255)
 		)
 		padding = height - padding - text_height
 	
 	impact_text.write_text_box(
-		(int(width/2), padding), 
-		text, 
-		width, 
-		font, 
-		size, 
-		color, 
+		(int(width/2), padding), text, 
+		text_width, font, size, color, 
 		stroke_width=int(size/16), 
 		stroke_fill=(0, 0, 0, 255)
 	)

@@ -210,6 +210,7 @@ class GifizeView(discord.ui.View):
 		if (
 			ctx.message.interaction and ctx.message.interaction.user == ctx.user
 			or
+			not ctx.message.reference.fail_if_not_exists and
 			(ref:=await ctx.channel.fetch_message(ctx.message.reference.jump_url.split("/")[-1])) and 
 			ref.author == ctx.user
 		):
