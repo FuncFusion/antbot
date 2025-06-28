@@ -19,7 +19,7 @@
 ```ansi
 [35mwhitelist [34mon
 ```
-Перезагружает вайтлист из файла [`whitelist.json`](https://minecraft.wiki/w/Whitelist.json) на диске.
+Перезагружает вайтлист из файла [`whitelist.json`](<https://minecraft.wiki/w/Whitelist.json>) на диске.
 ```ansi
 [35mwhitelist [34mreload
 ```
