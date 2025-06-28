@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
+from discord.utils import MISSING
 
 from PIL import Image
 from io import BytesIO
 
-from utils import handle_errors, edit_image
+from utils import handle_errors, edit_image, no_ping
+from cogs.general.gif import GifizeView
 
 
 soyjak_point = Image.open("assets/memes/soyjak_point.png").convert("RGBA")
@@ -22,13 +24,19 @@ class SoyjakCommand(commands.Cog):
 		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
+		extension = image.filename.split(".")[-1]
+
 		soyjaked = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			extension,
 			soyjak
 		)
 		soyjaked_discorded = discord.File(soyjaked, filename=image.filename)
-		await ctx.send(file=soyjaked_discorded)
+		await ctx.reply(
+			file=soyjaked_discorded,
+			view=GifizeView() if extension != "gif" else MISSING,
+			allowed_mentions=no_ping
+		)
 
 	@soyjak.error
 	async def soyjak_error(self, ctx, error):

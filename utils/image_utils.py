@@ -87,13 +87,16 @@ class ImageText(object):
 
 
     def write_text_box(self, xy, text, box_width, font_path,
-           font_size=11, color=(0, 0, 0), place='left',
-           justify_last_line=False):
+           font_size=11, color=(0, 0, 0), stroke_width=0, 
+           stroke_fill=None, place='left', justify_last_line=False
+        ):
         x, y = xy
         font = ImageFont.truetype(font_path, font_size)
         words = text.split()
         lines = []
         current_line = []
+        self.stroke_width = stroke_width
+        self.stroke_fill = stroke_fill
         
         for word in words:
             # Handle words that are longer than box_width
@@ -171,13 +174,15 @@ class ImageText(object):
         return (box_width, total_height - y)
 
     def get_height(self, xy, text, box_width, font_path,
-           font_size=11, color=(0, 0, 0), place='left',
+           font_size=11, color=(0, 0, 0), place='left', stroke_width=0, stroke_fill=None,
            justify_last_line=False):
         x, y = xy
         font = ImageFont.truetype(font_path, font_size)
         words = text.split()
         lines = []
         current_line = []
+        self.stroke_width = stroke_width
+        self.stroke_fill = stroke_fill
         
         for word in words:
             # Handle words that are longer than box_width

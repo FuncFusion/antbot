@@ -1,12 +1,14 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+from discord.utils import MISSING
 
 from PIL import Image
 import numpy as np
 from io import BytesIO
 
-from utils import handle_errors, edit_image, closest_match
+from utils import handle_errors, edit_image, closest_match, no_ping
+from cogs.general.gif import GifizeView
 
 transparent_aliases = {
 	"True": ["T", "t", "yes", "y", "1", "да", "д", "прозрачный"],
@@ -56,6 +58,7 @@ class SpeechbubbleCommand(commands.Cog):
 		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
+		extension = image.filename.split(".")[-1]
 
 		transparent = True if closest_match(transparent, transparent_aliases) == "True" else False
 		direction = closest_match(direction, direction_aliases)
@@ -72,7 +75,7 @@ class SpeechbubbleCommand(commands.Cog):
 
 		speechbubbled = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			extension,
 			speechbubble,
 			transparent1=transparent,
 			direction1=direction,
@@ -81,7 +84,11 @@ class SpeechbubbleCommand(commands.Cog):
 			direction2=direction2
 		)
 		speechbubbled_discorded = discord.File(speechbubbled, filename=image.filename)
-		await ctx.send(file=speechbubbled_discorded)
+		await ctx.reply(
+			file=speechbubbled_discorded,
+			view=GifizeView() if extension != "gif" else MISSING,
+			allowed_mentions=no_ping
+		)
 	
 	@speechbubble.autocomplete(name="transparent")
 	async def transparent_autocomplete(self, ctx, curr):

@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
+from discord.utils import MISSING
 
 from PIL import Image
 from io import BytesIO
 
-from utils import handle_errors, ImageText, edit_image
-
+from utils import handle_errors, ImageText, edit_image, no_ping
+from cogs.general.gif import GifizeView
 
 
 class DemotivatorCommand(commands.Cog):
@@ -26,15 +27,21 @@ class DemotivatorCommand(commands.Cog):
 		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
+		extension = image.filename.split(".")[-1]
+
 		demotivated = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			extension,
 			demotivator,
 			huge_text=title,
 			normal_text=description
 		)
 		demotivated_discorded = discord.File(demotivated, filename=image.filename)
-		await ctx.send(file=demotivated_discorded)
+		await ctx.reply(
+			file=demotivated_discorded,
+			view=GifizeView() if extension != "gif" else MISSING,
+			allowed_mentions=no_ping
+		)
 
 	@demotivator.error
 	async def demotivator_error(self, ctx, error):

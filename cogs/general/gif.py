@@ -9,7 +9,7 @@ import aiohttp
 from PIL import Image
 from io import BytesIO
 
-from utils import handle_errors, no_color, no_ping, edit_image
+from utils import handle_errors, no_color, no_ping, edit_image, Emojis
 
 image_types = (
 	"bmp", "dds", "gif", "ico", "im",
@@ -199,3 +199,36 @@ async def video2webp(file: bytes, msg: discord.Message):
 						os.unlink(temp_file.name)
 				except Exception as cleanup_error:
 					print(f"Warning: Could not clean up temp file {temp_file.name}: {cleanup_error}")
+
+
+class GifizeView(discord.ui.View):
+	def __init__(self):
+		super().__init__(timeout=None)
+	
+	@discord.ui.button(label="Конвертировать в гиф", custom_id="gifize:togif")
+	async def togif(self, ctx: discord.Interaction, _):
+		if (
+			ctx.message.interaction and ctx.message.interaction.user == ctx.user
+			or
+			(ref:=await ctx.channel.fetch_message(ctx.message.reference.jump_url.split("/")[-1])) and 
+			ref.author == ctx.user
+		):
+			await ctx.response.defer()
+			attachment = ctx.message.attachments[0]
+			image = Image.open(BytesIO(await attachment.read()))
+			gifed = edit_image(
+				image,
+				"gif",
+				lambda im: im.convert(mode="RGBA")
+			)
+			discorded_gifed = discord.File(
+				gifed, 
+				".".join(attachment.filename.split(".")[:-1]) + ".gif"
+			)
+			await ctx.message.edit(attachments=[discorded_gifed], view=None)
+		else:
+			await ctx.response.send_message(
+				f"{Emojis.exclamation_mark} Вы не являетесь автором команды",
+				ephemeral=True
+			)
+

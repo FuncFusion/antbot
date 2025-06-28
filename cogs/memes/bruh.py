@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
+from discord.utils import MISSING
 
 from PIL import Image
 from io import BytesIO
-from utils import handle_errors, ImageText, edit_image
 
+from utils import handle_errors, ImageText, edit_image, no_ping
+from cogs.general.gif import GifizeView
 
 
 class BruhCommand(commands.Cog):
@@ -25,14 +27,20 @@ class BruhCommand(commands.Cog):
 		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
+		extension = image.filename.split(".")[-1]
+
 		bruhed = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.filename.split(".")[-1],
+			extension,
 			bruh,
 			text=text
 		)
 		bruhed_discorded = discord.File(bruhed, filename=image.filename)
-		await ctx.send(file=bruhed_discorded)
+		await ctx.reply(
+			file=bruhed_discorded,
+			view=GifizeView() if extension != "gif" else MISSING,
+			allowed_mentions=no_ping
+		)
 
 	@bruh.error
 	async def bruh_error(self, ctx, error):

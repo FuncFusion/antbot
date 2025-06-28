@@ -30,7 +30,7 @@ cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
 		ClearCommand, PunishmentCommands, AutoThreads,
 	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
 		CustomVoiceChannels,]
-views = [LookForView, StarterView, R_u_sure, BotPingView]
+views = [LookForView, StarterView, R_u_sure, BotPingView, GifizeView]
 
 
 class AntBot(commands.Bot):
