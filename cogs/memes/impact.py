@@ -1,12 +1,12 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord.app_commands import Choice
 
 from PIL import Image
 from io import BytesIO
 from utils import handle_errors, ImageText, edit_image, closest_match
 
-default_positions = [app_commands.Choice(name="Верх", value="up"), app_commands.Choice(name="Низ", value="down")]
+positions = [Choice(name="Верх", value="up"), Choice(name="Низ", value="down")]
 positions_aliases = {
 	"up": ["верх", "в"],
 	"down": ["низ", "н"]
@@ -28,14 +28,14 @@ class ImpactCommand(commands.Cog):
 		text: str,
 		position: str="down"
 	):
-		if "image" not in image.content_type:
+		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
 
 		position = closest_match(position, positions_aliases)
 		impacted = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.content_type.split("/")[-1],
+			image.filename.split(".")[-1],
 			impact,
 			text=text,
 			position=position
@@ -44,8 +44,8 @@ class ImpactCommand(commands.Cog):
 		await ctx.send(file=impacted_discorded)
 	
 	@impact.autocomplete(name="position")
-	async def position_default_choices(self, ctx: discord.Interaction, _: str):
-		return default_positions
+	async def position_default_choices(self, ctx, curr):
+		return positions
 
 	@impact.error
 	async def impact_error(self, ctx, error):
@@ -60,7 +60,7 @@ class ImpactCommand(commands.Cog):
 
 def impact(image: Image.Image, text: str, position: str):
 	font = "assets/memes/impact.ttf"
-	size = int(max(image.size)/8)
+	size = int(image.width/8)
 	color = (255, 255, 255)
 	width = image.size[0]
 	height = image.size[1]

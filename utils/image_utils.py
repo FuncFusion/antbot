@@ -7,7 +7,7 @@ def edit_image(image: Image.Image, extension: str, edit_func: Callable[..., Imag
     byteslike = BytesIO()
 
     # NO JPEGs ALLOWED
-    if extension == "jpeg":
+    if extension.lower() in ("jpeg", "jpg"):
         extension = "PNG"
         image = image.convert(mode="RGBA")
 

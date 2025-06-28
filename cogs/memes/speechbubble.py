@@ -1,34 +1,107 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 from PIL import Image
 import numpy as np
 from io import BytesIO
 
-from utils import handle_errors, edit_image
+from utils import handle_errors, edit_image, closest_match
 
-
-sb_original = Image.open("assets/memes/speechbubble.png").convert("RGBA")
+transparent_aliases = {
+	"True": ["T", "t", "yes", "y", "1", "да", "д", "прозрачный"],
+	"False": ["F", "f", "no", "n", "0", "нет", "н", "непрозрачный"]
+}
+direction_aliases = {
+	"left": ["l", "лево", "л"],
+	"right": ["r", "право", "п"],
+	"center": ["c", "центр", "ц"]
+}
+position_aliases = {
+	"up" : ["u", "в", "верх"],
+	"down": ["d", "н", "низ"]
+}
+transparents = [app_commands.Choice(name="Прозрачный", value="True"), app_commands.Choice(name="Непрозрачный", value="False")]
+directions = [app_commands.Choice(name="Лево", value="left"), app_commands.Choice(name="Право", value="right"), app_commands.Choice(name="Центр", value="center")]
+positions = [app_commands.Choice(name="Верх", value="up"), app_commands.Choice(name="Низ", value="down")]
 
 
 class SpeechbubbleCommand(commands.Cog):
 	@commands.hybrid_command(
 		aliases=["ызуусригииду", "спичбабл", "спичбаббл", "сб", "sb"],
 		description="💬",
-		usage="`/speechbubble <изображение>`",
-		help="### Пример:\n`/speechbubble image.png`"
+		usage="`/speechbubble <изображение> [Прозрачность спичбаббла] "
+			"[Положение стрелки спичбаббла] [Положение первого спичбаббла] "
+			"[Прозрачность второго спичбаббла] [Положение стрелки второго спичбаббла]`",
+		help="### Пример:\n`/speechbubble image.png Прозрачный Право Непрозрачный Лево`"
 	)
-	async def speechbubble(self, ctx: commands.Context, image: discord.Attachment):
-		if "image" not in image.content_type:
+	@app_commands.describe(
+		transparent="Прозрачность спичбаббла",
+		direction="Положение стрелки спичбаббла",
+		position="Положение первого спичбаббла",
+		transparent2="Прозрачность второго спичбаббла",
+		direction2="Положение стрелки второго спичбаббла",
+	)
+
+	async def speechbubble(
+		self, 
+		ctx: commands.Context, 
+		image: discord.Attachment,
+		transparent: str="True",
+		direction: str = "left",
+		position: str = "up",
+		transparent2: str = None,
+		direction2: str = None,
+	):
+		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
+
+		transparent = True if closest_match(transparent, transparent_aliases) == "True" else False
+		direction = closest_match(direction, direction_aliases)
+		position = closest_match(position, position_aliases)
+		if transparent2 != None or direction2 != None:
+			try:
+				transparent2 = True if closest_match(transparent2, transparent_aliases) == "True" else False
+			except:
+				transparent2 = True
+			try:
+				direction2 = closest_match(direction2, direction_aliases)
+			except:
+				direction2 = "right" if direction == "left" else "left"
+
 		speechbubbled = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.content_type.split("/")[-1],
-			speechbubble
+			image.filename.split(".")[-1],
+			speechbubble,
+			transparent1=transparent,
+			direction1=direction,
+			position1=position,
+			transparent2=transparent2,
+			direction2=direction2
 		)
 		speechbubbled_discorded = discord.File(speechbubbled, filename=image.filename)
 		await ctx.send(file=speechbubbled_discorded)
+	
+	@speechbubble.autocomplete(name="transparent")
+	async def transparent_autocomplete(self, ctx, curr):
+		return transparents
+	
+	@speechbubble.autocomplete(name="direction")
+	async def direction_autocomplete(self, ctx, curr):
+		return directions
+	
+	@speechbubble.autocomplete(name="position")
+	async def position_autocomplete(self, ctx, curr):
+		return positions
+	
+	@speechbubble.autocomplete(name="transparent2")
+	async def transparent2_autocomplete(self, ctx, curr):
+		return transparents
+	
+	@speechbubble.autocomplete(name="direction2")
+	async def direction2_autocomplete(self, ctx, curr):
+		return directions
 
 	@speechbubble.error
 	async def speechbubble_error(self, ctx, error):
@@ -40,15 +113,34 @@ class SpeechbubbleCommand(commands.Cog):
 		])
 
 
-def speechbubble(image: Image.Image):
-	sb_image = sb_original.copy()
-	sb_image = sb_image.resize((image.width, image.height))
+def speechbubble(
+	image: Image.Image,
+	transparent1: bool,
+	direction1: str,
+	position1: str,
+	transparent2: bool,
+	direction2: str
+	):
 
-	sb_arr = np.array(sb_image).astype(int)
-	image_arr = np.array(image).astype(int)
+	image = image.convert(mode="RGBA")
+	bubbles = [(direction1, transparent1, position1)]
+	if direction2 != None:
+		bubbles.append((direction2, transparent2, "down" if position1 == "up" else "up"))
 
-	diff = image_arr - sb_arr
-	diff[diff < 0] = 0
-	diff = diff.astype(np.uint8)
+	for direction, transparent, position in bubbles:
+		bubble = Image.open(f"assets/memes/speechbubble_{direction}.png").convert("RGBA").resize(image.size)
+		if position == "down":
+			bubble = bubble.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
 
-	return Image.fromarray(diff, mode="RGBA")
+		if transparent:
+			bubble_arr = np.array(bubble).astype(int)
+			image_arr = np.array(image).astype(int)
+			diff = image_arr - bubble_arr
+			diff[diff < 0] = 0
+			diff = diff.astype(np.uint8)
+			image = Image.fromarray(diff, mode="RGBA")
+
+		else:
+			image.paste(bubble, (0,0), bubble)
+
+	return image

@@ -23,12 +23,12 @@ class DemotivatorCommand(commands.Cog):
 		title: str="",
 		description: str=""
 	):
-		if "image" not in image.content_type:
+		if not image.content_type or "image" not in image.content_type:
 			raise Exception("Not image")
 		await ctx.defer()
 		demotivated = edit_image(
 			Image.open(BytesIO(await image.read())),
-			image.content_type.split("/")[-1],
+			image.filename.split(".")[-1],
 			demotivator,
 			huge_text=title,
 			normal_text=description
