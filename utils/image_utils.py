@@ -68,7 +68,7 @@ class ImageText(object):
         if font_size == 'fill':
             font_size = self.get_font_size(text, font_path, max_width, max_height)
         
-        font = ImageFont.truetype(font_path, font_size)
+        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.Layout.RAQM)
         text_size = self.get_text_size(font_path, font_size, text)
     
         if x == 'center':
@@ -77,11 +77,11 @@ class ImageText(object):
             y = (self.size[1] - text_size[1]) / 2
     
         self.draw.text((x, y), text, font=font, fill=color, anchor=self.anchor, 
-                       stroke_width=self.stroke_width, stroke_fill=self.stroke_fill)
+                       stroke_width=self.stroke_width, stroke_fill=self.stroke_fill, embedded_color=True)
         return text_size
 
     def get_text_size(self, font_path, font_size, text):
-        font = ImageFont.truetype(font_path, font_size)
+        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.Layout.RAQM)
         bbox = font.getbbox(text)
         return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
@@ -91,7 +91,7 @@ class ImageText(object):
            stroke_fill=None, place='left', justify_last_line=False
         ):
         x, y = xy
-        font = ImageFont.truetype(font_path, font_size)
+        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.Layout.RAQM)
         words = text.split()
         lines = []
         current_line = []
@@ -177,7 +177,7 @@ class ImageText(object):
            font_size=11, color=(0, 0, 0), place='left', stroke_width=0, stroke_fill=None,
            justify_last_line=False):
         x, y = xy
-        font = ImageFont.truetype(font_path, font_size)
+        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.Layout.RAQM)
         words = text.split()
         lines = []
         current_line = []

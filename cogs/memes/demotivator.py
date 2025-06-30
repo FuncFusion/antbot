@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import MISSING
+from discord import app_commands
 
 from PIL import Image
 from io import BytesIO
@@ -16,6 +17,7 @@ class DemotivatorCommand(commands.Cog):
 		usage="`/demotivator <изображение> <большой текст> [маленький текст]`",
 		help="### Пример:\n`/demotivator` `image.png` `SAY GEX` `pay gorn`"
 	)
+	@app_commands.default_permissions(discord.Permissions.administrator)
 
 	async def demotivator(
 		self, 

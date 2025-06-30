@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import MISSING
+from discord import app_commands
 
 from PIL import Image
 from io import BytesIO
@@ -16,6 +17,7 @@ class BruhCommand(commands.Cog):
 		usage="`/bruh <изображение> <текст>",
 		help="### Пример:\n`/bruh` `image.png` `Пей горн`"
 	)
+	@app_commands.default_permissions(discord.Permissions.administrator)
 
 	async def bruh(
 		self, 
