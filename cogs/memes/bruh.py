@@ -17,7 +17,7 @@ class BruhCommand(commands.Cog):
 		usage="`/bruh <изображение> <текст>",
 		help="### Пример:\n`/bruh` `image.png` `Пей горн`"
 	)
-	@app_commands.default_permissions(discord.Permissions.administrator)
+	@app_commands.default_permissions(discord.Permissions(administrator=True)
 
 	async def bruh(
 		self, 

@@ -21,7 +21,7 @@ class ImpactCommand(commands.Cog):
 		top_text="Верхний текст (до 500 символов)",
 		bottom_text="Нижний текст (до 500 символов)"
 	)
-	@app_commands.default_permissions(discord.Permissions.administrator)
+	@app_commands.default_permissions(discord.Permissions(administrator=True))
 
 	async def impact(
 		self, 

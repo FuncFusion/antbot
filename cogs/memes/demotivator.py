@@ -17,7 +17,7 @@ class DemotivatorCommand(commands.Cog):
 		usage="`/demotivator <изображение> <большой текст> [маленький текст]`",
 		help="### Пример:\n`/demotivator` `image.png` `SAY GEX` `pay gorn`"
 	)
-	@app_commands.default_permissions(discord.Permissions.administrator)
+	@app_commands.default_permissions(discord.Permissions(administrator=True)
 
 	async def demotivator(
 		self, 
