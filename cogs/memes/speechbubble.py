@@ -44,7 +44,6 @@ class SpeechbubbleCommand(commands.Cog):
 		transparent2="Прозрачность второго спичбаббла",
 		direction2="Положение стрелки второго спичбаббла",
 	)
-	@app_commands.default_permissions(discord.Permissions(administrator=True))
 
 	async def speechbubble(
 		self, 

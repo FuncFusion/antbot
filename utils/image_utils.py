@@ -224,7 +224,7 @@ class ImageText(object):
             lines.append(' '.join(current_line))
     
         # Get line metrics from a sample line containing ascenders and descenders
-        sample_text = "Ёрj"  # Text with both ascenders and descenders
+        sample_text = "Ёjp"  # Text with both ascenders and descenders
         line_height = self.get_text_size(font_path, font_size, sample_text)[1]
         fixed_spacing = int(line_height * 1.2)  # 20% extra space
         total_height = y + (fixed_spacing * (len(lines) - 1)) + line_height

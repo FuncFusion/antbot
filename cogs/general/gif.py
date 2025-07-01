@@ -209,13 +209,16 @@ class GifizeView(discord.ui.View):
 	
 	@discord.ui.button(label="Конвертировать в гиф", custom_id="gifize:togif")
 	async def togif(self, ctx: discord.Interaction, _):
-		if (
-			ctx.message.interaction and ctx.message.interaction.user == ctx.user
-			or
-			not ctx.message.reference.fail_if_not_exists and
-			(ref:=await ctx.channel.fetch_message(ctx.message.reference.jump_url.split("/")[-1])) and 
-			ref.author == ctx.user
-		):
+		user_is_author = False
+		if ctx.message.interaction_metadata:
+			if ctx.message.interaction_metadata.user == ctx.user:
+				user_is_author = True
+		else:
+			ref = await ctx.channel.fetch_message(ctx.message.reference.jump_url.split("/")[-1])
+			if ref.author == ctx.user:
+				user_is_author = True
+				
+		if user_is_author:
 			await ctx.response.defer()
 			attachment = ctx.message.attachments[0]
 			image = Image.open(BytesIO(await attachment.read()))

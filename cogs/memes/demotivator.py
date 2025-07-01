@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord.utils import MISSING
-from discord import app_commands
 
 from PIL import Image
 from io import BytesIO
@@ -12,12 +11,12 @@ from cogs.general.gif import GifizeView
 
 class DemotivatorCommand(commands.Cog):
 	@commands.hybrid_command(
-		aliases=["вуьщешмфещк", "демотиватор", "дем", "dem"],
+		aliases=["вуьщешмфещк", "демотиватор", "дем", "dem", "вуь"],
 		description="Вставляет изображение в черную рамку с текстом",
-		usage="`/demotivator <изображение> <большой текст> [маленький текст]`",
-		help="### Пример:\n`/demotivator` `image.png` `SAY GEX` `pay gorn`"
+		usage="`/demotivator <изображение> [большой текст] [маленький текст]`",
+		help="### Пример:\n`/demotivator image.png часть уже ждет вас. сатньте " 
+		"героем своей шизы удивительный мир датапаков`"
 	)
-	@app_commands.default_permissions(discord.Permissions(administrator=True))
 
 	async def demotivator(
 		self, 
@@ -73,7 +72,7 @@ def demotivator(image, huge_text, normal_text):
 	demotivator_text = ImageText(demotivator, anchor="ma")
 	huge_y = 370
 	huge_text_height = demotivator_text.get_height((256, huge_y), huge_text, 480, huge_font, huge_size)
-	normal_y = huge_y + huge_text_height + 7
+	normal_y = huge_y + huge_text_height + 15
 	normal_text_height = demotivator_text.get_height((256, normal_y), normal_text, 400, normal_font, normal_size)
 	
 	# Calculate total required height

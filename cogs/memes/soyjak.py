@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord.utils import MISSING
-from discord import app_commands
 
 from PIL import Image
 from io import BytesIO
@@ -20,7 +19,6 @@ class SoyjakCommand(commands.Cog):
 		usage="`/soyjak <изображение>`",
 		help="### Пример:\n`/soyjak image.png`"
 	)
-	@app_commands.default_permissions(discord.Permissions(administrator=True))
 
 	async def soyjak(self, ctx: commands.Context, image: discord.Attachment):
 		if not image.content_type or "image" not in image.content_type:

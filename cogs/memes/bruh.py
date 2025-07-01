@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord.utils import MISSING
-from discord import app_commands
 
 from PIL import Image
 from io import BytesIO
@@ -14,10 +13,9 @@ class BruhCommand(commands.Cog):
 	@commands.hybrid_command(
 		aliases=["druh", "брух", "икгр", "брах"],
 		description="Добавляет текст на изображение",
-		usage="`/bruh <изображение> <текст>",
-		help="### Пример:\n`/bruh` `image.png` `Пей горн`"
+		usage="`/bruh <изображение> <текст>`",
+		help="### Пример:\n`/bruh image.png Сей горн`"
 	)
-	@app_commands.default_permissions(discord.Permissions(administrator=True))
 
 	async def bruh(
 		self, 
@@ -69,7 +67,7 @@ def bruh(image: Image.Image, text):
 	text_height = bruh_text.get_height((int(width/2), 16), text, width, font, size)
 	
 	# Resize the text
-	text_part = text_part.resize((width, text_height + 48))
+	text_part = text_part.resize((width, 16 + text_height + 32))
 	bruh_text = ImageText(text_part, anchor="ma")
 	bruh_text.write_text_box((int(width/2), 16), text, width, font, size, color)
 
