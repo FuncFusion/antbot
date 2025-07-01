@@ -12,10 +12,10 @@ from cogs.general.gif import GifizeView
 
 class ImpactCommand(commands.Cog):
 	@commands.hybrid_command(
-		aliases=["шьзфсе", "импакт", "геншин"],
+		aliases=["шьзфсе", "импакт", "геншин","imp","имп","шьз"],
 		description="Добавляет текст на изображение",
 		usage="`/impact <изображение> [верхний текст] [нижний текст]`",
-		help="### Пример:\n`/impact image.png Say gex pay gorn ☝`"
+		help="### Примеры:\n`/impact image.png Say gex pay gorn ☝`\n`!impact image.png \"Say gex\" \"pay gorn ☝\"`"
 	)
 	@app_commands.describe(
 		top_text="Верхний текст (до 500 символов)",

@@ -14,7 +14,7 @@ soyjak_point = Image.open("assets/memes/soyjak_point.png").convert("RGBA")
 
 class SoyjakCommand(commands.Cog):
 	@commands.hybrid_command(
-		aliases=["ыщнофл", "сойджак"],
+		aliases=["ыщнофл", "сойджак", "сой", "soy","sj","сдж","ыо","ыщн"],
 		description="Вставляет на изображение удивленных сойджаков",
 		usage="`/soyjak <изображение>`",
 		help="### Пример:\n`/soyjak image.png`"
