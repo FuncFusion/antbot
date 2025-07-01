@@ -11,6 +11,8 @@ from io import BytesIO
 
 from utils import handle_errors, no_color, no_ping, edit_image, Emojis
 
+ffmpeg_path = "/usr/bin/ffmpeg" if os.environ["PATH"].startswith("/") else "ffmpeg"
+
 image_types = (
 	"bmp", "dds", "gif", "ico", "im",
 	"jpg", "jpeg", "msp", "pcx", "png",
@@ -123,7 +125,7 @@ async def video2webp(file: bytes, msg: discord.Message):
 		output_temp.close()
 		
 		cmd = [
-			"ffmpeg",
+			ffmpeg_path,
 			"-y",
 			"-i", input_path,
 			"-probesize", "100M",
