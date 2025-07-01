@@ -9,7 +9,8 @@ class AskToResolve(commands.Cog):
 
 	@commands.Cog.listener("on_message")
 	async def ask_to_resolve(self, msg):
-		if msg.channel.parent_id != HELP_FORUM_ID:
+		if not isinstance(msg.channel, discord.ForumChannel) \
+			or isinstance(msg.channel, discord.ForumChannel) and msg.channel.parent_id != HELP_FORUM_ID:
 			return
 		elif msg.author.id != msg.channel.owner_id:
 			return
