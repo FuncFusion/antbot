@@ -116,7 +116,7 @@ class EnchantCommands(commands.Cog):
 		messages = [enchanted[i:i + 2000] for i in range(0, len(enchanted), 2000)]
 		await ctx.reply(messages[0], allowed_mentions=no_ping)
 		for message in messages[1:]:
-			await ctx.channel.send(message)
+			await ctx.channel.send(message, allowed_mentions=no_ping)
 
 	@enchant.error
 	async def enchant_error(self, ctx, error):
@@ -142,7 +142,7 @@ class EnchantCommands(commands.Cog):
 		messages = [unenchanted[i:i + 2000] for i in range(0, len(unenchanted), 2000)]
 		await ctx.reply(messages[0], allowed_mentions=no_ping)
 		for message in messages[1:]:
-			await ctx.channel.send(message)
+			await ctx.channel.send(message, allowed_mentions=no_ping)
 
 	@unenchant.error
 	async def unenchant_error(self, ctx, error):
