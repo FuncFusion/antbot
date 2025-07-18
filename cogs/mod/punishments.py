@@ -101,13 +101,14 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 	@commands.has_permissions(moderate_members=True)
 	@app_commands.default_permissions(moderate_members=True)
 	async def mute(self, ctx, user: discord.Member, term: str, *, reason: str=None):
+		final_term = min(get_secs(term), 2419200)
 		reason = reason if reason != None else generate_stupid_reason()
-		await user.timeout(timedelta(seconds=get_secs(term)), reason=reason)
+		await user.timeout(timedelta(seconds=final_term), reason=reason)
 		#
 		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
 		embed.set_thumbnail(url=user.display_avatar.url)
 		embed.add_field(name="Замученый участник", value=user.mention)
-		embed.add_field(name="Срок наказания", value=f"<t:{int(time()) + get_secs(term)}:R>")
+		embed.add_field(name="Срок наказания", value=f"<t:{int(time()) + final_term}:R>")
 		embed.add_field(name="Причина", value=reason,inline=False)
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	@mute.error
@@ -142,12 +143,53 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 				"msg": "Недостаточно прав"
 			}
 		])
+	
+	@commands.hybrid_command(
+		aliases=["гтьгеу", "анмут", "размут", "открыть-рот"],
+		descripion="**Модератроская команда.** Снимает мут с указанного пользователя",
+		usage="`/unmute <пользователь>`",
+		help=""
+	)
+	@commands.has_permissions(moderate_members=True)
+	@app_commands.default_permissions(moderate_members=True)
+	async def unmute(self, ctx, member: discord.Member):
+		if not member.is_timed_out():
+			raise Exception("Not muted")
+		await member.timeout(None)
+
+		embed = discord.Embed(title=f"{Emojis.speaker} Размут", color=no_color)
+		embed.set_thumbnail(url=member.display_avatar.url)
+		embed.add_field(name="Размученый участник", value=member.mention)
+		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+
+	@unmute.error
+	async def unmute_error(self, ctx, error):
+		await handle_errors(ctx, error, [
+			{
+				"contains": "Not muted",
+				"msg": "Пользователь и так не в муте"
+			},
+			{
+				"exception": commands.MissingRequiredArgument,
+				"msg": "Укажите пользователя"
+			},
+			{
+				"exception": commands.MemberNotFound,
+				"msg": "Пользователь не найден"
+			},
+			{
+				"exception": commands.MissingPermissions,
+				"msg": "Недостаточно прав"
+			}
+		])
+
 		
 	@commands.hybrid_command(
 		aliases=["лшсл", "кик", "изгнать"],
 		description="**Модераторская команда.** Кикает указанного пользователя.",
 		usage="`/kick <пользователь> [причина]`",
-		help="")
+		help=""
+	)
 	@commands.has_permissions(kick_members=True)
 	@app_commands.default_permissions(kick_members=True)
 	async def kick(self, ctx, user: discord.Member, *, reason: str=None):
