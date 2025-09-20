@@ -1,4 +1,4 @@
-discord.py>=2.4.0
+discord.py>=2.6.3
 pymongo
 python-dotenv
 Levenshtein
