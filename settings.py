@@ -1,4 +1,5 @@
 import discord
+from discord import ForumTag as Tag
 import os
 import logging
 from logging.config import dictConfig
@@ -36,16 +37,26 @@ SNAPSHOT_PING_ROLE = 1245322215428329503
 DATAPACK_MASTER_ROLE = 924185371225497600
 RESOURCEPACK_MASTER_ROLE = 940944701895356468
 
-SOLVED_TAG = discord.ForumTag(name="solved")
+SOLVED_TAG = Tag(name="solved")
 SOLVED_TAG.id=1284875549247799328
-DATAPACKS_TAG = discord.ForumTag(name="datapack")
+DATAPACKS_TAG = Tag(name="datapack")
 DATAPACKS_TAG.id = 1026759908214968360
-RESOURCEPACKS_TAG = discord.ForumTag(name="resourcepacks")
+RESOURCEPACKS_TAG = Tag(name="resourcepacks")
 RESOURCEPACKS_TAG.id = 1026759958294954014
-BLOCKBENCH_TAG = discord.ForumTag(name="blockbench")
+ONLY_CB_TAG = Tag(name="only cb")
+ONLY_CB_TAG.id = 1026759989232144425
+MISC_TAG = Tag(name="misc")
+MISC_TAG.id = 1026760014003699732
+BLOCKBENCH_TAG = Tag(name="blockbench")
 BLOCKBENCH_TAG.id = 1026760450815295528
-OPTIFINE_TAG = discord.ForumTag(name="optifine")
+VSCODE_TAG = Tag(name="vscode")
+VSCODE_TAG.id = 1026760968736354334
+OPTIFINE_TAG = Tag(name="optifine")
 OPTIFINE_TAG.id = 1026760514895892580
+PLUGINS_TAG = Tag(name="plugins")
+PLUGINS_TAG.id = 1313114807309701120
+MODS_TAG = Tag(name="mods")
+MODS_TAG.id = 1026761227508138095
 RESOURCEPACKS_TAGS = (RESOURCEPACKS_TAG, BLOCKBENCH_TAG, OPTIFINE_TAG)
 
 LOGGING_CONFIG = {

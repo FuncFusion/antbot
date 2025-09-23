@@ -21,13 +21,10 @@ async def handle_errors(
 		errors
 	):
 
-	if isinstance(ctx, discord.Interaction):
-		ctx = await commands.Context.from_interaction(ctx)
-
 	async def send(msg):
 		emoji = Emojis.exclamation_mark if not msg.startswith("<") else ''
-		if ctx.interaction:
-			await ctx.interaction.response.send_message(f"{emoji}{msg}", allowed_mentions=no_ping, ephemeral=True)
+		if isinstance(ctx, discord.Interaction):
+			await ctx.response.send_message(f"{emoji}{msg}", allowed_mentions=no_ping, ephemeral=True)
 		else:
 			await ctx.reply(f"{emoji}{msg}", allowed_mentions=no_ping, delete_after=(None if ctx.channel.id == \
 				BOT_COMMANDS_CHANNEL_ID else 5))
@@ -57,3 +54,11 @@ async def handle_errors(
 		else:
 			await send(unknown_error.format(error))
 			print(error_msg)
+
+def totag(id):
+	tag = discord.ForumTag(name="manually created ForumTag")
+	tag.id = id
+	return tag
+
+def is_moderator(user: discord.Member):
+	return user.guild_permissions.manage_messages

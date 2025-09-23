@@ -1,5 +1,5 @@
 import discord
-from discord.utils import MISSING
+from discord.utils import MISSING, _MissingSentinel
 
 from pymongo.mongo_client import MongoClient
 
@@ -9,10 +9,10 @@ from utils.shortcuts import no_ping
 db = MongoClient(MONGO_URI).antbot.webhook_channels
 
 
-async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING):
+async def fake_send(user, channel, content=MISSING, attachments=MISSING, embeds=MISSING, view=MISSING, thread_name=MISSING):
 	files = MISSING
 	thread = MISSING
-	if attachments != MISSING:
+	if not isinstance(attachments, _MissingSentinel):
 		files = []
 		for attachment in attachments:
 			files.append(await attachment.to_file())
@@ -37,5 +37,6 @@ async def fake_send(user, channel, content, attachments=MISSING, embeds=MISSING)
 			else:
 				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread, allowed_mentions=no_ping)	
 	else:
-		await user_copy_webhook.send(content=content, avatar_url=user.display_avatar.url, username=user.display_name, 
-		thread=thread, files=files, allowed_mentions=no_ping)
+		msg = await user_copy_webhook.send(content=content, avatar_url=user.display_avatar.url, username=user.display_name, 
+		thread=thread, thread_name=thread_name, embeds=embeds, view=view, files=files, allowed_mentions=no_ping, wait=True)
+		return msg

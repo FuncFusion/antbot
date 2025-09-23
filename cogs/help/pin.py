@@ -25,9 +25,9 @@ class Pin(commands.Cog):
 				pass
 	
 	@commands.Cog.listener("on_message")
-	async def message_pin(self, msg):
+	async def message_pin(self, msg: discord.Message):
 		if isinstance(msg.channel, discord.Thread) and msg.channel.parent_id in (HELP_FORUM_ID, CREATIONS_FORUM_ID) \
-		and (msg.author == msg.channel.owner or msg.author.guild_permissions.manage_messages):
+		and not msg.author.bot and (msg.author == msg.channel.owner or msg.author.guild_permissions.manage_messages):
 			if msg.content.strip().lower() in pin_aliases:
 				try:
 					replied_msg = await msg.channel.fetch_message(msg.reference.message_id)
