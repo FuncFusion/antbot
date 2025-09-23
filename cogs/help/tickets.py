@@ -19,17 +19,18 @@ class Tickets(commands.Cog):
         ticket_message = f"{ctx.user.mention}\n"
         
         # Filling out
-        if description:=data.get("description"):
-            ticket_message += f"**{Emojis.txt} Подробности**\n{description}\n"
         ticket_message += f"**{Emojis.worldgen_file} Версия майнкрафта**\n`{data.get('mc_version')}`\n"
         ticket_message += f"**{Emojis.jar} Моды**\n`{data.get('mod_list')}`\n"
+        if description:=data.get("description"):
+            ticket_message += f"**{Emojis.txt} Подробности**\n{description}\n"
 
         help_forum = await ctx.guild.fetch_channel(HELP_FORUM_ID)
         msg = await fake_send(
             ctx.user, 
             help_forum, 
             view=LazyLayout(ui.TextDisplay(ticket_message), container=False),
-            thread_name=data.get("thread_name")
+            thread_name=data.get("thread_name"),
+            allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False)
         )
         await msg.channel.send(view=StarterMessageLayout())
 
@@ -89,7 +90,7 @@ class TicketModal(ui.Modal):
     )
 
     async def on_submit(self, ctx: discord.Interaction):
-        if self.retard_test.value.lower() not in ("да", "lf", "yes", "нуы"):
+        if not any(i in self.retard_test.value.lower() for i in ("да", "lf", "yes", "нуы")):
             await ctx.response.send_message(f"{Emojis.exclamation_mark} Сначала, "
                 f"поищите похожие посты в <#{HELP_FORUM_ID}>! Это может сэкономить "
                 "время и вам, и тем, кто помогает в ветках", 
@@ -100,8 +101,6 @@ class TicketModal(ui.Modal):
         input_names = ("retard_test", "thread_name", 
             "mc_version", "mod_list", "description")
         
-        await ctx.response.send_message(f"{Emojis.check} Пост был успешно создан в <#{HELP_FORUM_ID}>")
+        await ctx.response.send_message(f"{Emojis.check} Пост был успешно создан в <#{HELP_FORUM_ID}>", ephemeral=True)
         await Tickets.create_ticket(ctx, {name:child.value for name, child in zip(input_names, self.children)})
-
-
 

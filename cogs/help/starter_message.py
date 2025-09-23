@@ -133,7 +133,7 @@ class StarterMessageLayout(ui.LayoutView):
 			]
 		)
 		async def tags_selection(self, ctx: discord.Interaction, _):
-			post_author = get_author(ctx)
+			post_author = await get_author(ctx)
 			if ctx.user != post_author and not is_moderator(ctx.user):
 				raise Exception("No perms")
 			

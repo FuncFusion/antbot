@@ -9,7 +9,15 @@ from utils.shortcuts import no_ping
 db = MongoClient(MONGO_URI).antbot.webhook_channels
 
 
-async def fake_send(user, channel, content=MISSING, attachments=MISSING, embeds=MISSING, view=MISSING, thread_name=MISSING):
+async def fake_send(user, 
+	channel, 
+	content=MISSING, 
+	attachments=MISSING, 
+	embeds=MISSING, 
+	view=MISSING, 
+	thread_name=MISSING, 
+	allowed_mentions=no_ping
+):
 	files = MISSING
 	thread = MISSING
 	if not isinstance(attachments, _MissingSentinel):
@@ -33,10 +41,10 @@ async def fake_send(user, channel, content=MISSING, attachments=MISSING, embeds=
 		for text in content:
 			if text == content[-1]:
 				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, 
-				files=files, thread=thread, allowed_mentions=no_ping)
+				files=files, thread=thread, allowed_mentions=allowed_mentions)
 			else:
-				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread, allowed_mentions=no_ping)	
+				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread, allowed_mentions=allowed_mentions)	
 	else:
 		msg = await user_copy_webhook.send(content=content, avatar_url=user.display_avatar.url, username=user.display_name, 
-		thread=thread, thread_name=thread_name, embeds=embeds, view=view, files=files, allowed_mentions=no_ping, wait=True)
+		thread=thread, thread_name=thread_name, embeds=embeds, view=view, files=files, allowed_mentions=allowed_mentions, wait=True)
 		return msg
