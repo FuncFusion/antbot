@@ -5,7 +5,7 @@ from discord.ext import commands
 from asyncio import sleep
 from datetime import datetime, timedelta, timezone
 
-from settings import HELP_FORUM_ID, CREATIONS_FORUM_ID, DATAPACKS_TAG, RESOURCEPACKS_TAG, ONLY_CB_TAG, \
+from settings import CREATIONS_FORUM_ID, DATAPACKS_TAG, RESOURCEPACKS_TAG, ONLY_CB_TAG, \
 	BLOCKBENCH_TAG, VSCODE_TAG, MODS_TAG, PLUGINS_TAG, MISC_TAG, OPTIFINE_TAG, SOLVED_TAG, \
 	RESOURCEPACKS_TAGS, DATAPACK_MASTER_ROLE, RESOURCEPACK_MASTER_ROLE
 from utils import Emojis, no_color, no_ping, totag, is_moderator, handle_errors, LazyLayout
@@ -20,17 +20,16 @@ class StarterMessage(commands.Cog):
 	@commands.Cog.listener("on_thread_create")
 	async def new_help_post(self, trd):
 		if trd.parent_id == CREATIONS_FORUM_ID:
-			layout = ui.LayoutView()
-			layout.add_item(ui.Container(
+			layout = LazyLayout(
 				ui.TextDisplay(	
-					"## {Emojis.pin} Ознакомьтесь с правилами творчества!\n"
+					f"## {Emojis.pin} Ознакомьтесь с правилами творчества!\n"
 					"Надеемся, что вы уже прочитали правила творчества "
 					"(https://discord.com/channels/914772142300749854/1142473873200267314/1142473873200267314). "
 					"Если вы хотите поменять картинку на обложке вашего поста, вы **можете это сделать**. Вы можете вставить прямую "
 					"ссылку на картинку или ссылку на тот сайт, что уже имеет картинку в своём эмбеде. Также не забывайте, что вы можете "
 					"закреплять сообщения в своей ветке, отреагировав с помощью эмодзи :pushpin:."
 				)
-			))
+			)
 		for _ in range(10):
 			try:
 				await trd.send(view=layout)
@@ -147,21 +146,18 @@ class StarterMessageLayout(ui.LayoutView):
 	cuntainer = Cuntainer()
 
 	async def on_error(self, ctx: discord.Interaction, error, _):
-		try:
-			await handle_errors(ctx, error, [
-				{
-					"contains": "No perms",
-					"msg": "Вы не являетесь ни автором ветки, ни модератором"
-				},
-				{
-					"contains": "Awaited not enough",
-					"msg": "Подождите хотя бы 24 часа, перед тем как звать мастеров на помощь"
-				},
-				{
-					"contains": "No massters",
-					"msg": "Не обнаружено дп/рп тэгов в этом посте"
-				}
-			])
-		except Exception as e:
-			print(e)
+		await handle_errors(ctx, error, [
+			{
+				"contains": "No perms",
+				"msg": "Вы не являетесь ни автором ветки, ни модератором"
+			},
+			{
+				"contains": "Awaited not enough",
+				"msg": "Подождите хотя бы 24 часа, перед тем как звать мастеров на помощь"
+			},
+			{
+				"contains": "No massters",
+				"msg": "Не обнаружено дп/рп тэгов в этом посте"
+			}
+		])
 

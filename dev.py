@@ -59,20 +59,24 @@ from cogs.voice_channels import *
 
 logger = settings.logging.getLogger("bot")
 
-cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
-		FAQs,
-		EnchantCommands, LookForCommand, RandomCommands, DeadChat,
-		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
-		HelpCommand, LinkCommand, Pin, 
-		# StarterMessage, 
-		SyntaxCommand, AskToResolve, Tickets,
-		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
-		GiveawayCommand, GAModerationCommands,
-		Logs, IdeaVoteReactions,
-		ClearCommand, PunishmentCommands, AutoThreads,
-	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
-		CustomVoiceChannels,]
-views = [LookForView, R_u_sure, BotPingView, GifizeView, LazyLayout, StarterMessageLayout, CreateTicketMessage]
+cogs = [
+	DebugCommand, EditCommand, PingCommand, StatusCommands,
+	FAQs,
+	EnchantCommands, LookForCommand, RandomCommands, DeadChat,
+	SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
+	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
+	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
+	GiveawayCommand, GAModerationCommands,
+	Logs, IdeaVoteReactions,
+	ClearCommand, PunishmentCommands, AutoThreads,
+	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
+	CustomVoiceChannels
+]
+views = [
+	LookForView, R_u_sure, BotPingView, 
+	GifizeView, LazyLayout, StarterMessageLayout, 
+	CreateTicketMessage, FileLayout
+]
 
 
 class AntBot(commands.Bot):

@@ -1,5 +1,5 @@
 import discord
-from discord import app_commands
+from discord import app_commands, ui
 from discord.ext import commands, tasks
 from discord.utils import MISSING
 
@@ -10,9 +10,7 @@ from io import BytesIO
 from pymongo import MongoClient
 
 from settings import MONGO_URI, GITHUB_HEADERS, LOGS_CHANNEL_ID
-from utils.tree_gen import generate_tree
-from utils.general import handle_errors
-from utils.shortcuts import no_color, no_ping
+from utils import generate_tree, handle_errors, no_ping, Emojis
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
 versions_pathes = MongoClient(MONGO_URI).antbot.versions_pathes
@@ -113,7 +111,6 @@ class FileCommand(commands.Cog):
 	@app_commands.describe(path="Путь/название интересующего файла")
 
 	async def file(self, ctx, path: str, version: str="latest"):
-		is_image = False
 		if version == "latest":
 			current_files = files
 		else:
@@ -146,14 +143,13 @@ class FileCommand(commands.Cog):
 					raise Exception(f"Response error {response.status}")
 				file = discord.File(BytesIO(await response.read()), filename=path.split("/")[-1])
 		#
-		embed = discord.Embed(description=f"## <{path_tree.split("<")[-1].replace("`","")} ({version})\n{path_tree}",
-			color=no_color)
-		if path.endswith("png"):
-			embed.set_image(url=f"attachment://{file.filename}")
-			is_image = True
-		await ctx.reply(embed=embed, file=file if is_image else MISSING, allowed_mentions=no_ping)
-		if not is_image:
-			await ctx.channel.send(file=file)
+		layout = FileLayout(
+			f"## <{path_tree.split("<")[-1].replace("`","")} ({version})\n{path_tree}",
+			file,
+			f"https://raw.githubusercontent.com/misode/mcmeta/{branch}/{path}"
+		)
+		await ctx.reply(view=layout, file=file, allowed_mentions=no_ping)
+
 	
 	@file.error
 	async def file_error(self, ctx, error):
@@ -199,3 +195,38 @@ class FileCommand(commands.Cog):
 			app_commands.Choice(name=file[-100:], value=file[-100:]) 
 			for file in self.search_files(curr, current_files)
 		][:25]
+
+
+class PreviewButton(ui.Button):
+	def __init__(self, file_url: str):
+		super().__init__(
+			label="Предпросмотр", 
+			emoji=Emojis.painting_variant_file, 
+			custom_id="file:preview_button"
+		)
+		self.file_url = file_url
+
+	async def callback(self, ctx: discord.Interaction):
+		async with ClientSession() as session:
+			async with session.get(self.file_url) as response:
+				file = discord.File(
+					BytesIO(await response.read()),
+					filename=self.file_url.split("/")[-1]
+				)
+		await ctx.response.send_message(file=file, ephemeral=True)
+
+class Cont(ui.Container):
+	def __init__(self, path: str, file: discord.File, file_url: str, id=0):
+		super().__init__()
+		self.add_item(ui.TextDisplay(path))
+		self.add_item(ui.Separator())
+		ui_file = ui.File(file, id=3)
+		self.add_item(ui_file)
+		self.add_item(ui.ActionRow(PreviewButton(file_url), id=4))
+
+class FileLayout(ui.LayoutView):
+	def __init__(self, path: str="", file: discord.File=None, file_url: str=""):
+		super().__init__(timeout=None)
+		self.add_item(Cont(path, file, file_url))
+	
+	

@@ -19,18 +19,24 @@ from utils.packmcmeta import update_mcmeta_info
 
 logger = settings.logging.getLogger("bot")
 
-cogs = [DebugCommand, EditCommand, PingCommand, StatusCommands,
-		FAQs,
-		EnchantCommands, LookForCommand, RandomCommands, DeadChat,
-		SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
-		HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve,
-		JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
-		GiveawayCommand, GAModerationCommands,
-		Logs, IdeaVoteReactions,
-		ClearCommand, PunishmentCommands, AutoThreads,
-	    SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
-		CustomVoiceChannels,]
-views = [LookForView, StarterView, R_u_sure, BotPingView, GifizeView]
+cogs = [
+	DebugCommand, EditCommand, PingCommand, StatusCommands,
+	FAQs,
+	EnchantCommands, LookForCommand, RandomCommands, DeadChat,
+	SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
+	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
+	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
+	GiveawayCommand, GAModerationCommands,
+	Logs, IdeaVoteReactions,
+	ClearCommand, PunishmentCommands, AutoThreads,
+	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
+	CustomVoiceChannels
+]
+views = [
+	LookForView, R_u_sure, BotPingView, 
+	GifizeView, StarterMessageLayout, 
+	CreateTicketMessage, FileLayout
+]
 
 
 class AntBot(commands.Bot):

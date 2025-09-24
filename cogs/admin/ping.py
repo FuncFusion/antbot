@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from utils.shortcuts import no_color, no_ping
+from utils import LazyLayout, no_ping
 
 
 class PingCommand(commands.Cog):
@@ -14,6 +14,10 @@ class PingCommand(commands.Cog):
 		usage="`/ping`",
 		help="")
 	async def ping(self, ctx):
-		embed = discord.Embed(title="🏓 Понг!", color=no_color)
-		embed.add_field(name=f'Мой пинг: {round(self.bot.latency*1000)}ms', value="", inline=True)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(view=LazyLayout(
+			discord.ui.TextDisplay(
+				"# 🏓 Понг!\n"
+				f"**Мой пинг: {round(self.bot.latency*1000)}ms**"
+			)), 
+			allowed_mentions=no_ping
+		)
