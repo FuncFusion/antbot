@@ -19,7 +19,7 @@ settings.MEDIA_CHANNEL_ID = 1290277768520663113
 settings.FB_IDEAS_CHANNEL_ID = 1078066910933037106
 settings.JOINS_CHANNEL_ID = 1270326886022643719
 settings.LEAVES_CHANNEL_ID = 1270326886022643720
-settings.LOGS_CHANNEL_ID = 916753359304790066
+settings.LOGS_CHANNEL_ID = 1270326887066898515
 settings.LOOK_FOR_CHANNEL_ID = 1270326886391746573
 settings.SNAPSHOTS_CHANNEL_ID = 1270326886203133966
 
@@ -73,8 +73,8 @@ cogs = [
 	CustomVoiceChannels
 ]
 views = [
-	LookForView, R_u_sure, BotPingView, 
-	GifizeView, LazyLayout, StarterMessageLayout, 
+	LookForView, GifizeView, 
+	LazyLayout, StarterMessageLayout, 
 	CreateTicketMessage, FileLayout
 ]
 

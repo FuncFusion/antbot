@@ -1,5 +1,5 @@
 import discord
-from discord import app_commands
+from discord import ui
 from discord.ext import commands
 from discord.utils import MISSING
 
@@ -7,9 +7,7 @@ from PIL import Image, ImageDraw
 from io import BytesIO
 from re import search, compile
 
-from utils.general import handle_errors
-from utils.shortcuts import no_color, no_ping
-from utils.msg_utils import Emojis
+from utils import handle_errors, no_color, no_ping, Emojis, LazyLayout
 
 color_regex = compile(
 	r"(?P<hex>"
@@ -73,9 +71,9 @@ def generate_showcase(color):
 					g * color[1] // 255,
 					b * color[2] // 255,
 					a)
-	draw = ImageDraw.Draw(showcase_image)
-	square_position = (21, 2, 21 + 12, 2 + 12)
-	draw.rectangle(square_position, fill=color)
+	# draw = ImageDraw.Draw(showcase_image)
+	# square_position = (21, 2, 21 + 12, 2 + 12)
+	# draw.rectangle(square_position, fill=color)
 	#
 	showcase_bg = Image.open("assets/color/showcase_bg.png").convert("RGBA")
 	showcase_bg.paste(showcase_image, (0, 0), showcase_image)
@@ -101,8 +99,10 @@ class ColorCommand(commands.Cog):
 		color = search(color_regex, color)
 		if color == None:
 			raise Exception("Wrong type")
+		
 		if color.group("hex"):
 			rgba_color = to_rgb_int(color.group("hex"), "hex")
+
 		elif color.group("rgb_int"):
 			rgba_color = list(int(color.group(f"int_{i}")) for i in "rgb")
 			if (alpha:=color.group("int_a")):
@@ -110,6 +110,7 @@ class ColorCommand(commands.Cog):
 			else:
 				rgba_color.append(255)
 			rgba_color = tuple(rgba_color)
+
 		elif color.group("rgb_float"):
 			rgba_float_color = list(float(color.group(f"float_{i}")) for i in "rgb")
 			if (alpha:=color.group("float_a")):
@@ -117,25 +118,33 @@ class ColorCommand(commands.Cog):
 			else:
 				rgba_float_color.append(1.0)
 			rgba_color = to_rgb_int(rgba_float_color, "rgb_float")
+
 		elif color.group("decimal"):
 			rgba_color = to_rgb_int(int(color.group("color")), "decimal")
+
 		hex_color = to_hex(rgba_color)
 		rgba_float_color = to_rgb_float(rgba_color)
 		decimal_color = to_decimal(rgba_color)
-		#
-		embed = discord.Embed(
-			color=no_color,
-			description=f"## {Emojis.shader_triangle} Форматы цвета\n"
-				f"**Hex** ```css\n{hex_color}```\n"
-				f"**RGB float** ```c\n{str(rgba_float_color)[1:-1]}```\n"
-				f"**RGB int** ```c\n{str(rgba_color)[1:-1]}```\n"
-				f"**Decimal** ```c\n{decimal_color}```"
-		)
-		#
+		
 		showcase = generate_showcase(rgba_color)
 		showcase_discord_file = discord.File(showcase, filename="showcase.png")
-		embed.set_image(url="attachment://showcase.png")
-		await ctx.reply(embed=embed, file=showcase_discord_file, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.TextDisplay(
+					f"## {Emojis.shader_triangle} Форматы цвета\n"
+					f"**Hex** ```css\n{hex_color}```\n"
+					f"**RGB float** ```c\n{str(rgba_float_color)[1:-1]}```\n"
+					f"**RGB int** ```c\n{str(rgba_color)[1:-1]}```\n"
+					f"**Decimal** ```c\n{decimal_color}```\n"
+					"**Предпросмотр**"
+				),
+				ui.MediaGallery(
+					discord.MediaGalleryItem("attachment://showcase.png")
+				)
+			), 
+			file=showcase_discord_file, 
+			allowed_mentions=no_ping
+		)
 	
 	@color.error
 	async def color_error(self, ctx, error):

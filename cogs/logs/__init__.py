@@ -1,4 +1,5 @@
 import discord
+from discord import ui
 from discord.ext import commands
 from discord.utils import MISSING
 
@@ -6,92 +7,131 @@ from datetime import datetime, timedelta, timezone
 from pymongo.mongo_client import MongoClient
 
 from settings import LOGS_CHANNEL_ID, DMS_LOGS_GUILD_ID, GUILD, CREATE_VC_CHANNEL_ID, MONGO_URI
-from utils.msg_utils import Emojis
-from utils.shortcuts import no_ping, no_color
-from utils.fake_user import fake_send
-from utils.users_db import DB
+from utils import Emojis, no_color, no_ping, fake_send, DB, LazyLayout
 
 command_statistics = MongoClient(MONGO_URI).antbot.command_statistics
 
 
 class Logs(commands.Cog, name="no_help_logs"):
 	def __init__(self, bot):
-		self.bot = bot
+		self.bot: commands.Bot = bot
 	
 	@commands.Cog.listener(name="on_member_update")
-	async def nick_changed(self, before, after):
+	async def nick_changed(self, before: discord.Member, after: discord.Member):
 		if after.guild.id == GUILD and before.nick != after.nick:
-			embed = discord.Embed(title=f"{Emojis.user} Ник обновлён", color=no_color)
-			embed.set_author(name=after.name, icon_url=after.display_avatar.url)
-			embed.add_field(name="До", value=before.display_name)
-			embed.add_field(name="После", value=after.display_name)
-			embed.add_field(name="Участник", value=after.mention, inline=False)
-			#
+			
 			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(embed=embed)
+			await log_channel.send(
+				view=LazyLayout(
+					ui.Section(
+						f"# {Emojis.user} Ник обновлён\n"
+						f"**Участник**\n{after.mention}\n"
+						f"**До**\n{before.display_name}\n"
+						f"**Поcле**\n{after.display_name}\n",
+						accessory=ui.Thumbnail(after.display_avatar.url)
+					)
+				),
+				allowed_mentions=no_ping
+			)
 	
 	@commands.Cog.listener(name="on_voice_state_update")
-	async def voice_event(self, member, before, after):
+	async def voice_event(self, member: discord.Member, before: discord.VoiceChannel, after: discord.VoiceChannel):
 		if member.guild.id == GUILD:
+
 			if before.channel != after.channel and after.channel != None and after.channel.id != CREATE_VC_CHANNEL_ID:
-				embed = discord.Embed(title=f"{Emojis.vc_joined} Участник зашёл в гк", color=no_color)
-				embed.set_author(name=member.name, icon_url=member.display_avatar.url)
-				embed.add_field(name="Канал", value=f"{after.channel.name} ({after.channel.mention})")
+				text = (
+					f"# {Emojis.vc_joined} Участник зашёл в гк\n"
+					f"**Участник**\n{member.mention}\n"
+					f"**Канал**\n{after.channel.name} ({after.channel.mention})"
+				)
+
 			elif not after.channel:
-				embed = discord.Embed(title=f"{Emojis.vc_left} Участник покинул гк", color=no_color)
-				embed.set_author(name=member.name, icon_url=member.display_avatar.url)
-				embed.add_field(name="Канал", value=f"{before.channel.name} ({before.channel.mention})")
+				text = (
+					f"# {Emojis.vc_left} Участник покинул гк\n"
+					f"**Участник**\n{member.mention}\n"
+					f"**Канал**\n{before.channel.name} ({before.channel.mention})"
+				)
+
 			else:return
 			#
 			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(embed=embed)
+			await log_channel.send(
+				view=LazyLayout(
+					ui.Section(
+						text,
+						accessory=ui.Thumbnail(member.display_avatar.url)
+					)
+				),
+				allowed_mentions=no_ping
+			)
 	
 	@commands.Cog.listener(name="on_message_edit")
-	async def edited(self, before, after):
+	async def edited(self, before: discord.Message, after: discord.Message):
 		if after.guild and after.guild.id == GUILD and after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
-			# Build ebmed
-			embed = discord.Embed(title=f"{Emojis.edited_msg} Сообщение отредактировано", color=no_color)
-			embed.set_author(icon_url=after.author.display_avatar.url, name=after.author.name)
-			embed.add_field(name="Автор", value=after.author.mention)
-			embed.add_field(name="Канал", value=after.channel.jump_url)
-			embed.add_field(name="До", value=before.content[:1021] + ("..." if len(before.content) >= 1024 else ""), 
-				inline=False)
-			embed.add_field(name="После", value=after.content[:1021] + ("..." if len(after.content) >= 1024 else ""), 
-				inline=False)
-			#
 			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(embed=embed, view=JumpMessage(after.jump_url))
+			await log_channel.send(
+				view=LazyLayout(
+					ui.Section(
+						f"# {Emojis.edited_msg} Сообщение отредактировано\n"
+						f"**Автор**\n{after.author.mention}",
+						accessory=ui.Thumbnail(after.author.display_avatar.url)
+					)
+				),
+				allowed_mentions=no_ping
+			)
+			await log_channel.send(view=LazyLayout(ui.TextDisplay(f"# До\n{before.content}")), allowed_mentions=no_ping)
+			await log_channel.send(view=LazyLayout(ui.TextDisplay(f"# После\n{after.content}")), allowed_mentions=no_ping)
 
 	@commands.Cog.listener(name="on_message_delete")
-	async def deleted(self, msg):
+	async def deleted(self, msg: discord.Message):
 		if msg.guild.id != GUILD:return
 		if msg.author.id != self.bot.user.id and not isinstance(msg.channel, discord.DMChannel):
 			# Getting files from message
+			files = []
+			media_gal = ui.MediaGallery()
+			non_media = []
 			if msg.attachments != None:
-				files = []
 				for attachment in msg.attachments:
 					files.append(await attachment.to_file())
-			else:
-				files = MISSING
+					if attachment.content_type and any((i in attachment.content_type.lower() for i in ("video", "image"))):
+						media_gal.add_item(media=f"attachment://{attachment.filename}")
+					else:
+						non_media.append(ui.File(f"attachment://{attachment.filename}"))
+			attachment_items = []
+			if media_gal.items:
+				attachment_items.append(media_gal)
+			if non_media:
+				attachment_items += non_media
 			# Deleter
 			now = datetime.now(timezone.utc)
 			deleter = msg.author.mention
 			guild = await self.bot.fetch_guild(GUILD)
 			async for entry in guild.audit_logs(limit=5):
 				if entry.action == discord.AuditLogAction.message_delete and entry.target.id == msg.author.id and\
-				abs(now - entry.created_at) <= timedelta(seconds=1):
+				abs(now - entry.created_at) <= timedelta(seconds=2):
 					deleter = entry.user.mention
 			# Build ebmed
-			embed = discord.Embed(title=f"{Emojis.deleted_msg} Сообщение удалено", color=no_color)
-			embed.set_author(icon_url=msg.author.display_avatar.url, name=msg.author.name)
-			embed.add_field(name="Автор", value=msg.author.mention)
-			embed.add_field(name="Удалитель", value=deleter)
-			embed.add_field(name="Канал", value=msg.channel.jump_url)
-			embed.add_field(name="Содержимое", value=msg.content[:1021] + ("..." if len(msg.content) >= 1024 else ""), inline=False)
-			#
 			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(embed=embed, files=files)
+			await log_channel.send(
+				view=LazyLayout(
+					ui.Section(
+						f"{Emojis.deleted_msg} Сообщение удалено\n"
+						f"**Автор**\n{msg.author.mention}\n"
+						f"**Удалитель**\n{deleter}\n"
+						f"**Канал**\n{msg.channel.jump_url}\n",
+						accessory=ui.Thumbnail(msg.author.display_avatar.url)
+					)
+				), 
+				allowed_mentions=no_ping
+			)
+			await log_channel.send(
+				view=LazyLayout(
+					ui.TextDisplay(f"## Содержимое\n{msg.content}"),
+					*attachment_items
+				),
+				files=files,
+			)
 	
 	#dms
 	@commands.Cog.listener(name="on_message")

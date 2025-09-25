@@ -34,14 +34,16 @@ class PackformatCommand(commands.Cog):
 	async def packformat(self, ctx, *, version: str=None):
 		versions = get_mcmeta_ver(requested_version="all")
 		version = None if not version else version.replace(" ", ".")
+
 		if version in ("all", "al", "a", "все", "вс", "в", "фдд", "фд", "ф"):
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
 			versions_formatted_dp = transform_version_data(all_releases, "data_pack")
 			versions_formatted_rp = transform_version_data(all_releases, "resource_pack")
 			embed = discord.Embed(description=f"## {Emojis.packformat} Все (релизные) версии пак формата", color=no_color)
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
+			embed.add_field(name=f"{Emojis.data_open} Датaпаки", value=versions_formatted_dp)
+			embed.add_field(name=f"{Emojis.assets_open} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
+
 		elif version:
 			if version in ("latest","последняя","последний"):
 				version = versions["latest"]["id"]
@@ -50,9 +52,10 @@ class PackformatCommand(commands.Cog):
 				dp_ver = f"`{versions[version]["data_pack"]}`"
 			except:
 				dp_ver = f"`—`"
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпак", value=dp_ver)
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспак", value=f"`{versions[version]["resource_pack"]}`")
+			embed.add_field(name=f"{Emojis.data_open} Датaпак", value=dp_ver)
+			embed.add_field(name=f"{Emojis.assets_open} Ресурспак", value=f"`{versions[version]["resource_pack"]}`")
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
+
 		else:
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
 			versions_formatted_dp = versions_formatted_rp = ""
@@ -62,8 +65,8 @@ class PackformatCommand(commands.Cog):
 			versions_formatted_dp += "\n".join(transform_version_data(all_releases, "data_pack").split("\n")[:5])
 			versions_formatted_rp += "\n".join(transform_version_data(all_releases, "resource_pack").split("\n")[:5])
 			embed = discord.Embed(description=f"## {Emojis.packformat} Последние версии пак формата", color=no_color)
-			embed.add_field(name=f"{Emojis.deta_rack} Датaпаки", value=versions_formatted_dp)
-			embed.add_field(name=f"{Emojis.resource_rack} Ресурспаки", value=versions_formatted_rp)
+			embed.add_field(name=f"{Emojis.data_open} Датaпаки", value=versions_formatted_dp)
+			embed.add_field(name=f"{Emojis.assets_open} Ресурспаки", value=versions_formatted_rp)
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")
 		await ctx.reply(embed=embed, allowed_mentions=no_ping)
 	

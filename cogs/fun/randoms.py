@@ -1,13 +1,11 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord import app_commands, ui
 
 from random import choice, randint
 import re
 
-from utils.general import handle_errors
-from utils.msg_utils import Emojis
-from utils.shortcuts import no_color, no_ping
+from utils import handle_errors, Emojis, no_ping, LazyLayout
 
 
 class RandomCommands(commands.Cog):
@@ -26,9 +24,13 @@ class RandomCommands(commands.Cog):
 		if minimum > maximum:
 			minimum, maximum = maximum, minimum
 		result = randint(minimum, maximum)
-		embed = discord.Embed(color=no_color)
-		embed.description = f"## {Emojis.dice} Рандомное число между {minimum} и {maximum}:\n**{result}**"
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+
+		await ctx.reply(
+			view=LazyLayout(
+				ui.TextDisplay(f"## {Emojis.dice} Рандомное число между {minimum} и {maximum}:\n**{result}**")
+			), 
+			allowed_mentions=no_ping
+		)
 
 	@randomrange.error
 	async def randomrange_error(self, ctx, error):
@@ -52,12 +54,18 @@ class RandomCommands(commands.Cog):
 		args = re.split(pattern, text)[1:]
 		title = re.split(pattern, text)[0]
 		result = choice(args)
-		embed = discord.Embed(color=no_color)
-		embed.description = f"## {title}\n{Emojis.dice} **Ответ:**\n{result}"
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.TextDisplay(f"## {title}\n{Emojis.dice} **Ответ:**\n{result}")
+			), 
+			allowed_mentions=no_ping
+		)
 
 	@random.error
 	async def random_error(self, ctx, error):
-		embed = discord.Embed(color=no_color)
-		embed.description = f"## {Emojis.exclamation_mark} Не хватает аргументов?\n{Emojis.dice} **Ответ:**\nДа"
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.TextDisplay(f"## {Emojis.exclamation_mark} Не хватает аргументов?\n{Emojis.dice} **Ответ:**\nДа")
+			), 
+			allowed_mentions=no_ping
+		)

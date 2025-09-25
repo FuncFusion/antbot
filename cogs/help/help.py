@@ -1,20 +1,18 @@
 import discord
-from discord import app_commands
 from discord.ext import commands
 from discord.utils import MISSING
+from discord import app_commands, ui
+
 import os
 from re import search, MULTILINE
 from typing import List
 
-from utils.general import handle_errors
-from utils.msg_utils import Emojis
-from utils.shortcuts import no_color, no_ping
-from utils.validator import validate, all_valid, closest_match
+from utils import handle_errors, Emojis, no_ping, validate, all_valid, closest_match, LazyLayout
 
 
 class HelpCommand(commands.Cog):
 	def __init__(self, bot):
-		self.bot = bot
+		self.bot: commands.Bot = bot
 		self.all_features = special_features.copy()
 	
 	@commands.hybrid_command(
@@ -22,8 +20,10 @@ class HelpCommand(commands.Cog):
 		description="Показывает, как пользоваться командами/фичами антбота.",
 		usage="`/help <название команды/фичи>`",
 		help="Написав просто `/help`, вы получите список всех доступных команд и фич. Написав конкретное название фичи, получите подробное описание её использования.\n### Пример:\n`/help форматтер`")
+	
 	async def help(self, ctx, *, feature=None):
 		fetched_commands = await self.bot.tree.fetch_commands()
+
 		if feature == None:
 			permed_cmd_list = []
 			for command in fetched_commands:
@@ -33,16 +33,23 @@ class HelpCommand(commands.Cog):
 					permed_cmd_list.append(command)
 			cmd_mentions = ", ".join([f"{command.mention}" for command in sorted(permed_cmd_list, key=lambda command: command.name)])
 			special_feature_list = "\n".join([f"- **`{special_feature}`**" for special_feature in special_features])
-			thumbnail = discord.File("assets/antbot.png", filename="antbot.png")
-			embed = discord.Embed(color=no_color)
-			embed.set_thumbnail(url="attachment://antbot.png")
-			embed.description = f"## Команды:\n{cmd_mentions}\n## Фичи:\n{special_feature_list}\n"
-			await ctx.reply(embed=embed, file=thumbnail, allowed_mentions=no_ping)
+
+			await ctx.reply(
+				view=LazyLayout(
+					ui.Section(
+						f"## Команды:\n{cmd_mentions}\n## Фичи:\n{special_feature_list}\n",
+						accessory=ui.Thumbnail(self.bot.user.avatar.url)
+					)
+				),
+				allowed_mentions=no_ping
+			)
 			return
+		
 		feature = closest_match(feature, self.all_features, 10)
 		if feature == None:
 			raise AttributeError
-		embed = discord.Embed(color=no_color)
+
+		image = MISSING
 		for command in self.bot.commands:
 			if feature == command.name or feature in command.aliases:
 				mention = f"**/{command.name}**"
@@ -52,24 +59,38 @@ class HelpCommand(commands.Cog):
 				aliases = ", ".join([f"`{alias}`" for alias in command.aliases])
 				try:
 					image = discord.File(f"assets/help/{command.name}.png", filename="image.png")
-				except:
-					image = MISSING
+				except:pass
 
-				embed.description = f"## {Emojis.md} Команда {mention}\n{command.description}\n### Алиасы:\n{aliases}\n### Использование:\n{command.usage}\n\n{command.help}"
-				embed.set_image(url="attachment://image.png")
-				await ctx.reply(embed=embed, file=image, allowed_mentions=no_ping)
-				return
+				layout = LazyLayout(
+					ui.TextDisplay(
+						f"## {Emojis.md} Команда {mention}\n{command.description}\n"
+						f"### Алиасы:\n{aliases}\n### Использование:\n{command.usage}\n\n{command.help}"
+					),
+					ui.MediaGallery(
+						discord.MediaGalleryItem("attachment://image.png")
+					)
+				)
+				break
+			
 			elif feature in special_features.keys():
 				special_feature_name = special_features[feature][0]
 				try:
 					image = discord.File(f"assets/help/{special_feature_name}.png", filename="image.png")
-				except:
-					image = MISSING
+				except:pass
 				description = special_feature_descs[special_feature_name]
-				embed.description = f"## {Emojis.md} {feature}\n{description}"
-				embed.set_image(url="attachment://image.png")
-				await ctx.reply(embed=embed, file=image, allowed_mentions=no_ping)
-				return
+				layout = LazyLayout(
+					ui.TextDisplay(f"## {Emojis.md} {feature}\n{description}"),
+					ui.MediaGallery(
+						discord.MediaGalleryItem("attachment://image.png")
+					)
+				)
+				break
+			
+		await ctx.reply(
+			view=layout, 
+			file=image, 
+			allowed_mentions=no_ping
+		)
 	
 	@help.autocomplete("feature")
 	async def help_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:

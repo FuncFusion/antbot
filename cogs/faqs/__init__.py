@@ -10,10 +10,7 @@ import os
 from typing import List
 import json
 
-from utils.general import handle_errors
-from utils.msg_utils import Emojis
-from utils.shortcuts import no_ping, no_color
-from utils.validator import all_valid, closest_match
+from utils import handle_errors, Emojis, no_ping, all_valid, closest_match, LazyLayout
 
 
 with open("cogs/faqs/faqs.json", 'r', encoding="utf-8") as file: db = json.load(file)
@@ -33,19 +30,32 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		help="Смотрите `/help FAQшки` для получения большей информации о них.")
 	@app_commands.describe(name = "Название факьюшки, алиасы которой вы хотите посмотреть")
 	async def faqs(self, ctx, *, name=None):
-		embed = discord.Embed(color=no_color)
+		text = ""
+
 		if name == None:
 			faqs_str = ", ".join([f"`{faq}`" for faq in faq_names])
-			embed.description = f"## {Emojis.question_mark} Список всех факьюшек ({len(faq_names)}):\n{faqs_str}"
-			embed.add_field(name="Как использовать факьюшки?", value="Чтобы вызвать ответ на какую либо факьюшку, напишите вопросительный знак и после него название факьюшки. Вы также можете вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. Примеры:\n`?логи`\n`Тебе стоит открыть **?**логи, потому что в них полезная инфа`")
-			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+			text = str(
+				f"## {Emojis.question_mark} Список всех факьюшек ({len(faq_names)}):\n{faqs_str}\n"
+				"**Как использовать факьюшки?**\nЧтобы вызвать ответ на какую либо факьюшку, "
+				"напишите вопросительный знак и после него название факьюшки. Вы также можете "
+				"вызвать факьюшку всередине сообщения, сделав вопросительный знак жирным. "
+				"Примеры:\n`?логи`\n`Тебе стоит открыть **?**логи, потому что в них полезная инфа`"
+			)
+		
 		else:
 			faq = closest_match(name, db, accuracy=3)
-			aliases = ", ".join([f"`{alias}`" for alias in db[faq]])             
-			embed.title = f"{Emojis.txt} Список алиасов для \"{faq}\""
-			embed.add_field(name="", value=aliases, inline=False)
-			embed.set_footer(text="Смотрите /help FAQшки для получения большей информации о них.")
-			await ctx.reply(embed=embed, allowed_mentions=no_ping)
+			aliases = ", ".join([f"`{alias}`" for alias in db[faq]])
+			text = str(
+				f"### {Emojis.txt} Список алиасов для \"{faq}\"\n"
+				f"{aliases}\n\n"
+				"-# Смотрите /help FAQшки для получения большей информации о них."
+			)
+		await ctx.reply(
+			view=LazyLayout(
+				discord.ui.TextDisplay(text)
+			), 
+			allowed_mentions=no_ping
+		)
 	
 	@faqs.autocomplete(name="name")
 	async def link_autocomplete(self, ctx: discord.Interaction, curr: str) -> List[app_commands.Choice[str]]:

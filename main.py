@@ -33,7 +33,7 @@ cogs = [
 	CustomVoiceChannels
 ]
 views = [
-	LookForView, R_u_sure, BotPingView, 
+	LookForView, 
 	GifizeView, StarterMessageLayout, 
 	CreateTicketMessage, FileLayout
 ]

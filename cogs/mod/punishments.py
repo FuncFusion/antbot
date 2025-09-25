@@ -1,16 +1,14 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord import app_commands, ui
 
 from re import findall
 from random import choice
 from typing import Union
 from datetime import timedelta
 
-from utils.general import handle_errors
-from utils.msg_utils import Emojis
-from utils.shortcuts import no_ping, no_color
-from utils.time import get_secs
+from utils import handle_errors, Emojis, no_ping, get_secs, LazyLayout
+
 from time import time
 
 
@@ -42,12 +40,17 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.ban(reason=reason)
 		#
-		embed = discord.Embed(title=f"{Emojis.ban} Бан", color=no_color)
-		embed.set_thumbnail(url=user.display_avatar.url)
-		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-		embed.add_field(name="Причина", value=reason)
-		embed.add_field(name="Забаненый участник", value=f"{user.name}({user.mention})", inline=False)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.Section(
+					f"# {Emojis.ban} Бан\n"
+					f"**Забаненый участник**\n{user.name}({user.mention})\n"
+					f"**Причина**\n{reason}",
+					accessory=ui.Thumbnail(user.display_avatar.url)
+				)
+			), 
+			allowed_mentions=no_ping
+		)
 	@ban.error
 	async def ban_error(self, ctx, error):
 		await handle_errors(ctx, error, [
@@ -74,14 +77,18 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 	@app_commands.default_permissions(ban_members=True)
 	async def unban(self, ctx, user: Union[discord.Member, discord.User]):
 		await ctx.guild.unban(user)
-		#
-		embed = discord.Embed(title=f"{Emojis.ban} Разбан", color=no_color)
-		embed.set_thumbnail(url=user.display_avatar.url)
-		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-		embed.add_field(name="Разабаненый участник", value=f"{user.name}({user.mention})", inline=False)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
-	@ban.error
-	async def ban_error(self, ctx, error):
+		await ctx.reply(
+			view=LazyLayout(
+				ui.Section(
+					f"# {Emojis.ban} Разбан\n"
+					f"**Разабаненый участник**\n{user.name}({user.mention})",
+					accessory=ui.Thumbnail(user.display_avatar.url)
+				)
+			), 
+			allowed_mentions=no_ping
+		)
+	@unban.error
+	async def unban_error(self, ctx, error):
 		await handle_errors(ctx, error, [
 			{
 				"exception": commands.MissingRequiredArgument,
@@ -90,6 +97,10 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			{
 				"exception": commands.MissingPermissions,
 				"msg": "Недостаточно прав"
+			},
+			{
+				"contains": "Unknown Ban",
+				"msg": "Этот пользователь не забанен"
 			}
 		])
 		
@@ -105,12 +116,18 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.timeout(timedelta(seconds=final_term), reason=reason)
 		#
-		embed = discord.Embed(title=f"{Emojis.mute} Мут", color=no_color)
-		embed.set_thumbnail(url=user.display_avatar.url)
-		embed.add_field(name="Замученый участник", value=user.mention)
-		embed.add_field(name="Срок наказания", value=f"<t:{int(time()) + final_term}:R>")
-		embed.add_field(name="Причина", value=reason,inline=False)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.Section(
+					f"# {Emojis.mute} Мут\n"
+					f"**Замученый участник**\n{user.mention}\n"
+					f"**Замучен до**\n<t:{int(time()) + final_term}:R>\n"
+					f"**Причина**\n{reason}",
+					accessory=ui.Thumbnail(user.display_avatar.url)
+				)
+			), 
+			allowed_mentions=no_ping
+		)
 	@mute.error
 	async def mute_error(self, ctx, error):
 		await handle_errors(ctx, error, [
@@ -157,10 +174,16 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			raise Exception("Not muted")
 		await member.timeout(None)
 
-		embed = discord.Embed(title=f"{Emojis.speaker} Размут", color=no_color)
-		embed.set_thumbnail(url=member.display_avatar.url)
-		embed.add_field(name="Размученый участник", value=member.mention)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.Section(
+					f"# {Emojis.speaker} Размут\n"
+					f"**Размученый участник**\n{member.mention}\n",
+					accessory=ui.Thumbnail(member.display_avatar.url)
+				)
+			), 
+			allowed_mentions=no_ping
+		)
 
 	@unmute.error
 	async def unmute_error(self, ctx, error):
@@ -195,12 +218,18 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 	async def kick(self, ctx, user: discord.Member, *, reason: str=None):
 		reason = reason if reason != None else generate_stupid_reason()
 		await user.kick(reason=reason)
-		embed = discord.Embed(title=f"{Emojis.door}Кик", color=no_color)
-		embed.set_thumbnail(url=user.display_avatar.url)
-		embed.add_field(name="Вершитель судьбы", value=ctx.author.mention)
-		embed.add_field(name="Причина", value=reason)
-		embed.add_field(name="Кикнутый участник", value=f"{user.name}({user.mention})", inline=False)
-		await ctx.reply(embed=embed, allowed_mentions=no_ping)
+		await ctx.reply(
+			view=LazyLayout(
+				ui.Section(
+					f"# {Emojis.door} Кик\n"
+					f"**Кикнутый участник**\n{user.name}({user.mention})\n"
+					f"**Причина**\n{reason}",
+					accessory=ui.Thumbnail(user.display_avatar.url)
+				)
+			), 
+			allowed_mentions=no_ping
+		)
+
 	@kick.error
 	async def kick_error(self, ctx, error):
 		await handle_errors(ctx, error, [

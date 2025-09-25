@@ -21,6 +21,7 @@ class Tickets(commands.Cog):
         # Filling out
         ticket_message += f"**{Emojis.worldgen_file} Версия майнкрафта**\n`{data.get('mc_version')}`\n"
         ticket_message += f"**{Emojis.jar} Моды**\n`{data.get('mod_list')}`\n"
+        ticket_message += f"**{Emojis.loot_table_file} Конечная цель**\n{data.get('end_goal')}\n"
         if description:=data.get("description"):
             ticket_message += f"**{Emojis.txt} Подробности**\n{description}\n"
 
@@ -35,6 +36,30 @@ class Tickets(commands.Cog):
         await msg.channel.send(view=StarterMessageLayout())
 
 
+class RetardTest(ui.LayoutView):
+    def __init__(self):
+        super().__init__(timeout=None)
+    
+    q = ui.TextDisplay(
+        f"## {Emojis.question_mark} Потратили ли вы хотя бы "
+        f"3 минуты на поиск схожих проблем в <#{HELP_FORUM_ID}>"
+    )
+    ar = ui.ActionRow()
+
+    @ar.button(label="Да", emoji=Emojis.check, custom_id="retard_test:yes")
+    async def yes(self, ctx: discord.Interaction, _):
+        await ctx.response.send_modal(TicketModal())
+    
+    @ar.button(label="Нет", emoji=Emojis.cross, custom_id="retard_test:no")
+    async def no(self, ctx: discord.Interaction, _):
+        await ctx.response.send_message(
+            f"{Emojis.exclamation_mark} Сначала, поищите похожие "
+            f"посты в <#{HELP_FORUM_ID}>! Это может сэкономить "
+            "время и вам, и тем, кто помогает в ветках",
+            ephemeral=True
+        )
+
+
 class CreateTicketMessage(ui.LayoutView):
     def __init__(self):
         super().__init__(timeout=None)
@@ -46,7 +71,7 @@ class CreateTicketMessage(ui.LayoutView):
     
         @ar.button(label="Создать тикет", emoji=Emojis.tags_file, custom_id="tickets:create_button")
         async def create_ticket(self, ctx: discord.Interaction, _):
-            await ctx.response.send_modal(TicketModal())
+            await ctx.response.send_message(view=RetardTest(), ephemeral=True)
 
     cuntainer = Cuntainer()
 
@@ -55,17 +80,16 @@ class TicketModal(ui.Modal):
     def __init__(self):
         super().__init__(title="\U0001f3f7 Создание тикета", timeout=None, custom_id="tickets:create_ticket")
     
-    retard_test = ui.TextInput(
-        label="Пробовали лы вы искать похожие посты в помощи",
-        placeholder="Да | Нет",
-        min_length=2,
-        max_length=3
-    )
-
     thread_name = ui.TextInput(
         label="Название ветки",
         placeholder="Краткое описание проблемы",
         max_length=100
+    )
+
+    end_goal = ui.TextInput(
+        label="Какая ваша конечная цель",
+        placeholder="XY problem goddamnchik",
+        max_length=128
     )
 
     mc_version = ui.TextInput(
@@ -90,15 +114,7 @@ class TicketModal(ui.Modal):
     )
 
     async def on_submit(self, ctx: discord.Interaction):
-        if not any(i in self.retard_test.value.lower() for i in ("да", "lf", "yes", "нуы")):
-            await ctx.response.send_message(f"{Emojis.exclamation_mark} Сначала, "
-                f"поищите похожие посты в <#{HELP_FORUM_ID}>! Это может сэкономить "
-                "время и вам, и тем, кто помогает в ветках", 
-                ephemeral=True
-            )
-            return
-
-        input_names = ("retard_test", "thread_name", 
+        input_names = ("end_goal", "thread_name", 
             "mc_version", "mod_list", "description")
         
         await ctx.response.send_message(f"{Emojis.check} Пост был успешно создан в <#{HELP_FORUM_ID}>", ephemeral=True)

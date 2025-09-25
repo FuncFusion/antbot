@@ -122,7 +122,7 @@ class Emojis:
 	enchantment_file = "<:enchantment:1246812661866561536>"
 	item_modifier_file = "<:item_modifier:1188838125565382728>"
 	instrument_file = "<:instrument_file:1319409210257182831>"
-	loot_table_file = "<:loot_table:1281966368626835546>"
+	loot_table_file = "<:loot_table_file:1319409534510432388>"
 	painting_variant_file = "<:painting:1142345422233423942>"
 	predicate_file = "<:predicate:1188838122633576488>"
 	recipe_file = "<:recipe:1188838131299004466>"
