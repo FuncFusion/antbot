@@ -70,18 +70,31 @@ class Logs(commands.Cog, name="no_help_logs"):
 		if after.guild and after.guild.id == GUILD and after.author.id != self.bot.user.id and before.content != after.content\
 		and not isinstance(after.channel, discord.DMChannel):
 			log_channel = await self.bot.fetch_channel(LOGS_CHANNEL_ID)
-			await log_channel.send(
-				view=LazyLayout(
-					ui.Section(
-						f"# {Emojis.edited_msg} Сообщение отредактировано\n"
-						f"**Автор**\n{after.author.mention}",
-						accessory=ui.Thumbnail(after.author.display_avatar.url)
-					)
-				),
-				allowed_mentions=no_ping
-			)
-			await log_channel.send(view=LazyLayout(ui.TextDisplay(f"# До\n{before.content}")), allowed_mentions=no_ping)
-			await log_channel.send(view=LazyLayout(ui.TextDisplay(f"# После\n{after.content}")), allowed_mentions=no_ping)
+
+			views: list[discord.Message] = []
+			main_text = (f"# {Emojis.edited_msg} Сообщение отредактировано\n"
+				f"**Автор**\n{after.author.mention}\n")
+			
+			b_fits = True if len(before.content) <= 3994 else False
+			a_fits = True if len(after.content) <= 3992 else False
+			before_field = f"# До\n{before.content[:None if b_fits else -9]}{'...' if not b_fits else ''}\n"
+			after_field = f"# После\n{after.content[:None if a_fits else -12]}{'...' if not a_fits else ''}"
+
+			if len(main_n_before:=(main_text + before_field)) <= 4000:
+				main_text = main_n_before
+				if len(main_n_after:=(main_text + after_field)) <= 4000:
+					main_text = main_n_after
+				else:
+					views.append(LazyLayout(ui.TextDisplay(after_field)))
+			elif len(before_n_after:=(before_field + after_field)) <= 4000:
+				views.append(LazyLayout(ui.TextDisplay(before_n_after)))
+			else:
+				views.append(LazyLayout(ui.TextDisplay(before_field)))
+				views.append(LazyLayout(ui.TextDisplay(after_field)))
+			views.insert(0, LazyLayout(ui.Section(main_text, accessory=ui.Thumbnail(after.author.display_avatar.url))))
+
+			for view in views:
+				await log_channel.send(view=view, allowed_mentions=no_ping)
 
 	@commands.Cog.listener(name="on_message_delete")
 	async def deleted(self, msg: discord.Message):

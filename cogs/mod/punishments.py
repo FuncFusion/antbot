@@ -61,10 +61,6 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			{
 				"contains": "Forbidden",
 				"msg": "Э, не туда воюешь"
-			},
-			{
-				"exception": commands.MissingPermissions,
-				"msg": "Недостаточно прав"
 			}
 		])
 	
@@ -93,10 +89,6 @@ class PunishmentCommands(commands.Cog, name="Модерация"):
 			{
 				"exception": commands.MissingRequiredArgument,
 				"msg": "Пожалуйста, укажите пользователя"
-			},
-			{
-				"exception": commands.MissingPermissions,
-				"msg": "Недостаточно прав"
 			},
 			{
 				"contains": "Unknown Ban",

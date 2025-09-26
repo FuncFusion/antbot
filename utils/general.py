@@ -51,6 +51,8 @@ async def handle_errors(
 			if command_mention:
 				message += missing_argument_addition.format(command_mention[0])
 			await send(message)
+		elif isinstance(error, commands.MissingPermissions):
+			await send("Недостаточно прав")
 		else:
 			await send(unknown_error.format(error))
 			print(error_msg)
