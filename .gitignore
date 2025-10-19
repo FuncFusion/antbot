@@ -18,6 +18,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 temp.py
+dev_no_db.py
 build/
 develop-eggs/
 dist/

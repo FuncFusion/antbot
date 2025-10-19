@@ -8,12 +8,7 @@ from datetime import datetime, timedelta, timezone
 from settings import CREATIONS_FORUM_ID, DATAPACKS_TAG, RESOURCEPACKS_TAG, ONLY_CB_TAG, \
 	BLOCKBENCH_TAG, VSCODE_TAG, MODS_TAG, PLUGINS_TAG, MISC_TAG, OPTIFINE_TAG, SOLVED_TAG, \
 	RESOURCEPACKS_TAGS, DATAPACK_MASTER_ROLE, RESOURCEPACK_MASTER_ROLE
-from utils import Emojis, no_color, no_ping, totag, is_moderator, handle_errors, LazyLayout
-
-async def get_author(ctx: discord.Interaction):
-	starter_msg = await ctx.channel.fetch_message(ctx.channel.id)
-	return await ctx.guild.fetch_member(int(starter_msg.components[0].content.split(">")[0].split("@")[-1]))
-
+from utils import Emojis, no_color, no_ping, totag, is_moderator, handle_errors, LazyLayout, get_help_thread_author
 
 class StarterMessage(commands.Cog):
 
@@ -49,7 +44,7 @@ class BetterCallMastersButton(ui.Button):
 		)
 	
 	async def callback(self, ctx: discord.Interaction):
-		post_author = await get_author(ctx)
+		post_author = await get_help_thread_author(ctx)
 
 		if ctx.user != post_author and not is_moderator(ctx.user):
 			raise Exception("No perms")
@@ -77,7 +72,7 @@ class ResolveButton(ui.Button):
 		)
 	
 	async def callback(self, ctx: discord.Interaction):
-		post_author = await get_author(ctx)
+		post_author = await get_help_thread_author(ctx)
 		
 		if ctx.user != post_author and not is_moderator(ctx.user):
 			raise Exception("No perms")
@@ -99,14 +94,20 @@ class StarterMessageLayout(ui.LayoutView):
 		self.cuntainer.call_masters_sec.accessory.disabled = call_masters_disabled
 
 	class Cuntainer(ui.Container):
-		text = ui.TextDisplay(f"# {Emojis.pin} Добро пожаловать в помощь\n"
-			"Пожалуйста, выберите тэги, которые соответствуют вашей проблеме"
-			"в меню ниже"
+		text = ui.TextDisplay(f"# {Emojis.pin} Спасибо за создание тикета!\n"
+			"Чтоб ещё больше ускорить и упростить процесс получения помощи, вы можете предоставить:\n"
+			"- **Полноэкранные скриншоты** содержимого файлов, их расположения в рп/дп и интерфейсов программ типа бб и вскода;\n"
+			"- **Логи** (файл по пути `.minecraft/logs/latest.log`), если у вас проблема с рп/дп/модами/сборками;\n"
+			"- **Краш репорты** (файл внутри папки `.minecraft/crash-reports/`), если у вас вылетел майн.\n\n"
+		)
+		sep1 = ui.Separator()
+		tags_text = ui.TextDisplay(
+			f"### {Emojis.tags_file} Выберите теги, соответствующие вашей проблеме в меню ниже"
 		)
 		selectar = ui.ActionRow()
-		sep = ui.Separator()
+		sep2 = ui.Separator()
 		call_masters_sec = ui.Section(
-			f"Позовите мастеров, если вам не отвечают больше дня",
+			f"Позовите мастеров, если вам не отвечают больше суток",
 			accessory = BetterCallMastersButton()
 		)
 		resolve_sec = ui.Section(
@@ -116,7 +117,7 @@ class StarterMessageLayout(ui.LayoutView):
 
 		@selectar.select(
 			custom_id="tickets:tags_select",
-			placeholder="Выбирете тэги со списка", 
+			placeholder="Выбирете теги из списка", 
 			min_values=1, 
 			max_values=4, 
 			options=[
@@ -132,7 +133,7 @@ class StarterMessageLayout(ui.LayoutView):
 			]
 		)
 		async def tags_selection(self, ctx: discord.Interaction, _):
-			post_author = await get_author(ctx)
+			post_author = await get_help_thread_author(ctx)
 			if ctx.user != post_author and not is_moderator(ctx.user):
 				raise Exception("No perms")
 			
@@ -141,7 +142,7 @@ class StarterMessageLayout(ui.LayoutView):
 
 			await ctx.channel.remove_tags(*tags_to_remove)
 			await ctx.channel.add_tags(*tags_to_apply)
-			await ctx.response.send_message(f"{Emojis.check} Тэги успешно отредактикрованы", ephemeral=True)
+			await ctx.response.send_message(f"{Emojis.check} Теги успешно отредактикрованы", ephemeral=True)
 
 	cuntainer = Cuntainer()
 

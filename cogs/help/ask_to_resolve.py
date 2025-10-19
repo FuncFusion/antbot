@@ -2,17 +2,19 @@ import discord
 from discord.ext import commands
 from settings import HELP_FORUM_ID
 from utils.validator import validate
+from utils.general import get_help_thread_author
 
 class AskToResolve(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
 	@commands.Cog.listener("on_message")
-	async def ask_to_resolve(self, msg):
-		if not isinstance(msg.channel, discord.ForumChannel) \
-			or isinstance(msg.channel, discord.ForumChannel) and msg.channel.parent_id != HELP_FORUM_ID:
+	async def ask_to_resolve(self, msg: discord.Message):
+		if not isinstance(msg.channel.parent, discord.ForumChannel) \
+			or isinstance(msg.channel.parent, discord.ForumChannel) and msg.channel.parent_id != HELP_FORUM_ID:
 			return
-		elif msg.author.id != msg.channel.owner_id:
+		post_author = await get_help_thread_author(msg)
+		if msg.author != post_author:
 			return
 		valid_strings = {
 			"решено": ["решил", "решила", "решили", "решилось"],
@@ -29,13 +31,11 @@ class AskToResolve(commands.Cog):
 		chnl = self.bot.get_channel(reaction.channel_id)
 		msg = await chnl.fetch_message(reaction.message_id)
 		if chnl.parent_id != HELP_FORUM_ID:
-			print("not help forum")
 			return
-		elif msg.author.id != msg.channel.owner_id:
-			print("not owner")
+		post_author = await get_help_thread_author(msg)
+		if msg.author != post_author:
 			return
 		elif reaction.emoji.name != "check":
-			print("not check")
 			return
 		await self.ask_to_resolve_msg(msg)
 

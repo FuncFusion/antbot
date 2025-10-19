@@ -11,6 +11,7 @@ from utils.msg_utils import Emojis, get_msg_by_id_arg
 from utils.shortcuts import no_color, no_ping
 
 
+# Deprecated
 class ResolveCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot

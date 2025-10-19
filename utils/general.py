@@ -64,3 +64,7 @@ def totag(id):
 
 def is_moderator(user: discord.Member):
 	return user.guild_permissions.manage_messages
+
+async def get_help_thread_author(ctx: Union[discord.Interaction, discord.Message]):
+	starter_msg = await ctx.channel.fetch_message(ctx.channel.id)
+	return await ctx.guild.fetch_member(int(starter_msg.components[0].content.split(">")[0].split("@")[-1]))
