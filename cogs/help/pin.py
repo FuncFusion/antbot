@@ -15,7 +15,7 @@ class Pin(commands.Cog):
 		self.bot = bot
 
 	@commands.Cog.listener("on_raw_reaction_add")
-	async def react_to_pin(self, reaction):
+	async def react_to_pin(self, reaction: discord.RawReactionActionEvent):
 		chnl = self.bot.get_channel(reaction.channel_id)
 		if isinstance(chnl, discord.Thread) and chnl.parent_id in [HELP_FORUM_ID, CREATIONS_FORUM_ID, LOOK_FOR_CHANNEL_ID] \
 			and reaction.emoji.name == "📌":
@@ -24,8 +24,11 @@ class Pin(commands.Cog):
 			post_author = None
 			if chnl.parent_id == HELP_FORUM_ID:
 				post_author = await get_help_thread_author(msg)
+			else:
+				init_message  = await chnl.fetch_message(reaction.channel_id)
+				post_author = init_message.author
 
-			if reaction.member.id == msg.author.id or reaction.member == post_author or chnl.permissions_for(reaction.member).manage_messages:
+			if reaction.member == post_author or chnl.permissions_for(reaction.member).manage_messages:
 				await msg.pin()
 			else:
 				pass
