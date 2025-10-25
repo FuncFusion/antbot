@@ -8,72 +8,6 @@ import aiohttp
 
 from utils import LazyLayout, Emojis, handle_errors, no_color, no_ping
 
-class SeeImagesAR(ui.ActionRow):
-    def __init__(self, urls: list[str], music: bytes):
-        super().__init__()
-        self.urls = urls
-        self.music = music
-
-    @ui.button(label="Смотреть изображения")
-    async def see_images(self, ctx: discord.Interaction, button):
-        await ctx.response.defer(ephemeral=True)
-
-        music_file = discord.File(io.BytesIO(self.music), filename="music.mp3")
-
-        view = TiktokImageView(self.urls, self.music)
-        embed = discord.Embed(
-            title=f"1/{len(self.urls)}",
-            color=no_color
-        )
-        embed.set_image(url=self.urls[0])
-        await ctx.followup.send(embed=embed, view=view, ephemeral=True, file=music_file)
-
-class TiktokImageView(ui.View):
-    def __init__(self, urls: list[str] = [], music: bytes = None, current: int = 0):
-        super().__init__(timeout=None)
-        self.urls = urls
-        self.music = music
-        self.current = current
-
-        options = [
-            discord.SelectOption(label=f"Изображение {i + 1}", value=str(i), default=(i == current))
-            for i in range(len(urls))
-        ]
-        self.select = discord.ui.Select(
-            placeholder="Выбери изображение...",
-            options=options,
-            custom_id="tiktok:select"
-        )
-        self.select.callback = self.select_callback
-        self.add_item(self.select)
-
-        if len(urls) == 1:
-            self.clear_items()
-
-    async def update_message(self, ctx: discord.Interaction):
-        for option in self.select.options:
-            option.default = (option.value == str(self.current))
-
-        embed = discord.Embed(
-            title=f"{self.current + 1}/{len(self.urls)}",
-            color=no_color
-        )
-        embed.set_image(url=self.urls[self.current])
-        await ctx.response.edit_message(embed=embed, view=self)
-
-    async def select_callback(self, ctx: discord.Interaction):
-        self.current = int(self.select.values[0])
-        await self.update_message(ctx)
-
-    @ui.button(label="<", custom_id="tiktok:left")
-    async def prev(self, ctx: discord.Interaction, button: ui.Button):
-        self.current = (self.current - 1) % len(self.urls)
-        await self.update_message(ctx)
-
-    @ui.button(label=">", custom_id="tiktok:right")
-    async def next(self, ctx: discord.Interaction, button: ui.Button):
-        self.current = (self.current + 1) % len(self.urls)
-        await self.update_message(ctx)
 
 class TikTokCommand(commands.Cog):
     @commands.hybrid_command(
@@ -90,45 +24,49 @@ class TikTokCommand(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
             async with session.get(api_url) as resp:
-                if resp.status == 200:
-                    result = await resp.json()
-                    data = result.get("data", {})
+                if resp.status != 200:
+                    raise Exception("unable to get")
+                
+                result = await resp.json()
+                data = result.get("data", {})
 
-                    if result.get("code") == 0 and not data.get("images") and data.get("hdplay"):
-                        video = data.get("hdplay")
-                        gex = LazyLayout(
+                if not data.get("images") and data.get("hdplay"):
+                    video = data.get("hdplay")
+                    await ctx.reply(
+                        view=LazyLayout(
                             ui.TextDisplay(url),
                             ui.MediaGallery(discord.MediaGalleryItem(media=video)),
                             container=False
-                        )
-                        await ctx.reply(view=gex, allowed_mentions=no_ping)
-                    elif data.get("images"):
-                        images = data.get("images")
-                        music = data.get("music")
-                        async with session.get(music) as m_resp:
-                            if m_resp.status == 200:
-                                music_bytes = await m_resp.read()
-                        if len(images) > 1:
-                            gex = LazyLayout(
-                                ui.MediaGallery(discord.MediaGalleryItem(media=images[0])),
-                                SeeImagesAR(images, music_bytes)
-                            )
-                            await ctx.reply(view=gex, allowed_mentions=no_ping)
-                        else:
-                            music_file = discord.File(io.BytesIO(music_bytes), filename="music.mp3")
+                        ),
+                        allowed_mentions=no_ping
+                    )
 
-                            view = TiktokImageView(images, music_bytes)
-                            embed = discord.Embed(
-                                color=no_color
-                            )
-                            embed.set_image(url=images[0])
-                            await ctx.reply(embed=embed, view=view, file=music_file, allowed_mentions=no_ping)
-                    else:
+                elif data.get("images"):
+                    images = data.get("images")
+                    music_url = data.get("music")
+                    if len(images) > 1:
                         await ctx.reply(
-                            Emojis.cross + "Ошибка! Не удалось скачать тикток."
+                            view=LazyLayout(
+                                ui.MediaGallery(discord.MediaGalleryItem(media=images[0])),
+                                SeeImagesAR(images, music_url)
+                            ),
+                            allowed_mentions=no_ping
                         )
+                    else:
+                        async with session.get(music_url) as m_resp:
+                            music_bytes = await m_resp.read()
+                        music_file = discord.File(io.BytesIO(music_bytes), filename="music.mp3")
+
+                        embed = discord.Embed(
+                            color=no_color
+                        )
+                        embed.set_image(url=images[0])
+                        await ctx.reply(embed=embed, file=music_file, allowed_mentions=no_ping)
                 else:
-                    await ctx.reply(f"Ошибка запроса! Код: {resp.status}")
+                    await ctx.reply(
+                        Emojis.cross + "Ошибка! Не удалось скачать тикток."
+                    )
+
 
     @tiktok.error
     async def tiktok_error(self, ctx, error):
@@ -136,5 +74,89 @@ class TikTokCommand(commands.Cog):
             {
                 "exception": commands.MissingRequiredArgument,
                 "msg": "Введите ссылку на видео"
+            },
+            {
+                "contains": "unable to get",
+                "msg": "Не удалось найти видео"
             }
         ])
+
+
+class SeeImagesAR(ui.ActionRow):
+    def __init__(self, images: list[str], music_url: str):
+        super().__init__()
+        self.images = images
+        self.music_url = music_url
+
+    @ui.button(label="Смотреть изображения")
+    async def see_images(self, ctx: discord.Interaction, _):
+        await ctx.response.defer(ephemeral=True)
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.music_url) as resp:
+                music_bytes = await resp.read()
+        music_file = discord.File(io.BytesIO(music_bytes), filename="music.mp3")
+
+        view = TiktokImageView(self.images)
+        embed = discord.Embed(
+            title=f"1/{len(self.images)}",
+            color=no_color
+        )
+        embed.set_image(url=self.images[0])
+        await ctx.followup.send(embed=embed, view=view, ephemeral=True, file=music_file)
+
+
+class TiktokImageView(ui.View):
+    def __init__(self, urls: list[str] = [], current_slide: int = 0):
+        super().__init__(timeout=None)
+        self.urls = urls
+        self.current_slide = current_slide
+
+        options = [
+            discord.SelectOption(label=f"Изображение {i + 1}", value=str(i), default=(i == current_slide))
+            for i in range(len(urls))
+        ]
+        self.select = discord.ui.Select(
+            placeholder="Выбери изображение...",
+            options=options,
+            custom_id="tiktok:select"
+        )
+        self.select.callback = self.select_callback
+        self.add_item(self.select)
+
+        if len(urls) == 1:
+            self.clear_items()
+
+    async def update_message(self, ctx: discord.Interaction, seleced_slide: int):
+        self.select.options[self.current_slide].default = False
+        self.select.options[seleced_slide].default = True
+        self.current_slide = seleced_slide
+
+        embed = discord.Embed(
+            title=f"{self.current_slide + 1}/{len(self.urls)}",
+            color=no_color
+        )
+        embed.set_image(url=self.urls[self.current_slide])
+        await ctx.response.edit_message(embed=embed, view=self)
+
+    async def select_callback(self, ctx: discord.Interaction):
+        await self.update_message(
+            ctx,
+            int(self.select.values[0])
+        )
+
+    @ui.button(label="<", custom_id="tiktok:left")
+    async def prev(self, ctx: discord.Interaction, _):
+        await self.update_message(
+            ctx,
+            (self.current_slide - 1) % len(self.urls)
+        )
+
+    @ui.button(label=">", custom_id="tiktok:right")
+    async def next(self, ctx: discord.Interaction, _):
+        await self.update_message(
+            ctx,
+            (self.current_slide + 1) % len(self.urls)
+        )
+
+
