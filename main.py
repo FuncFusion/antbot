@@ -22,7 +22,7 @@ logger = settings.logging.getLogger("bot")
 cogs = [
 	DebugCommand, EditCommand, PingCommand, StatusCommands,
 	FAQs,
-	EnchantCommands, LookForCommand, RandomCommands, DeadChat,
+	EnchantCommands, LookForCommand, RandomCommands, DeadChat, TikTokCommand,
 	SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
 	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
 	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
@@ -33,8 +33,8 @@ cogs = [
 	CustomVoiceChannels
 ]
 views = [
-	LookForView, 
-	GifizeView, StarterMessageLayout, 
+	LookForView, TiktokImageView,
+	GifizeView, StarterMessageLayout,
 	CreateTicketMessage, FileLayout
 ]
 
