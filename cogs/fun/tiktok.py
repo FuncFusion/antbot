@@ -24,7 +24,7 @@ class TikTokCommand(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
             async with session.get(api_url) as resp:
-                if resp.status != 200:
+                if resp.status != 200 or not (data.get("images") or data.get("hdplay")):
                     raise Exception("unable to get")
                 
                 result = await resp.json()
@@ -62,10 +62,6 @@ class TikTokCommand(commands.Cog):
                         )
                         embed.set_image(url=images[0])
                         await ctx.reply(embed=embed, file=music_file, allowed_mentions=no_ping)
-                else:
-                    await ctx.reply(
-                        Emojis.cross + "Ошибка! Не удалось скачать тикток."
-                    )
 
 
     @tiktok.error
