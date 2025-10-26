@@ -124,7 +124,7 @@ class TicketModal(ui.Modal):
     )
 
     async def on_submit(self, ctx: discord.Interaction):
-        input_names = ("end_goal", "thread_name", 
+        input_names = ("thread_name", "end_goal" 
             "mc_version", "mod_list", "description")
         
         await ctx.response.send_message(f"{Emojis.check} Пост был успешно создан в <#{HELP_FORUM_ID}>", ephemeral=True)
