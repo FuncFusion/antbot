@@ -10,7 +10,7 @@ class AskToResolve(commands.Cog):
 
 	@commands.Cog.listener("on_message")
 	async def ask_to_resolve(self, msg: discord.Message):
-		if msg.channel.parent_id != HELP_FORUM_ID:
+		if not isinstance(msg.channel, discord.ForumChannel) or msg.channel.parent_id != HELP_FORUM_ID:
 			return
 		post_author = await get_help_thread_author(msg)
 		if msg.author != post_author:

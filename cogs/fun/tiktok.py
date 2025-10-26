@@ -24,11 +24,11 @@ class TikTokCommand(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
             async with session.get(api_url) as resp:
+                result = await resp.json()
+                data = result.get("data", {})
                 if resp.status != 200 or not (data.get("images") or data.get("hdplay")):
                     raise Exception("unable to get")
                 
-                result = await resp.json()
-                data = result.get("data", {})
 
                 if not data.get("images") and data.get("hdplay"):
                     video = data.get("hdplay")
