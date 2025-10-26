@@ -65,9 +65,6 @@ class HelpCommand(commands.Cog):
 					ui.TextDisplay(
 						f"## {Emojis.md} Команда {mention}\n{command.description}\n"
 						f"### Алиасы:\n{aliases}\n### Использование:\n{command.usage}\n\n{command.help}"
-					),
-					ui.MediaGallery(
-						discord.MediaGalleryItem("attachment://image.png")
 					)
 				)
 				break
@@ -79,13 +76,16 @@ class HelpCommand(commands.Cog):
 				except:pass
 				description = special_feature_descs[special_feature_name]
 				layout = LazyLayout(
-					ui.TextDisplay(f"## {Emojis.md} {feature}\n{description}"),
-					ui.MediaGallery(
-						discord.MediaGalleryItem("attachment://image.png")
-					)
+					ui.TextDisplay(f"## {Emojis.md} {feature}\n{description}")
 				)
 				break
 			
+		if image:
+			layout.children[0].add_item(
+				ui.MediaGallery(
+					discord.MediaGalleryItem("attachment://image.png")
+				)
+			)
 		await ctx.reply(
 			view=layout, 
 			file=image, 

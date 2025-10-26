@@ -144,6 +144,7 @@ class Logs(commands.Cog, name="no_help_logs"):
 					*attachment_items
 				),
 				files=files,
+				allowed_mentions=no_ping
 			)
 	
 	#dms
