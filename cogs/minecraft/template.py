@@ -11,6 +11,8 @@ from utils.validator import validate
 from utils.shortcuts import no_ping
 from utils.pack_generator import Modals, PGenerator
 
+# Deprecated
+
 pack_offers = (app_commands.Choice(name="Датапак", value="Датапак"), app_commands.Choice(name="Ресурспак", value="Ресурспак"))
 type_offers = (app_commands.Choice(name="Базовый", value="Базовый"), app_commands.Choice(name="Расширенный", value="Расширенный"), 
 	app_commands.Choice(name="Настраиваемый", value="Настраиваемый"))

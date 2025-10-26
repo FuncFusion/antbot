@@ -69,7 +69,7 @@ cogs = [
 	GiveawayCommand, GAModerationCommands,
 	Logs, IdeaVoteReactions,
 	ClearCommand, PunishmentCommands, AutoThreads,
-	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand, TemplateCommand,
+	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,
 	CustomVoiceChannels
 ]
 views = [
