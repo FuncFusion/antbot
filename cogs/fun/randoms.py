@@ -56,7 +56,7 @@ class RandomCommands(commands.Cog):
 		result = choice(args)
 		await ctx.reply(
 			view=LazyLayout(
-				ui.TextDisplay(f"## {title}\n{Emojis.dice} **Ответ:**\n{result}")
+				ui.TextDisplay(f"## {title}\n### {Emojis.dice} Ответ:\n{result}")
 			), 
 			allowed_mentions=no_ping
 		)
