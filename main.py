@@ -28,7 +28,7 @@ cogs = [
 	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 	GiveawayCommand, GAModerationCommands,
 	Logs, IdeaVoteReactions,
-	ClearCommand, PunishmentCommands, AutoThreads,
+	ClearCommand, PunishmentCommands, AutoThreads, AntiSpamBot,
 	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,
 	CustomVoiceChannels
 ]

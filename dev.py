@@ -22,6 +22,8 @@ settings.LEAVES_CHANNEL_ID = 1270326886022643720
 settings.LOGS_CHANNEL_ID = 1270326887066898515
 settings.LOOK_FOR_CHANNEL_ID = 1270326886391746573
 settings.SNAPSHOTS_CHANNEL_ID = 1270326886203133966
+settings.MODERATOR_ONLY_CHANNEL_ID = 1270351131041857549
+settings.ANTI_SPAM_CHANNEL_ID = 1454956591106232463
 
 settings.VCS_CATEGORY_ID = 1270326886890868742
 settings.CREATE_VC_CHANNEL_ID = 1270326886890868744
@@ -68,7 +70,7 @@ cogs = [
 	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
 	GiveawayCommand, GAModerationCommands,
 	Logs, IdeaVoteReactions,
-	ClearCommand, PunishmentCommands, AutoThreads,
+	ClearCommand, PunishmentCommands, AutoThreads, AntiSpamBot,
 	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,
 	CustomVoiceChannels
 ]
