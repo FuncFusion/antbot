@@ -8,7 +8,6 @@ from cogs.faqs import *
 from cogs.fun import *
 from cogs.memes import *
 from cogs.general import *
-from cogs.giveaway import *
 from cogs.help import *
 from cogs.ideas import *
 from cogs.logs import *
@@ -26,7 +25,6 @@ cogs = [
 	SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
 	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
 	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
-	GiveawayCommand, GAModerationCommands,
 	Logs, IdeaVoteReactions,
 	ClearCommand, PunishmentCommands, AutoThreads, AntiSpamBot,
 	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,
@@ -51,7 +49,6 @@ class AntBot(commands.Bot):
 			await self.add_cog(cog(self))
 		for view in views:
 			self.add_view(view())
-		self.add_view(JudgeGA(self))
 		await self.tree.sync()
 		HelpCog = self.get_cog("HelpCommand")
 		HelpCog.all_features.update({command.name: command.aliases for command in sorted(self.commands, key=lambda cmd: cmd.name)})

@@ -24,7 +24,7 @@ db = MongoClient(MONGO_URI).antbot.giveaways
 
 FOUR_WEEKS = 4 * 7 * 24 * 60 * 60
 
-
+# Deprecated
 class GiveawayCommand(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
