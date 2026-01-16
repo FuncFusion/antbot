@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import ui
-from settings import ANTI_SPAM_CHANNEL_ID, MODERATOR_ONLY_CHANNEL_ID
+from settings import ANTI_SPAM_CHANNEL_ID, MODERATOR_ONLY_CHANNEL_ID, CHAT_ID
 from utils.general import is_moderator
 from utils import LazyLayout
 from utils.msg_utils import Emojis, no_ping
@@ -37,9 +37,11 @@ class AntiSpamBot(commands.Cog):
 			f"Спамер {spam_bot_user.name} ({spam_bot_user.mention}) был забанен <:smirk_new:1311716402742296689>",
 			f"Минус один бот скамер — {spam_bot_user.name} ({spam_bot_user.mention}) был забанен",
 			f"{spam_bot_user.name} ({spam_bot_user.mention}) был дезинтегрирован <:smirk_new:1311716402742296689>",
-			f"Казино от мистера биста это конечно хорошо, но вам тут не место — {spam_bot_user.name} ({spam_bot_user.mention}) был забанен"
+			f"Казино от мистера биста это конечно хорошо, но вам тут не место — {spam_bot_user.name} ({spam_bot_user.mention}) был забанен",
+			f"{spam_bot_user.name} ({spam_bot_user.mention}) забанен :index_pointing_at_the_viewer::joy:"
 		]
-		await msg.channel.send(choice(kick_msgs),allowed_mentions=no_ping)
+		chat_chnl = await msg.guild.fetch_channel(CHAT_ID)
+		await chat_chnl.send(choice(kick_msgs),allowed_mentions=no_ping)
 
 		await spam_bot_user.ban(reason="Бот спамер",delete_message_seconds=3600)
 		await msg.delete()
