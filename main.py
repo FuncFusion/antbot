@@ -24,7 +24,7 @@ cogs = [
 	EnchantCommands, LookForCommand, RandomCommands, DeadChat, TikTokCommand,
 	SoyjakCommand, DemotivatorCommand, SpeechbubbleCommand, BruhCommand, GifCommand, ImpactCommand,
 	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
-	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing,
+	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing, DeleteBotMessage,
 	Logs, IdeaVoteReactions,
 	ClearCommand, PunishmentCommands, AutoThreads, AntiSpamBot,
 	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,

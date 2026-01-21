@@ -3,8 +3,9 @@ from discord.utils import MISSING, _MissingSentinel
 
 from pymongo.mongo_client import MongoClient
 
-from settings import MONGO_URI, DISCORD_API_SECRET
+from settings import MONGO_URI
 from utils.shortcuts import no_ping
+from utils.invoked_messages_cache import cache_message_author
 
 db = MongoClient(MONGO_URI).antbot.webhook_channels
 
@@ -37,14 +38,20 @@ async def fake_send(user,
 		user_copy_webhook = await channel.create_webhook(name=".")
 		db.insert_one({"_id": channel.id, "webhook_id": user_copy_webhook.id})
 	#
+	messages = []
 	if isinstance(content, list):
 		for text in content:
 			if text == content[-1]:
-				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, 
-				files=files, thread=thread, allowed_mentions=allowed_mentions)
+				msg = await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, 
+				files=files, thread=thread, allowed_mentions=allowed_mentions, wait=True)
 			else:
-				await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, thread=thread, allowed_mentions=allowed_mentions)	
+				msg = await user_copy_webhook.send(content=text, avatar_url=user.display_avatar.url, username=user.display_name, 
+				thread=thread, allowed_mentions=allowed_mentions, wait=True)	
+			messages.append(msg.id)
+		
+		await cache_message_author(user.id, messages)
 	else:
 		msg = await user_copy_webhook.send(content=content, avatar_url=user.display_avatar.url, username=user.display_name, 
 		thread=thread, thread_name=thread_name, embeds=embeds, view=view, files=files, allowed_mentions=allowed_mentions, wait=True)
+		await cache_message_author(user.id, [msg.id])
 		return msg

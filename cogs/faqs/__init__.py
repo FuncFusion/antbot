@@ -10,7 +10,7 @@ import os
 from typing import List
 import json
 
-from utils import handle_errors, Emojis, no_ping, all_valid, closest_match, LazyLayout
+from utils import handle_errors, Emojis, no_ping, all_valid, closest_match, LazyLayout, cache_message_author
 
 
 with open("cogs/faqs/faqs.json", 'r', encoding="utf-8") as file: db = json.load(file)
@@ -75,7 +75,7 @@ class FAQs(commands.Cog, name="FAQ команды"):
 		])
 
 	@commands.Cog.listener("on_message")
-	async def main(self, msg):
+	async def main(self, msg: discord.Message):
 		if msg.author.bot:
 			return
 		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID:
@@ -99,25 +99,31 @@ class FAQs(commands.Cog, name="FAQ команды"):
 				"msg": "Факьюшка не найдена"
 			}])
 			return
+		
 		files = []
 		for filename in os.listdir(f"assets/faqs/{faq}"):
 			if not filename.endswith(".md"):
 				files.append(discord.File(f'assets/faqs/{faq}/{filename}'))
 		with open(f'assets/faqs/{faq}/{faq}.md', 'r', encoding="utf-8") as file: content = file.read()
+
 		emoji_instance = Emojis()
 		for attr in dir(emoji_instance):
 			if not attr.startswith("__") and not callable(getattr(emoji_instance, attr)):
 				content = content.replace("{" + attr + "}", getattr(emoji_instance, attr))
 		answers = content.split("\n---separator---\n")
+
+		message_ids = []
 		for answer in answers:
 			if len(answers) == 1:
 				#answer += "\n-# Источник: [AntBot](<https://github.com/FuncFusion/antbot>)"
-				await msg.reply(answer, files=files, allowed_mentions=no_ping)
+				cur_msg = await msg.reply(answer, files=files, allowed_mentions=no_ping)
 			elif answers.index(answer) == 0:
-				await msg.reply(answer, allowed_mentions=no_ping)
+				cur_msg = await msg.reply(answer, allowed_mentions=no_ping)
 			elif answer != answers[-1]:
-				await msg.channel.send(answer, allowed_mentions=no_ping)
+				cur_msg = await msg.channel.send(answer, allowed_mentions=no_ping)
 			else:
 				#answer += "\n-# Источник: [AntBot](<https://github.com/FuncFusion/antbot>)"
-				await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
+				cur_msg = await msg.channel.send(answer, files=files, allowed_mentions=no_ping)
+			message_ids.append(cur_msg.id)
+		await cache_message_author(msg.author.id, message_ids)
 		

@@ -2,14 +2,11 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from Levenshtein import distance
 from typing import List
 import os
 
-from utils.general import handle_errors
-from utils.msg_utils import Emojis, split_msg
-from utils.shortcuts import no_color, no_ping
-from utils.validator import all_valid, closest_match
+from utils import handle_errors, Emojis, split_msg, no_color, \
+	no_ping, all_valid, closest_match, cache_message_author
 
 
 syntaxes = {}
@@ -29,7 +26,7 @@ class SyntaxCommand(commands.Cog):
 		help="### Пример:\n`/syntax item`")
 	@app_commands.describe(command="Команда из майнкрафта")
 
-	async def syntax(self, ctx, *, command:str):
+	async def syntax(self, ctx: commands.Context, *, command:str):
 		syntaxes_dict = {}
 		for syntax in syntaxes.keys():
 			syntaxes_dict.update({syntax: []})
@@ -39,11 +36,15 @@ class SyntaxCommand(commands.Cog):
 			raise Exception("KeyError")
 		msg = f"## {Emojis.mcf_load} [/{command}](<https://minecraft.wiki/w/Commands/{command.replace(" ","#")}>)\n" + syntaxes[command]
 		parts = msg.split("\n---separator---\n")
+		message_ids = []
 		for part in parts:
 			if parts.index(part) == 0:
-				await ctx.reply(part, allowed_mentions=no_ping)
+				msg = await ctx.reply(part, allowed_mentions=no_ping)
+				message_ids.append(msg.id)
 			else:
-				await ctx.channel.send(part, allowed_mentions=no_ping)
+				msg = await ctx.channel.send(part, allowed_mentions=no_ping)
+				message_ids.append(msg.id)
+		await cache_message_author(ctx.author.id, message_ids)
 
 	@syntax.error
 	async def syntax_error(self, ctx, error):

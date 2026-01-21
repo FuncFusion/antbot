@@ -1,4 +1,5 @@
 from utils.fake_user import fake_send
+from utils.invoked_messages_cache import check_author_from_cache, cache_message_author
 from utils.general import handle_errors, totag, is_moderator, get_help_thread_author
 from utils.msg_utils import get_msg_by_id_arg, split_msg, user_from_embed, Emojis
 from utils.pack_generator import Templates, PGenerator, Modals

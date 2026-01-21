@@ -6,6 +6,7 @@ antbot.ico
 
 # 🤨
 syntax_hl/
+invoked_messages_cache.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

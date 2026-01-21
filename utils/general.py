@@ -17,8 +17,8 @@ unknown_error = ("Произошла непредвиденная ошибка, 
 
 async def handle_errors(
 		ctx: Union[commands.Context, discord.Interaction], 
-		error, 
-		errors
+		error: Exception, 
+		errors: list
 	):
 
 	async def send(msg):

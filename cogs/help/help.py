@@ -22,11 +22,12 @@ class HelpCommand(commands.Cog):
 		help="Написав просто `/help`, вы получите список всех доступных команд и фич. Написав конкретное название фичи, получите подробное описание её использования.\n### Пример:\n`/help форматтер`")
 	
 	async def help(self, ctx, *, feature=None):
-		fetched_commands = await self.bot.tree.fetch_commands()
+		fetched_commands: list[app_commands.AppCommand] = await self.bot.tree.fetch_commands()
 
 		if feature == None:
 			permed_cmd_list = []
 			for command in fetched_commands:
+				if command.type == discord.AppCommandType.message: continue
 				if command.default_member_permissions is None:
 					permed_cmd_list.append(command)
 				elif ctx.channel.permissions_for(ctx.author) >= command.default_member_permissions:
