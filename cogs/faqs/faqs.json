@@ -52,5 +52,6 @@
 	"команда плавного поворота": ["smooth rotation command","smooth rotation","smooth rot","smooth rot command","smooth rot cmd","плавный поворот","плавный поворот команда","rotation smooth","поворот плавный"],
 	"vertex snap": ["vert snap","вершинная привязка","верш прив","вертекс снап","привязать вершины","привязка углов","инструмент привязки вершин","vertex snap tool"],
 	"arm model": ["elbow","модель руки","локоть","рука модель","руки","бб руки"],
-	"trigger": ["trigger command","custom commands","command trigger","trigger scoreboard","scoreboard trigger","триггер","триггер команда","кастом команды","команда триггер","триггер скорборд","скорборд триггер","екшппук"]
+	"trigger": ["trigger command","custom commands","command trigger","trigger scoreboard","scoreboard trigger","триггер","триггер команда","кастом команды","команда триггер","триггер скорборд","скорборд триггер","екшппук"],
+	"spyglass в рф": ["спайгласс в рф","спайгласс не работает","спайгласс перестал работать","датапак хелпер плюс в рф","datapack helper plus in russia","spyglass in russia"]
 }
