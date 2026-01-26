@@ -132,5 +132,5 @@ class LFInfo(discord.ui.Modal):
 		lf_msg = await LOOK_FOR_CHANNEL.send(embed=embed, view=LookForView(), file=game_banner)
 		db.insert_one({"_id": lf_msg.id, "author_id": ctx.user.id})
 		await ctx.response.send_message(f"{Emojis.check} Пост создан: {lf_msg.jump_url}", ephemeral=True)
-		await lf_msg.create_thread(name="Обсуждение")
+		await lf_msg.create_thread(name=self.game.value)
 	
