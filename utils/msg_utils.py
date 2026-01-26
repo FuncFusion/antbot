@@ -139,6 +139,7 @@ class Emojis:
 	items_file = "<:items_file:1319409214614929478>"
 	particles_file = "<:particle:1188838146385911939>"
 	post_effect_file = "<:shader_triangle:1285663956496810048>"
+	cameras_file = "<:cameras_file:1319409185749860422>"
 
 
 	beet = "<:beet:1143125070336774165>"
