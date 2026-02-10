@@ -80,7 +80,11 @@ class FAQs(commands.Cog, name="FAQ команды"):
 			return
 		if msg.guild != None and msg.guild.id == DMS_LOGS_GUILD_ID:
 			return
-		segments = re.findall(r'(?:^\?|\*\*\?\*\*)([^?*]+)(?:\*\*\?\*\*)*?', msg.content)
+		message = msg.content
+		if "?faq " in message:
+			message = message.replace("?faq ", "?")
+			await msg.reply(f"{Emojis.exclamation_mark}**Не пишите `?faq <текст>` для вызова факьюшки, используйте просто `?<текст>`**", allowed_mentions=no_ping, delete_after=10)
+		segments = re.findall(r'(?:^\?|\*\*\?\*\*)([^?*]+)(?:\*\*\?\*\*)*?', message)
 		if segments == []:
 			return
 		args = []
