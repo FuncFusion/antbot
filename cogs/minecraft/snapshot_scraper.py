@@ -42,8 +42,8 @@ class SnapshotScraper(commands.Cog):
 		# Formatting name
 		latest_version = latest_version_id\
 			.replace(".", "-")\
-			.replace("pre", "pre-release-")\
-			.replace("rc", "release-candidate-")
+			.replace("pre", "pre-release")\
+			.replace("rc", "release-candidate")
 		#
 		if latest_version_id != last_known_version:
 			db.update_one({"_id": "latest_known_snapshot"}, {"$set": {"_": latest_version_id}})
