@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 
 from settings import CREATIONS_FORUM_ID, DATAPACKS_TAG, RESOURCEPACKS_TAG, ONLY_CB_TAG, \
 	BLOCKBENCH_TAG, VSCODE_TAG, MODS_TAG, PLUGINS_TAG, MISC_TAG, OPTIFINE_TAG, SOLVED_TAG, \
-	RESOURCEPACKS_TAGS, DATAPACK_MASTER_ROLE, RESOURCEPACK_MASTER_ROLE
+	RESOURCEPACKS_TAGS, DATAPACK_MASTER_ROLE, RESOURCEPACK_MASTER_ROLE, MOD_MASTER_ROLE, PLUGIN_MASTER_ROLE
 from utils import Emojis, no_color, no_ping, totag, is_moderator, handle_errors, LazyLayout, get_help_thread_author
 
 class StarterMessage(commands.Cog):
@@ -51,15 +51,19 @@ class BetterCallMastersButton(ui.Button):
 		if datetime.now().timestamp() - ctx.message.created_at.timestamp() < timedelta(days=1).total_seconds():
 			raise Exception("Awaited not enough")
 		
-		metnions = []
+		mentions = []
 		if DATAPACKS_TAG in ctx.channel.applied_tags:
-			metnions.append(f"<@&{DATAPACK_MASTER_ROLE}>")
+			mentions.append(f"<@&{DATAPACK_MASTER_ROLE}>")
 		if any((tag in ctx.channel.applied_tags for tag in RESOURCEPACKS_TAGS)):
-			metnions.append(f"<@&{RESOURCEPACK_MASTER_ROLE}>")
-		if not metnions:
+			mentions.append(f"<@&{RESOURCEPACK_MASTER_ROLE}>")
+		if MODS_TAG in ctx.channel.applied_tags:
+			mentions.append(f"<@&{MOD_MASTER_ROLE}>")
+		if PLUGINS_TAG in ctx.channel.applied_tags:
+			mentions.append(f"<@&{PLUGIN_MASTER_ROLE}>")
+		if not mentions:
 			raise Exception("No massters")
 		
-		await ctx.channel.send(" ".join(metnions))
+		await ctx.channel.send(" ".join(mentions))
 		await ctx.response.edit_message(view=StarterMessageLayout(call_masters_disabled=True))
 
 
