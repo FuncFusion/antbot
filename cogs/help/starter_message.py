@@ -48,8 +48,8 @@ class BetterCallMastersButton(ui.Button):
 
 		if ctx.user != post_author and not is_moderator(ctx.user):
 			raise Exception("No perms")
-		if datetime.now().timestamp() - ctx.message.created_at.timestamp() < timedelta(days=1).total_seconds():
-			raise Exception("Awaited not enough")
+		# if datetime.now().timestamp() - ctx.message.created_at.timestamp() < timedelta(days=1).total_seconds():
+		# 	raise Exception("Awaited not enough")
 		
 		mentions = []
 		if DATAPACKS_TAG in ctx.channel.applied_tags:
