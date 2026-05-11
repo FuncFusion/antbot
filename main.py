@@ -10,6 +10,7 @@ from cogs.memes import *
 from cogs.general import *
 from cogs.help import *
 from cogs.ideas import *
+from cogs.iven import *
 from cogs.logs import *
 from cogs.mod import *
 from cogs.minecraft import *
@@ -26,6 +27,7 @@ cogs = [
 	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
 	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing, DeleteBotMessage,
 	Logs, IdeaVoteReactions,
+	IvenRequests,
 	ClearCommand, PunishmentCommands, AutoThreads, AntiSpamBot,
 	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,
 	CustomVoiceChannels
@@ -33,7 +35,8 @@ cogs = [
 views = [
 	LookForView, TiktokImageView,
 	GifizeView, StarterMessageLayout,
-	CreateTicketMessage, FileLayout
+	CreateTicketMessage, FileLayout,
+	IvenRequestMessageLayout, IvenDossier
 ]
 
 

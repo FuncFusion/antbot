@@ -11,3 +11,4 @@ from utils.users_db import DB
 from utils.validator import validate, is_valid_image, all_valid, closest_match
 from utils.image_utils import edit_image, ImageText
 from utils.components2 import LazyLayout
+from utils.help_version_getter import get_minecraft_version

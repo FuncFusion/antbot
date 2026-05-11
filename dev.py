@@ -24,6 +24,8 @@ settings.LOOK_FOR_CHANNEL_ID = 1270326886391746573
 settings.SNAPSHOTS_CHANNEL_ID = 1270326886203133966
 settings.MODERATOR_ONLY_CHANNEL_ID = 1270351131041857549
 settings.ANTI_SPAM_CHANNEL_ID = 1454956591106232463
+settings.IVEN_GENERALS_CHANNEL_ID = 1497244466979803238
+settings.IVEN_CHAT_ID = 1497245738076209153
 
 settings.VCS_CATEGORY_ID = 1270326886890868742
 settings.CREATE_VC_CHANNEL_ID = 1270326886890868744
@@ -31,6 +33,10 @@ settings.CREATE_VC_CHANNEL_ID = 1270326886890868744
 settings.SNAPSHOT_PING_ROLE = 1245322215428329503
 settings.DATAPACK_MASTER_ROLE = 924185371225497600
 settings.RESOURCEPACK_MASTER_ROLE = 940944701895356468
+settings.IVEN_GENERAL_ROLE = 1497673619315359874
+settings.IVEN_PARTICIPANT_ROLE = 1497244769661747420
+settings.IVEN_PENDING_ROLE = 1497674155120922765
+settings.IVEN_REJECTED_ROLE = 1492598485617475816
 
 settings.SOLVED_TAG.id = 1270400825096929301
 settings.DATAPACKS_TAG.id = 1272928452164587562
@@ -54,6 +60,7 @@ from cogs.general import *
 from cogs.giveaway import *
 from cogs.help import *
 from cogs.ideas import *
+from cogs.iven import *
 from cogs.logs import *
 from cogs.mod import *
 from cogs.minecraft import *
@@ -69,6 +76,7 @@ cogs = [
 	HelpCommand, LinkCommand, Pin, StarterMessage, SyntaxCommand, AskToResolve, Tickets,
 	JoinAndLeaveMessage, SayCommand, ServerInfoCommand, BotPing, DeleteBotMessage,
 	Logs, IdeaVoteReactions,
+	IvenRequests,
 	ClearCommand, PunishmentCommands, AutoThreads, AntiSpamBot,
 	SnapshotScraper, ColorCommand, FileCommand, MessageFormatter, PackformatCommand,
 	CustomVoiceChannels
@@ -76,7 +84,8 @@ cogs = [
 views = [
 	LookForView, TiktokImageView,
 	GifizeView, StarterMessageLayout,
-	CreateTicketMessage, FileLayout
+	CreateTicketMessage, FileLayout,
+	IvenRequestMessageLayout, IvenDossier
 ]
 
 

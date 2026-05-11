@@ -8,8 +8,8 @@ from json import dumps, loads
 from re import sub
 from pymongo import MongoClient
 
-from settings import MONGO_URI
-from utils.msg_utils import Emojis
+from settings import MONGO_URI, HELP_FORUM_ID
+from utils import Emojis, get_minecraft_version
 from utils.packmcmeta import get_mcmeta_ver
 from utils.general import handle_errors
 from utils.shortcuts import no_color, no_ping
@@ -31,9 +31,13 @@ class PackformatCommand(commands.Cog):
 		help="Если не вводить никаких аргументов, команда выдаст числа для последних нескольких версий игры. Если ввести определённую версию, выдаст именно для неё числа, если `все`, то выдаст числа на все релизные версии, а если `последняя`, то выдаст числа для последней версии/снапшота.\n### Пример:\n`/packformat 1.21`")
 	@app_commands.describe(version="Интересующая версия")
 
-	async def packformat(self, ctx, *, version: str=None):
+	async def packformat(self, ctx: commands.Context, *, version: str=None):
 		versions = get_mcmeta_ver(requested_version="all")
 		version = None if not version else version.replace(" ", ".")
+
+		if version is None and isinstance(ctx.channel, discord.Thread):
+			if ctx.channel.parent.id == HELP_FORUM_ID:
+				version = await get_minecraft_version(ctx.channel)
 
 		if version in ("all", "al", "a", "все", "вс", "в", "фдд", "фд", "ф"):
 			all_releases = {ver: versions[ver] for ver in versions if versions[ver]["type"]=="release"}
@@ -51,7 +55,7 @@ class PackformatCommand(commands.Cog):
 			try:
 				dp_ver = f"`{versions[version]["data_pack"]}`"
 			except:
-				dp_ver = f"`—`"
+				dp_ver = "`—`"
 			embed.add_field(name=f"{Emojis.data_open} Датaпак", value=dp_ver)
 			embed.add_field(name=f"{Emojis.assets_open} Ресурспак", value=f"`{versions[version]["resource_pack"]}`")
 			embed.set_footer(text="Больше инфы в факьюшке \"?pack mcmeta\"")

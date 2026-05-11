@@ -9,8 +9,8 @@ from typing import List
 from io import BytesIO
 from pymongo import MongoClient
 
-from settings import MONGO_URI, GITHUB_HEADERS, LOGS_CHANNEL_ID
-from utils import generate_tree, handle_errors, no_ping, Emojis
+from settings import MONGO_URI, GITHUB_HEADERS, LOGS_CHANNEL_ID, HELP_FORUM_ID
+from utils import generate_tree, handle_errors, no_ping, Emojis, get_minecraft_version
 
 db = MongoClient(MONGO_URI).antbot.minecraft_data
 versions_pathes = MongoClient(MONGO_URI).antbot.versions_pathes
@@ -110,9 +110,17 @@ class FileCommand(commands.Cog):
 		help="Структура файлов обновляется в течении 6 минут сразу после выхода новой версии/снапшота. Слэш команда имеет автокомплит для файлов, что делает их поиск легче.\n### Пример:\n`/file colormap/grass`") 
 	@app_commands.describe(path="Путь/название интересующего файла")
 
-	async def file(self, ctx, path: str, version: str="latest"):
+	async def file(self, ctx: commands.Context, path: str, version: str=None):
+
+		if version == None and isinstance(ctx.channel, discord.Thread):
+			if ctx.channel.parent.id == HELP_FORUM_ID:
+				version = await get_minecraft_version(ctx.channel)
+			else:
+				version = "latest"
+
 		if version == "latest":
 			current_files = files
+
 		else:
 			version_for_mongo = version.replace(".", "_")
 			versions_hashes = db.find_one({"_id": "versions_hashes"})["_"]
