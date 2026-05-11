@@ -119,9 +119,9 @@ class IvenRequestMessageLayout(ui.LayoutView):
     async def create_request(self, ctx: discord.Interaction, _):
         if ctx.user.get_role(IVEN_PARTICIPANT_ROLE) != None:
             await ctx.response.send_message(f"{Emojis.check} Ваша заявка была принята ранее", ephemeral=True)
-        elif ctx.user.roles.get_role(IVEN_REJECTED_ROLE) != None:
+        elif ctx.user.get_role(IVEN_REJECTED_ROLE) != None:
             await ctx.response.send_message(f"{Emojis.cross} Ваша заявка была отклонена ранее", ephemeral=True)
-        elif ctx.user.roles.get_role(IVEN_PENDING_ROLE) != None:
+        elif ctx.user.get_role(IVEN_PENDING_ROLE) != None:
             await ctx.response.send_message(f"{Emojis.timeline_file} Ваша заявка на рассмотрении", ephemeral=True)
         else:
             await ctx.response.send_modal(IvenRequestForm())
