@@ -112,10 +112,11 @@ class FileCommand(commands.Cog):
 
 	async def file(self, ctx: commands.Context, path: str, version: str=None):
 
-		if version == None and isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == HELP_FORUM_ID:
-			version = await get_minecraft_version(ctx.channel)
-		else:
-			version = "latest"
+		if version == None:
+			if isinstance(ctx.channel, discord.Thread) and ctx.channel.parent.id == HELP_FORUM_ID:
+				version = await get_minecraft_version(ctx.channel)
+			else:
+				version = "latest"
 
 		if version == "latest":
 			current_files = files
