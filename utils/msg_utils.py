@@ -54,8 +54,8 @@ class Emojis:
 
 	ajmeta = "<:ajmeta_file:1480216809012596889>"
 	mcf = "<:mcfunction_file:1480233652318113822>"
-	mcf_tick = "<:mcfunction_load_file:1480233655170367528>"
-	mcf_load = "<:mcfunction_tick_file:1480233657464651826>"
+	mcf_tick = "<:mcfunction_tick_file:1480233655170367528>"
+	mcf_load = "<:mcfunction_load_file:1480233657464651826>"
 	json = "<:json_file:1480227043177398426>"
 	nbt = "<:structure_file:1480234250207887601>"
 	bbmodel = "<:models_file:1480233660346007716>"
